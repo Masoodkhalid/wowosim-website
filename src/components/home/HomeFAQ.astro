@@ -1,0 +1,58 @@
+---
+const faqs = [
+  { q: 'What is an eSIM?', a: 'An eSIM (embedded SIM) is a digital SIM card built into your device. Instead of inserting a physical card, you scan a QR code to activate a data plan instantly.' },
+  { q: 'How do I activate my WoWo SIM eSIM?', a: 'After purchase, you\'ll receive a QR code by email. Go to your device Settings → Mobile/Cellular → Add eSIM, then scan the QR code. Takes less than 2 minutes.' },
+  { q: 'Is my device compatible?', a: 'Most modern smartphones support eSIM including iPhone XR and newer, Samsung Galaxy S20+, Google Pixel 3 and newer, and many more. Check our Help Center for the full list.' },
+  { q: 'Do WoWo SIM plans include calls and SMS?', a: 'WoWo SIM plans are data-only. For calls, you can use WhatsApp, FaceTime, or any VoIP app over your data connection.' },
+  { q: 'Can I use my eSIM in multiple countries?', a: 'Yes! With regional or global plans you can roam across multiple countries on one eSIM. Check the coverage map on each plan page for included countries.' },
+  { q: 'What if I run out of data?', a: 'You\'ll receive a notification when you\'re close to your limit. You can top up your eSIM from your dashboard or purchase a new plan anytime.' },
+];
+---
+
+<section style="padding: 5rem 2rem; background: #f9fafb;">
+  <div style="max-width: 56rem; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 3.5rem;">
+      <span style="color: #03def3; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;">FAQ</span>
+      <h2 style="font-size: 2.5rem; font-weight: 900; color: #162544; margin: 0.5rem 0 0.75rem; letter-spacing: -0.5px;">Frequently Asked Questions</h2>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;" id="faqList">
+      {faqs.map((faq, i) => (
+        <div class="faq-item" style="background: white; border-radius: 1rem; border: 1px solid #f3f4f6; overflow: hidden;">
+          <button class="faq-trigger" data-index={i} style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; background: none; border: none; cursor: pointer; text-align: left; gap: 1rem;">
+            <span style="font-weight: 600; color: #162544; font-size: 0.95rem;">{faq.q}</span>
+            <span class="faq-arrow" style="font-size: 1.2rem; color: #03def3; flex-shrink: 0; transition: transform 0.25s;">+</span>
+          </button>
+          <div class="faq-body" style="display: none; padding: 0 1.5rem 1.25rem;">
+            <p style="color: #6b7280; font-size: 0.875rem; line-height: 1.7; margin: 0;">{faq.a}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div style="text-align: center; margin-top: 2.5rem;">
+      <a href="/faqs" class="btn-outline" style="font-size: 0.9rem;">View All FAQs →</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.faq-trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item') as HTMLElement;
+      const body = item.querySelector('.faq-body') as HTMLElement;
+      const arrow = item.querySelector('.faq-arrow') as HTMLElement;
+      const isOpen = body.style.display === 'block';
+
+      // Close all
+      document.querySelectorAll('.faq-body').forEach((b: any) => b.style.display = 'none');
+      document.querySelectorAll('.faq-arrow').forEach((a: any) => { a.textContent = '+'; a.style.transform = 'rotate(0deg)'; });
+
+      if (!isOpen) {
+        body.style.display = 'block';
+        arrow.textContent = '×';
+        arrow.style.transform = 'rotate(45deg)';
+      }
+    });
+  });
+</script>

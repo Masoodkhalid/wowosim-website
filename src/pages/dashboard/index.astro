@@ -1,0 +1,75 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getJwt, isLoggedIn } from '../../lib/auth';
+import { portalFetch } from '../../lib/api';
+
+if (!isLoggedIn(Astro.cookies)) return Astro.redirect('/login');
+
+const jwt = getJwt(Astro.cookies);
+let user: any = null;
+
+try {
+  const res = await portalFetch('/me', {}, jwt);
+  if (res.ok) user = await res.json();
+} catch {}
+---
+
+<Base title="Dashboard">
+  <div style="min-height: calc(100vh - 140px); background: #f9fafb; padding: 2rem 1rem;">
+    <div style="max-width: 72rem; margin: 0 auto;">
+
+      <!-- Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+        <div>
+          <h1 style="font-size: 1.75rem; font-weight: 800; color: #162544; margin: 0 0 0.25rem;">
+            Hi, {user?.first_name ?? 'Traveler'} 👋
+          </h1>
+          <p style="color: #9ca3af; font-size: 0.875rem; margin: 0;">Welcome back to your WoWo SIM dashboard</p>
+        </div>
+        <button id="logoutBtn" class="btn-outline" style="font-size: 0.8rem; padding: 0.5rem 1rem;">Sign Out</button>
+      </div>
+
+      <!-- Quick Stats -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;">
+        {[
+          { icon: '📱', label: 'Active eSIMs', href: '/dashboard/esims' },
+          { icon: '📄', label: 'Invoices', href: '/dashboard/invoices' },
+          { icon: '👤', label: 'Profile', href: '/dashboard/profile' },
+          { icon: '🛒', label: 'Buy eSIM', href: '/' },
+        ].map(item => (
+          <a href={item.href} class="card" style="text-align: center; text-decoration: none; transition: all 0.2s; cursor: pointer;"
+             onmouseover="this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">{item.icon}</div>
+            <p style="font-weight: 600; color: #162544; font-size: 0.85rem; margin: 0;">{item.label}</p>
+          </a>
+        ))}
+      </div>
+
+      <!-- Nav Tabs -->
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 2px solid #f3f4f6; padding-bottom: 0;">
+        {[
+          ['My eSIMs', '/dashboard/esims'],
+          ['Invoices', '/dashboard/invoices'],
+          ['Profile', '/dashboard/profile'],
+        ].map(([label, href]) => (
+          <a href={href} style="padding: 0.6rem 1.25rem; font-size: 0.875rem; font-weight: 600; color: #9ca3af; text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s;"
+             onmouseover="this.style.color='#162544'" onmouseout="this.style.color='#9ca3af'">{label}</a>
+        ))}
+      </div>
+
+      <div class="card" style="text-align: center; padding: 3rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
+        <h2 style="font-size: 1.25rem; font-weight: 700; color: #162544; margin: 0 0 0.5rem;">Select a section above</h2>
+        <p style="color: #9ca3af; font-size: 0.875rem;">View your eSIMs, invoices or update your profile.</p>
+        <a href="/dashboard/esims" class="btn-primary" style="margin-top: 1.5rem; display: inline-flex;">View My eSIMs →</a>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+    await fetch('/api/logout', { method: 'POST' });
+    window.location.href = '/';
+  });
+</script>

@@ -1,0 +1,70 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getJwt, isLoggedIn } from '../../lib/auth';
+import { portalFetch } from '../../lib/api';
+
+if (!isLoggedIn(Astro.cookies)) return Astro.redirect('/login');
+
+const jwt = getJwt(Astro.cookies);
+let invoices: any[] = [];
+let paypalInvoices: any[] = [];
+
+try {
+  const [r1, r2] = await Promise.all([
+    portalFetch('/invoices', {}, jwt),
+    portalFetch('/invoices_paypal', {}, jwt),
+  ]);
+  if (r1.ok) { const d = await r1.json(); invoices = d.invoices ?? d ?? []; }
+  if (r2.ok) { const d = await r2.json(); paypalInvoices = d.invoices ?? d ?? []; }
+} catch {}
+
+const all = [
+  ...invoices.map((i: any) => ({ ...i, method: 'Card' })),
+  ...paypalInvoices.map((i: any) => ({ ...i, method: 'PayPal' })),
+].sort((a, b) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime());
+---
+
+<Base title="Invoices">
+  <div style="min-height: calc(100vh - 140px); background: #f9fafb; padding: 2rem 1rem;">
+    <div style="max-width: 72rem; margin: 0 auto;">
+      <a href="/dashboard" style="color: #9ca3af; font-size: 0.8rem; text-decoration: none; display: block; margin-bottom: 0.5rem;">← Dashboard</a>
+      <h1 style="font-size: 1.75rem; font-weight: 800; color: #162544; margin: 0 0 2rem;">Invoices</h1>
+
+      {all.length === 0 ? (
+        <div class="card" style="text-align: center; padding: 4rem;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">📄</div>
+          <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.5rem;">No invoices yet</h2>
+          <p style="color: #9ca3af; font-size: 0.875rem; margin: 0 0 1.5rem;">Your purchase history will appear here.</p>
+          <a href="/" class="btn-primary">Buy eSIM →</a>
+        </div>
+      ) : (
+        <div class="card" style="padding: 0; overflow: hidden;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f9fafb; border-bottom: 1px solid #f3f4f6;">
+                <th style="padding: 0.875rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Invoice</th>
+                <th style="padding: 0.875rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Date</th>
+                <th style="padding: 0.875rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Method</th>
+                <th style="padding: 0.875rem 1.25rem; text-align: right; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Amount</th>
+                <th style="padding: 0.875rem 1.25rem; text-align: center; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {all.map((inv: any, i: number) => (
+                <tr style={`border-bottom: ${i < all.length - 1 ? '1px solid #f3f4f6' : 'none'};`}>
+                  <td style="padding: 1rem 1.25rem; font-size: 0.85rem; font-weight: 600; color: #162544;">#{inv.id ?? inv.invoice_number ?? 'N/A'}</td>
+                  <td style="padding: 1rem 1.25rem; font-size: 0.82rem; color: #6b7280;">{inv.created_at ? new Date(inv.created_at).toLocaleDateString() : '—'}</td>
+                  <td style="padding: 1rem 1.25rem; font-size: 0.82rem; color: #6b7280;">{inv.method}</td>
+                  <td style="padding: 1rem 1.25rem; font-size: 0.875rem; font-weight: 700; color: #162544; text-align: right;">${parseFloat(inv.total ?? inv.amount ?? 0).toFixed(2)}</td>
+                  <td style="padding: 1rem 1.25rem; text-align: center;">
+                    <span class="badge-success">Paid</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  </div>
+</Base>

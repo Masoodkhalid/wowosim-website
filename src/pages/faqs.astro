@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+const categories = [
+  {
+    name: 'Activation', icon: '⚡',
+    faqs: [
+      { q: 'How do I activate my eSIM?', a: 'Go to device Settings → Mobile/Cellular → Add eSIM, then scan the QR code sent to your email.' },
+      { q: 'Can I activate before I travel?', a: 'Yes! You can install the eSIM on your device before you leave. Data activates when you arrive at your destination.' },
+    ],
+  },
+  {
+    name: 'Coverage & Network', icon: '🌐',
+    faqs: [
+      { q: 'Which networks does WoWo SIM use?', a: 'We partner with leading local carriers in each country to give you the best coverage available.' },
+      { q: 'Does my plan work in multiple countries?', a: 'Local plans work in one country. Regional and global plans cover multiple countries as listed on each plan page.' },
+    ],
+  },
+  {
+    name: 'Billing & Payment', icon: '💳',
+    faqs: [
+      { q: 'What payment methods do you accept?', a: 'We accept Visa, Mastercard, Apple Pay, Google Pay, Amazon Pay, and PayPal.' },
+      { q: 'Can I get a refund?', a: 'Full refund is available if the eSIM has not been activated within 15 days of purchase.' },
+    ],
+  },
+  {
+    name: 'Device Compatibility', icon: '📱',
+    faqs: [
+      { q: 'Is my phone compatible?', a: 'Most iPhones from XR onwards, Samsung Galaxy S20+, Google Pixel 3+, and many more support eSIM.' },
+      { q: 'Can I use eSIM on multiple devices?', a: 'Each eSIM plan is tied to one device. You cannot transfer it to another device after installation.' },
+    ],
+  },
+];
+---
+<Base title="FAQs">
+  <section style="padding: 5rem 2rem; background: white; min-height: calc(100vh - 140px);">
+    <div style="max-width: 72rem; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 3.5rem;">
+        <h1 style="font-size: 2.5rem; font-weight: 900; color: #162544; margin: 0 0 0.75rem;">Frequently Asked Questions</h1>
+        <p style="color: #6b7280; font-size: 1rem; max-width: 500px; margin: 0 auto;">Everything you need to know about WoWo SIM eSIMs.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        {categories.map(cat => (
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem;">
+              <span style="font-size: 1.25rem;">{cat.icon}</span>
+              <h2 style="font-size: 1rem; font-weight: 700; color: #162544; margin: 0;">{cat.name}</h2>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+              {cat.faqs.map(faq => (
+                <div class="faq-item" style="background: #f9fafb; border-radius: 0.75rem; border: 1px solid #f3f4f6; overflow: hidden;">
+                  <button class="faq-trigger" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: none; border: none; cursor: pointer; text-align: left; gap: 0.75rem;">
+                    <span style="font-weight: 600; color: #162544; font-size: 0.875rem;">{faq.q}</span>
+                    <span class="faq-arrow" style="color: #03def3; flex-shrink: 0; font-size: 1.1rem; transition: transform 0.25s;">+</span>
+                  </button>
+                  <div class="faq-body" style="display: none; padding: 0 1.25rem 1rem;">
+                    <p style="color: #6b7280; font-size: 0.825rem; line-height: 1.6; margin: 0;">{faq.a}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+<script>
+  document.querySelectorAll('.faq-trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item') as HTMLElement;
+      const body = item.querySelector('.faq-body') as HTMLElement;
+      const arrow = item.querySelector('.faq-arrow') as HTMLElement;
+      const isOpen = body.style.display === 'block';
+      document.querySelectorAll('.faq-body').forEach((b: any) => b.style.display = 'none');
+      document.querySelectorAll('.faq-arrow').forEach((a: any) => { a.textContent = '+'; a.style.transform = ''; });
+      if (!isOpen) { body.style.display = 'block'; arrow.textContent = '×'; arrow.style.transform = 'rotate(45deg)'; }
+    });
+  });
+</script>

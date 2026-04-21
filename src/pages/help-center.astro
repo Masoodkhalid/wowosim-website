@@ -1,0 +1,143 @@
+---
+import Base from '../layouts/Base.astro';
+
+const categories = [
+  {
+    icon: '📱',
+    title: 'eSIM Management',
+    desc: 'Guidance on managing and using your WoWo eSIM effectively',
+    articles: [
+      'How to find your ICCID number',
+      'How to remove an eSIM from iOS',
+      'How to connect to the internet with your eSIM',
+      'How to scan your QR code',
+      'How to check remaining data',
+    ],
+  },
+  {
+    icon: '🔧',
+    title: 'Troubleshooting',
+    desc: 'Step-by-step solutions for common eSIM issues',
+    articles: [
+      'My eSIM is not connecting',
+      'Slow network speeds — how to fix',
+      'QR code not scanning — solutions',
+      'eSIM not showing in device settings',
+      'Data not working after activation',
+    ],
+  },
+  {
+    icon: '🎥',
+    title: 'Video Tutorials',
+    desc: 'Visual guides to help you navigate eSIM features and setup',
+    articles: [
+      'How to install eSIM on iPhone',
+      'How to install eSIM on Android',
+      'How to top up your plan',
+      'How to use the WoWo SIM app',
+      'How to set up data roaming',
+    ],
+  },
+];
+
+const popular = [
+  'How to find your ICCID number',
+  'How to remove an eSIM from iOS',
+  'How to connect to the internet',
+  'How to scan your QR code',
+  'Fix slow network speeds',
+];
+---
+
+<Base title="Help Center">
+  <!-- Hero -->
+  <section style="background: linear-gradient(135deg, #162544 0%, #0d1b36 100%); padding: 4rem 2rem; text-align: center; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -60px; right: -60px; width: 250px; height: 250px; background: rgba(3,222,243,0.06); border-radius: 9999px; filter: blur(40px);"></div>
+    <div style="max-width: 600px; margin: 0 auto; position: relative; z-index: 1;">
+      <h1 style="font-size: 2.5rem; font-weight: 900; color: white; margin: 0 0 0.75rem;">How can we help?</h1>
+      <p style="color: #9ca3af; margin: 0 0 2rem; font-size: 1rem;">Search our knowledge base or browse categories below</p>
+      <div style="position: relative; max-width: 480px; margin: 0 auto;">
+        <input type="text" placeholder="Search help articles..." id="helpSearch"
+          style="width: 100%; padding: 1rem 1.25rem 1rem 3rem; border-radius: 9999px; border: none; font-size: 0.95rem; outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.2);" />
+        <span style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1.1rem;">🔍</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Questions -->
+  <section style="padding: 3rem 2rem; background: #f9fafb; border-bottom: 1px solid #f3f4f6;">
+    <div style="max-width: 72rem; margin: 0 auto;">
+      <h2 style="font-size: 1rem; font-weight: 700; color: #162544; margin: 0 0 1rem;">⭐ Popular Articles</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+        {popular.map(a => (
+          <a href="#" style="background: white; border: 1px solid #e5e7eb; padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.8rem; color: #374151; text-decoration: none; transition: all 0.2s;"
+             onmouseover="this.style.borderColor='#03def3'; this.style.color='#03def3'" onmouseout="this.style.borderColor='#e5e7eb'; this.style.color='#374151'">{a}</a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section style="padding: 4rem 2rem; background: white;">
+    <div style="max-width: 72rem; margin: 0 auto;">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+        {categories.map(cat => (
+          <div class="card" style="transition: all 0.25s;">
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f0fdff, #e0f9ff); border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin-bottom: 1rem;">
+              {cat.icon}
+            </div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: #162544; margin: 0 0 0.4rem;">{cat.title}</h3>
+            <p style="color: #9ca3af; font-size: 0.8rem; margin: 0 0 1.25rem; line-height: 1.5;">{cat.desc}</p>
+            <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+              {cat.articles.map(a => (
+                <li>
+                  <a href="#" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.825rem; color: #374151; text-decoration: none; transition: color 0.15s;"
+                     onmouseover="this.style.color='#03def3'" onmouseout="this.style.color='#374151'">
+                    <span style="color: #03def3; font-size: 0.7rem;">→</span> {a}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Device Compatibility -->
+  <section style="padding: 4rem 2rem; background: #f9fafb;">
+    <div style="max-width: 72rem; margin: 0 auto;">
+      <h2 style="font-size: 1.75rem; font-weight: 800; color: #162544; text-align: center; margin: 0 0 2.5rem;">Compatible Devices</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+        {[
+          { icon: '🍎', brand: 'Apple iOS', models: ['iPhone XR / XS / XS Max','iPhone 11, 11 Pro, 11 Pro Max','iPhone 12, 13, 14, 15, 16 series','iPhone SE (2nd & 3rd gen)','iPad Pro, iPad Air (with cellular)'] },
+          { icon: '🤖', brand: 'Android', models: ['Samsung Galaxy S20, S21, S22, S23, S24','Google Pixel 3, 4, 5, 6, 7, 8, 9','Huawei P40 Pro, Mate 40 Pro','Oppo Find X3, X5 Pro','Xiaomi 12T Pro, 13 series'] },
+          { icon: '💻', brand: 'Windows', models: ['Microsoft Surface Pro X','Microsoft Surface Go 2 (LTE)','HP Spectre Folio','Lenovo Yoga 520, 630','Dell Inspiron 7000 (eSIM models)'] },
+        ].map(d => (
+          <div class="card">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+              <span style="font-size: 1.75rem;">{d.icon}</span>
+              <h3 style="font-size: 0.95rem; font-weight: 700; color: #162544; margin: 0;">{d.brand}</h3>
+            </div>
+            <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem;">
+              {d.models.map(m => (
+                <li style="font-size: 0.8rem; color: #6b7280; display: flex; align-items: center; gap: 0.4rem;">
+                  <span style="color: #03def3;">✓</span> {m}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Still need help -->
+  <section style="padding: 3rem 2rem; background: white; text-align: center;">
+    <div style="max-width: 480px; margin: 0 auto;">
+      <h2 style="font-size: 1.5rem; font-weight: 800; color: #162544; margin: 0 0 0.5rem;">Still need help?</h2>
+      <p style="color: #9ca3af; font-size: 0.875rem; margin: 0 0 1.5rem;">Our support team is available Mon–Fri, 9AM–6PM</p>
+      <a href="/contact" class="btn-primary">Contact Support →</a>
+    </div>
+  </section>
+</Base>

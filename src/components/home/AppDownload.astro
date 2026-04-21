@@ -1,0 +1,46 @@
+---
+---
+<section style="padding: 5rem 2rem; background: linear-gradient(135deg, #162544 0%, #0a0f1e 100%); position: relative; overflow: hidden;">
+  <div style="position: absolute; top: -80px; right: -80px; width: 300px; height: 300px; background: rgba(3,222,243,0.08); border-radius: 9999px; filter: blur(60px);"></div>
+
+  <div style="max-width: 80rem; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1;">
+    <div>
+      <span style="color: #03def3; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 1rem;">Mobile App</span>
+      <h2 style="font-size: 2.5rem; font-weight: 900; color: white; margin: 0 0 1rem; letter-spacing: -0.5px; line-height: 1.1;">
+        Manage Your eSIM<br/>From Your Pocket
+      </h2>
+      <p style="color: #9ca3af; font-size: 0.95rem; line-height: 1.7; margin: 0 0 2rem;">
+        Monitor data usage, view active plans, top up instantly, and manage all your eSIMs in one place with the WoWo SIM app.
+      </p>
+      <div style="display: flex; gap: 1rem;">
+        <a href="#" style="background: white; color: #162544; border-radius: 0.75rem; padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; transition: background 0.2s;"
+           onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='white'">
+          🍎 App Store
+        </a>
+        <a href="#" style="background: rgba(255,255,255,0.1); color: white; border-radius: 0.75rem; padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); transition: background 0.2s;"
+           onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+          🤖 Google Play
+        </a>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <div style="display: inline-block; background: rgba(255,255,255,0.05); border-radius: 2rem; padding: 2rem; border: 1px solid rgba(255,255,255,0.1);">
+        <div style="font-size: 5rem; margin-bottom: 1rem;">📱</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          {[
+            { icon: '📊', label: 'Data Usage' },
+            { icon: '🌍', label: 'Coverage Map' },
+            { icon: '⚡', label: 'Instant Top-up' },
+            { icon: '🔔', label: 'Smart Alerts' },
+          ].map(f => (
+            <div style="background: rgba(255,255,255,0.08); border-radius: 0.75rem; padding: 0.75rem; text-align: center;">
+              <div style="font-size: 1.25rem; margin-bottom: 0.25rem;">{f.icon}</div>
+              <p style="color: #d1d5db; font-size: 0.7rem; font-weight: 500; margin: 0;">{f.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

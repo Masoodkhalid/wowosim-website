@@ -1,0 +1,189 @@
+---
+import Base from '../layouts/Base.astro';
+import { portalFetch } from '../lib/api';
+
+const { country } = Astro.params;
+
+// Slug → ISO3 mapping for API
+const slugToIso3: Record<string, string> = {
+  'united-states': 'USA', 'united-kingdom': 'GBR', 'japan': 'JPN',
+  'australia': 'AUS', 'france': 'FRA', 'germany': 'DEU', 'italy': 'ITA',
+  'canada': 'CAN', 'spain': 'ESP', 'thailand': 'THA', 'mexico': 'MEX',
+  'brazil': 'BRA', 'china': 'CHN', 'india': 'IND', 'south-korea': 'KOR',
+  'indonesia': 'IDN', 'turkey': 'TUR', 'morocco': 'MAR', 'egypt': 'EGY',
+  'uae': 'ARE', 'saudi-arabia': 'SAU', 'portugal': 'PRT', 'netherlands': 'NLD',
+  'switzerland': 'CHE', 'austria': 'AUT', 'belgium': 'BEL', 'greece': 'GRC',
+  'new-zealand': 'NZL', 'singapore': 'SGP', 'malaysia': 'MYS', 'vietnam': 'VNM',
+  'philippines': 'PHL', 'taiwan': 'TWN', 'hong-kong': 'HKG', 'israel': 'ISR',
+  'jordan': 'JOR', 'kenya': 'KEN', 'south-africa': 'ZAF', 'nigeria': 'NGA',
+  // Regions
+  'europe': 'EUR', 'asia-pacific': 'ASIA', 'north-america': 'NAM',
+  'latin-america': 'LAM', 'middle-east': 'MDE', 'caribbean': 'CAR',
+  'caucasus-region': 'CAU', 'global': 'GLOBAL',
+};
+
+// Slug → display name
+const slugToName: Record<string, string> = {
+  'united-states': 'United States', 'united-kingdom': 'United Kingdom',
+  'japan': 'Japan', 'australia': 'Australia', 'france': 'France',
+  'germany': 'Germany', 'italy': 'Italy', 'canada': 'Canada',
+  'spain': 'Spain', 'thailand': 'Thailand', 'mexico': 'Mexico',
+  'brazil': 'Brazil', 'china': 'China', 'india': 'India',
+  'south-korea': 'South Korea', 'indonesia': 'Indonesia', 'turkey': 'Turkey',
+  'morocco': 'Morocco', 'egypt': 'Egypt', 'uae': 'UAE',
+  'saudi-arabia': 'Saudi Arabia', 'portugal': 'Portugal', 'netherlands': 'Netherlands',
+  'switzerland': 'Switzerland', 'austria': 'Austria', 'belgium': 'Belgium',
+  'greece': 'Greece', 'new-zealand': 'New Zealand', 'singapore': 'Singapore',
+  'malaysia': 'Malaysia', 'vietnam': 'Vietnam', 'philippines': 'Philippines',
+  'taiwan': 'Taiwan', 'hong-kong': 'Hong Kong', 'israel': 'Israel',
+  'europe': 'Europe', 'asia-pacific': 'Asia Pacific', 'north-america': 'North America',
+  'latin-america': 'Latin America', 'middle-east': 'Middle East',
+  'caribbean': 'Caribbean', 'caucasus-region': 'Caucasus Region', 'global': 'Global',
+};
+
+const iso3 = slugToIso3[country ?? ''];
+const countryName = slugToName[country ?? ''] ?? country?.replace(/-/g, ' ');
+
+if (!iso3) return Astro.redirect('/');
+
+let plans: any[] = [];
+try {
+  const res = await portalFetch(`/plans?q[iso3_eq]=${iso3}`);
+  if (res.ok) { const d = await res.json(); plans = d.plans ?? []; }
+} catch {}
+
+function formatBytes(bytes: number) {
+  if (!bytes) return 'Unlimited';
+  const gb = bytes / 1e9;
+  return gb >= 1 ? `${gb % 1 === 0 ? gb : gb.toFixed(1)} GB` : `${Math.round(bytes / 1e6)} MB`;
+}
+---
+
+<Base title={`${countryName} eSIM — Data Plans`} description={`Get instant eSIM data for ${countryName}. Plans from $3.50. No physical SIM needed.`}>
+
+  <!-- Hero -->
+  <section style="background: linear-gradient(135deg, #162544 0%, #0d1b36 100%); padding: 4rem 2rem; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -60px; right: -60px; width: 250px; height: 250px; background: rgba(3,222,243,0.07); border-radius: 9999px; filter: blur(40px);"></div>
+    <div style="max-width: 72rem; margin: 0 auto; position: relative; z-index: 1;">
+      <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(3,222,243,0.12); color: #03def3; font-size: 0.75rem; font-weight: 600; padding: 0.35rem 0.75rem; border-radius: 9999px; margin-bottom: 1rem;">
+        ⭐ Instant delivery · No contracts
+      </div>
+      <h1 style="font-size: 2.75rem; font-weight: 900; color: white; margin: 0 0 0.75rem; letter-spacing: -0.5px;">
+        {countryName} eSIM
+      </h1>
+      <p style="color: #9ca3af; font-size: 1rem; max-width: 520px; margin: 0; line-height: 1.6;">
+        Stay connected in {countryName} with instant eSIM data. Scan QR code, activate on arrival — no physical SIM needed.
+      </p>
+      <div style="display: flex; gap: 1.5rem; margin-top: 1.5rem;">
+        {plans.length > 0 && [
+          { icon: '📶', label: `${plans.length} plans available` },
+          { icon: '⚡', label: 'Instant activation' },
+          { icon: '💳', label: 'No contracts' },
+        ].map(b => (
+          <div style="display: flex; align-items: center; gap: 0.4rem; color: #9ca3af; font-size: 0.8rem;">
+            <span>{b.icon}</span> {b.label}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Plans Table -->
+  <section style="padding: 4rem 2rem; background: white;">
+    <div style="max-width: 72rem; margin: 0 auto;">
+      <h2 style="font-size: 1.5rem; font-weight: 800; color: #162544; margin: 0 0 1.5rem;">Available Plans</h2>
+
+      {plans.length === 0 ? (
+        <div style="text-align: center; padding: 4rem; background: #f9fafb; border-radius: 1.25rem;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">📡</div>
+          <h3 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.5rem;">No plans available right now</h3>
+          <p style="color: #9ca3af; font-size: 0.875rem; margin: 0 0 1.5rem;">Check back soon or browse other destinations.</p>
+          <a href="/" class="btn-primary">Browse All Plans →</a>
+        </div>
+      ) : (
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border: 1px solid #f3f4f6;">
+            <thead>
+              <tr style="background: #f9fafb; border-bottom: 2px solid #f3f4f6;">
+                <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Data</th>
+                <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Duration</th>
+                <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Network</th>
+                <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Price</th>
+                <th style="padding: 1rem 1.25rem; text-align: center; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {plans.map((plan: any, i: number) => (
+                <tr style={`border-bottom: ${i < plans.length - 1 ? '1px solid #f3f4f6' : 'none'}; transition: background 0.15s;`}
+                    onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='white'">
+                  <td style="padding: 1rem 1.25rem;">
+                    <span style="font-size: 1rem; font-weight: 800; color: #162544;">{formatBytes(plan.data_bytes ?? plan.data_quota_bytes)}</span>
+                    {plan.best_value && <span style="margin-left: 0.5rem; background: #03def3; color: #162544; font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 9999px;">Best Value</span>}
+                  </td>
+                  <td style="padding: 1rem 1.25rem; font-size: 0.875rem; color: #374151; font-weight: 500;">{plan.duration_days ?? plan.validity_days ?? '—'} days</td>
+                  <td style="padding: 1rem 1.25rem; font-size: 0.8rem; color: #6b7280;">{plan.network ?? plan.carrier ?? '—'}</td>
+                  <td style="padding: 1rem 1.25rem;">
+                    <span style="font-size: 1.1rem; font-weight: 800; color: #162544;">${parseFloat(plan.price ?? plan.amount ?? 0).toFixed(2)}</span>
+                  </td>
+                  <td style="padding: 1rem 1.25rem; text-align: center;">
+                    <button class="add-to-cart btn-primary" style="font-size: 0.78rem; padding: 0.5rem 1rem;"
+                      data-plan={JSON.stringify({ id: plan.id, name: `${formatBytes(plan.data_bytes ?? plan.data_quota_bytes)} - ${plan.duration_days ?? plan.validity_days}d`, price: plan.price ?? plan.amount, data: formatBytes(plan.data_bytes ?? plan.data_quota_bytes), duration: `${plan.duration_days ?? plan.validity_days} days`, quantity: 1 })}>
+                      Buy Now
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section style="padding: 4rem 2rem; background: #f9fafb;">
+    <div style="max-width: 72rem; margin: 0 auto;">
+      <h2 style="font-size: 1.5rem; font-weight: 800; color: #162544; margin: 0 0 2rem; text-align: center;">How to Get Connected</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
+        {[
+          { icon: '🛒', step: '1', title: 'Choose Plan', desc: 'Select the data plan that fits your trip.' },
+          { icon: '💳', step: '2', title: 'Pay Securely', desc: 'Card, Apple Pay, PayPal — your choice.' },
+          { icon: '📧', step: '3', title: 'Get QR Code', desc: 'Receive your eSIM instantly by email.' },
+          { icon: '📶', step: '4', title: 'Stay Connected', desc: 'Scan, activate, and enjoy data abroad.' },
+        ].map(s => (
+          <div style="text-align: center;">
+            <div style="width: 56px; height: 56px; background: white; border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 0.75rem;">
+              {s.icon}
+            </div>
+            <p style="font-weight: 700; color: #162544; font-size: 0.875rem; margin: 0 0 0.4rem;">{s.title}</p>
+            <p style="color: #9ca3af; font-size: 0.78rem; margin: 0; line-height: 1.5;">{s.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Base>
+
+<script>
+  document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const plan = JSON.parse((btn as HTMLElement).dataset.plan ?? '{}');
+      let cart: any[] = [];
+      try {
+        const raw = document.cookie.match(/wordpress_cart=([^;]+)/)?.[1];
+        if (raw) cart = JSON.parse(decodeURIComponent(raw));
+      } catch {}
+      cart.push(plan);
+      document.cookie = `wordpress_cart=${encodeURIComponent(JSON.stringify(cart))};path=/;max-age=86400`;
+      (btn as HTMLElement).textContent = '✓ Added!';
+      (btn as HTMLElement).style.background = '#dcfce7';
+      (btn as HTMLElement).style.color = '#15803d';
+      setTimeout(() => {
+        (btn as HTMLElement).textContent = 'Buy Now';
+        (btn as HTMLElement).style.background = '';
+        (btn as HTMLElement).style.color = '';
+      }, 1500);
+    });
+  });
+</script>

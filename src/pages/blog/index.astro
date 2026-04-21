@@ -1,0 +1,83 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const categories = ['All', 'Travel Tips', 'Informative', 'Featured'];
+---
+
+<Base title="Blog — Travel Tips & eSIM Guides">
+  <!-- Hero -->
+  <section style="background: linear-gradient(135deg, #162544, #0d1b36); padding: 4rem 2rem; text-align: center;">
+    <div style="max-width: 560px; margin: 0 auto;">
+      <span style="color: #03def3; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.75rem;">Blog</span>
+      <h1 style="font-size: 2.5rem; font-weight: 900; color: white; margin: 0 0 0.75rem; letter-spacing: -0.5px;">Travel Tips & eSIM Guides</h1>
+      <p style="color: #9ca3af; font-size: 0.95rem; margin: 0;">Destination guides, travel advice, and everything you need to stay connected.</p>
+    </div>
+  </section>
+
+  <!-- Category filters -->
+  <section style="padding: 2rem; background: white; border-bottom: 1px solid #f3f4f6; position: sticky; top: 64px; z-index: 40;">
+    <div style="max-width: 72rem; margin: 0 auto; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      {categories.map((cat, i) => (
+        <button class="cat-btn" data-cat={cat} style={`padding: 0.4rem 1rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 1.5px solid ${i === 0 ? '#03def3' : '#e5e7eb'}; background: ${i === 0 ? '#03def3' : 'white'}; color: ${i === 0 ? '#162544' : '#6b7280'};`}>
+          {cat}
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <!-- Posts Grid -->
+  <section style="padding: 3rem 2rem; background: #f9fafb;">
+    <div style="max-width: 72rem; margin: 0 auto;">
+      <div id="postsGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+        <!-- Posts loaded via JS from blog API or static list -->
+        <div style="text-align: center; padding: 4rem; grid-column: 1/-1; color: #9ca3af; font-size: 0.875rem;">
+          Loading posts...
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Sample posts — replace with real API call or CMS data
+  const posts = [
+    { title: 'Best eSIM for Europe 2026: Compare Prices, Coverage & Plans', category: 'Featured', date: 'Apr 14, 2026', slug: 'best-esim-europe-2026', emoji: '🇪🇺', desc: 'Find the best eSIM for your European trip with our detailed comparison of plans, prices and coverage.' },
+    { title: 'Japan Visa for Americans: Do You Need One? 2026 Entry Guide', category: 'Travel Tips', date: 'Apr 13, 2026', slug: 'japan-visa-americans-2026', emoji: '🇯🇵', desc: 'Complete guide to Japan entry requirements for US citizens in 2026 including visa-free travel rules.' },
+    { title: 'Morocco Visa for Europeans: Do You Need One? 2026 Entry Guide', category: 'Travel Tips', date: 'Apr 8, 2026', slug: 'morocco-visa-europeans-2026', emoji: '🇲🇦', desc: 'Everything European travelers need to know about visiting Morocco in 2026.' },
+    { title: 'Indonesia Visa for Australians: 2026 Entry Guide', category: 'Travel Tips', date: 'Apr 7, 2026', slug: 'indonesia-visa-australians-2026', emoji: '🇮🇩', desc: 'Complete guide for Australian travelers planning a trip to Indonesia in 2026.' },
+    { title: 'How to Make a Travel Itinerary: Complete Guide', category: 'Travel Tips', date: 'Apr 2, 2026', slug: 'how-to-make-travel-itinerary', emoji: '📋', desc: 'Step-by-step guide to planning the perfect travel itinerary for any destination.' },
+    { title: 'What is an eSIM and How Does It Work?', category: 'Informative', date: 'Mar 28, 2026', slug: 'what-is-esim-how-does-it-work', emoji: '📱', desc: 'A complete beginner\'s guide to understanding eSIM technology and how to use it while traveling.' },
+  ];
+
+  function renderPosts(filter: string) {
+    const grid = document.getElementById('postsGrid')!;
+    const filtered = filter === 'All' ? posts : posts.filter(p => p.category === filter);
+    if (filtered.length === 0) { grid.innerHTML = '<p style="text-align:center;padding:3rem;color:#9ca3af;grid-column:1/-1;">No posts in this category yet.</p>'; return; }
+    grid.innerHTML = filtered.map(p => `
+      <a href="/blog/${p.slug}" style="background:white;border-radius:1.25rem;overflow:hidden;border:1px solid #f3f4f6;text-decoration:none;display:flex;flex-direction:column;transition:all 0.25s;"
+         onmouseover="this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';this.style.transform='translateY(-3px)'" onmouseout="this.style.boxShadow='';this.style.transform=''">
+        <div style="background:linear-gradient(135deg,#f0fdff,#e0f9ff);padding:2.5rem;text-align:center;font-size:3rem;">${p.emoji}</div>
+        <div style="padding:1.25rem;flex:1;display:flex;flex-direction:column;">
+          <span style="font-size:0.7rem;font-weight:600;text-transform:uppercase;color:#03def3;letter-spacing:0.05em;margin-bottom:0.5rem;display:block;">${p.category}</span>
+          <h2 style="font-size:0.925rem;font-weight:700;color:#162544;margin:0 0 0.6rem;line-height:1.4;">${p.title}</h2>
+          <p style="font-size:0.8rem;color:#9ca3af;line-height:1.5;margin:0 0 1rem;flex:1;">${p.desc}</p>
+          <span style="font-size:0.75rem;color:#9ca3af;">${p.date}</span>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  renderPosts('All');
+
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-btn').forEach((b: any) => {
+        b.style.background = 'white'; b.style.color = '#6b7280'; b.style.borderColor = '#e5e7eb';
+      });
+      (btn as HTMLElement).style.background = '#03def3';
+      (btn as HTMLElement).style.color = '#162544';
+      (btn as HTMLElement).style.borderColor = '#03def3';
+      renderPosts((btn as HTMLElement).dataset.cat ?? 'All');
+    });
+  });
+</script>

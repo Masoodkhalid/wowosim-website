@@ -1,0 +1,62 @@
+---
+const types = [
+  {
+    emoji: '🗺️',
+    title: 'Local eSIMs',
+    desc: 'Country-specific plans for single destinations. Best rates for focused travel.',
+    from: '$3.50',
+    href: '/united-states',
+    featured: false,
+  },
+  {
+    emoji: '🌍',
+    title: 'Regional eSIMs',
+    desc: 'Multi-country plans covering entire regions. Perfect for multi-stop trips.',
+    from: '$4.50',
+    href: '/europe',
+    featured: true,
+  },
+  {
+    emoji: '🌐',
+    title: 'Global eSIMs',
+    desc: 'One eSIM for 115+ countries worldwide. Ideal for frequent travelers.',
+    from: '$7.99',
+    href: '/global',
+    featured: false,
+  },
+];
+---
+
+<section id="plans" style="padding: 5rem 2rem; background: white;">
+  <div style="max-width: 80rem; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 3.5rem;">
+      <span style="color: #03def3; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;">Our Plans</span>
+      <h2 style="font-size: 2.5rem; font-weight: 900; color: #162544; margin: 0.5rem 0 0.75rem; letter-spacing: -0.5px;">Choose Your Coverage</h2>
+      <p style="color: #6b7280; max-width: 500px; margin: 0 auto; font-size: 0.95rem;">
+        Whether you're visiting one country or travelling across continents, we have the right plan for you.
+      </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+      {types.map(t => (
+        <a href={t.href} style={`position: relative; display: block; background: ${t.featured ? 'linear-gradient(135deg, #f0fdff, white)' : 'white'}; border-radius: 1.25rem; padding: 2rem; border: ${t.featured ? '2px solid #03def3' : '1px solid #f3f4f6'}; box-shadow: ${t.featured ? '0 8px 30px rgba(3,222,243,0.12)' : '0 1px 4px rgba(0,0,0,0.06)'}; text-decoration: none; transition: all 0.25s; cursor: pointer;`}
+           onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 40px rgba(0,0,0,0.12)'" onmouseout={`this.style.transform='translateY(0)'; this.style.boxShadow='${t.featured ? '0 8px 30px rgba(3,222,243,0.12)' : '0 1px 4px rgba(0,0,0,0.06)'}'`}>
+          {t.featured && (
+            <span style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #03def3; color: #162544; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.75rem; border-radius: 9999px; white-space: nowrap;">
+              Most Popular
+            </span>
+          )}
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">{t.emoji}</div>
+          <h3 style="font-size: 1.1rem; font-weight: 800; color: #162544; margin: 0 0 0.5rem;">{t.title}</h3>
+          <p style="color: #6b7280; font-size: 0.85rem; line-height: 1.6; margin: 0 0 1.25rem;">{t.desc}</p>
+          <p style="font-size: 1rem; font-weight: 700; color: #162544; margin: 0 0 1rem;">
+            From <span style="color: #03def3; font-size: 1.25rem;">{t.from}</span>
+          </p>
+          <span style="display: inline-flex; align-items: center; gap: 0.25rem; color: #03def3; font-size: 0.85rem; font-weight: 600;">
+            Browse plans →
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

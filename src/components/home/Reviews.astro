@@ -1,0 +1,47 @@
+---
+const reviews = [
+  { name: 'Sarah M.', country: '🇺🇸', rating: 5, text: 'Worked perfectly in Japan. Setup took 2 minutes and I had data the entire trip. Will never use a physical SIM again!' },
+  { name: 'James K.', country: '🇬🇧', rating: 5, text: 'Travelled across 6 European countries with one eSIM. Seamless handovers between networks. Absolutely brilliant service.' },
+  { name: 'Ana L.', country: '🇧🇷', rating: 5, text: 'Amazing price for the coverage you get. Customer support was super helpful when I had a question. Highly recommend!' },
+  { name: 'Yuki T.', country: '🇯🇵', rating: 5, text: 'Used WoWo SIM for my US trip. Fast speeds, great coverage. QR code arrived instantly in my email. 10/10.' },
+  { name: 'Marco B.', country: '🇩🇪', rating: 5, text: 'Best eSIM service I have tried. The app makes it easy to monitor data usage. Perfect for business travelers.' },
+  { name: 'Emily R.', country: '🇦🇺', rating: 5, text: 'Saved so much money compared to my carrier roaming. Easy setup and reliable connection throughout Thailand.' },
+];
+---
+
+<section style="padding: 5rem 2rem; background: white;">
+  <div style="max-width: 80rem; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 3.5rem;">
+      <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #fef9c3; color: #92400e; font-size: 0.85rem; font-weight: 600; padding: 0.4rem 1rem; border-radius: 9999px; margin-bottom: 1rem;">
+        ⭐⭐⭐⭐⭐ 4.6 / 5 on Trustpilot
+      </div>
+      <h2 style="font-size: 2.5rem; font-weight: 900; color: #162544; margin: 0 0 0.75rem; letter-spacing: -0.5px;">What Travelers Say</h2>
+      <p style="color: #6b7280; font-size: 0.95rem;">Trusted by 50,000+ travelers worldwide</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;">
+      {reviews.map(r => (
+        <div class="review-card" style="background: #f9fafb; border-radius: 1.25rem; padding: 1.5rem; border: 1px solid #f3f4f6; transition: all 0.25s;">
+          <div style="display: flex; gap: 0.2rem; margin-bottom: 1rem;">
+            {'★★★★★'.split('').map(() => (
+              <span style="color: #f59e0b; font-size: 0.9rem;">★</span>
+            ))}
+          </div>
+          <p style="color: #374151; font-size: 0.875rem; line-height: 1.6; margin: 0 0 1.25rem;">"{r.text}"</p>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 1.25rem;">{r.country}</span>
+            <span style="font-weight: 600; color: #162544; font-size: 0.85rem;">{r.name}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .review-card:hover {
+    background: white;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+  }
+</style>

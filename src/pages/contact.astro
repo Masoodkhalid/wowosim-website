@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Contact Us">
+  <section style="padding: 5rem 2rem; background: linear-gradient(135deg, #f0fdff, white); min-height: calc(100vh - 140px);">
+    <div style="max-width: 56rem; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; font-weight: 900; color: #162544; margin: 0 0 0.75rem;">Get in Touch</h1>
+        <p style="color: #6b7280; font-size: 1rem;">Have a question? Our support team is ready to help.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        {[
+          { icon: '✉️', title: 'Email Support', value: 'support@wowosim.com', sub: 'Reply within 24 hours', href: 'mailto:support@wowosim.com' },
+          { icon: '💬', title: 'WhatsApp', value: 'Chat with us', sub: 'Mon–Fri · 9AM–6PM', href: 'https://wa.me/wowosim' },
+        ].map(c => (
+          <a href={c.href} class="card" style="display: flex; align-items: center; gap: 1.25rem; text-decoration: none; transition: all 0.2s;"
+             onmouseover="this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f0fdff, #e0f9ff); border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; flex-shrink: 0;">
+              {c.icon}
+            </div>
+            <div>
+              <p style="font-weight: 700; color: #162544; margin: 0 0 0.2rem;">{c.title}</p>
+              <p style="color: #03def3; font-size: 0.875rem; margin: 0 0 0.15rem; font-weight: 600;">{c.value}</p>
+              <p style="color: #9ca3af; font-size: 0.78rem; margin: 0;">{c.sub}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

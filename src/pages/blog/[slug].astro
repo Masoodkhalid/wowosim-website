@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const { slug } = Astro.params;
+
+// Static blog data — replace with CMS/API when ready
+const posts: Record<string, any> = {
+  'best-esim-europe-2026': {
+    title: 'Best eSIM for Europe 2026: Compare Prices, Coverage & Plans',
+    category: 'Featured', date: 'Apr 14, 2026', emoji: '🇪🇺',
+    content: 'Travelling to Europe? An eSIM gives you instant data connectivity across 30+ countries without swapping SIM cards or paying roaming fees. WoWo SIM offers regional plans starting from just $4.50 covering France, Germany, Italy, Spain, and more.',
+  },
+  'japan-visa-americans-2026': {
+    title: 'Japan Visa for Americans: Do You Need One? 2026 Entry Guide',
+    category: 'Travel Tips', date: 'Apr 13, 2026', emoji: '🇯🇵',
+    content: 'Great news for American travelers — US citizens can visit Japan visa-free for up to 90 days for tourism or business. Simply show your valid US passport on arrival. No pre-registration is required as of 2026.',
+  },
+  'what-is-esim-how-does-it-work': {
+    title: 'What is an eSIM and How Does It Work?',
+    category: 'Informative', date: 'Mar 28, 2026', emoji: '📱',
+    content: 'An eSIM (embedded SIM) is a digital version of the traditional SIM card built directly into your device. Instead of inserting a physical card, you scan a QR code to download a mobile plan. WoWo SIM makes it easy to activate data in 195+ countries instantly.',
+  },
+};
+
+const post = posts[slug ?? ''];
+if (!post) return Astro.redirect('/blog');
+---
+
+<Base title={post.title} description={post.content.slice(0, 160)}>
+  <article style="max-width: 720px; margin: 0 auto; padding: 4rem 2rem;">
+    <!-- Back -->
+    <a href="/blog" style="display: inline-flex; align-items: center; gap: 0.4rem; color: #9ca3af; font-size: 0.8rem; text-decoration: none; margin-bottom: 2rem;">
+      ← Back to Blog
+    </a>
+
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #f0fdff, white); border-radius: 1.5rem; padding: 2.5rem; text-align: center; margin-bottom: 2.5rem;">
+      <div style="font-size: 4rem; margin-bottom: 1rem;">{post.emoji}</div>
+      <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #03def3; letter-spacing: 0.05em;">{post.category}</span>
+      <h1 style="font-size: 1.75rem; font-weight: 900; color: #162544; margin: 0.75rem 0 0.5rem; line-height: 1.25; letter-spacing: -0.3px;">{post.title}</h1>
+      <p style="color: #9ca3af; font-size: 0.8rem; margin: 0;">{post.date}</p>
+    </div>
+
+    <!-- Content -->
+    <div style="color: #374151; font-size: 0.95rem; line-height: 1.8;">
+      <p>{post.content}</p>
+    </div>
+
+    <!-- CTA -->
+    <div style="background: linear-gradient(135deg, #162544, #0d1b36); border-radius: 1.25rem; padding: 2rem; margin-top: 3rem; text-align: center;">
+      <h2 style="font-size: 1.25rem; font-weight: 800; color: white; margin: 0 0 0.5rem;">Ready to travel connected?</h2>
+      <p style="color: #9ca3af; font-size: 0.875rem; margin: 0 0 1.5rem;">Get your WoWo SIM eSIM from $3.50. Instant delivery, no contracts.</p>
+      <a href="/" class="btn-primary" style="font-size: 0.9rem;">Browse Plans →</a>
+    </div>
+  </article>
+</Base>

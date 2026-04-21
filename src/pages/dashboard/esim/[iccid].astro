@@ -1,0 +1,91 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { getJwt, isLoggedIn } from '../../../lib/auth';
+import { portalFetch } from '../../../lib/api';
+
+if (!isLoggedIn(Astro.cookies)) return Astro.redirect('/login');
+
+const { iccid } = Astro.params;
+const jwt = getJwt(Astro.cookies);
+let esim: any = null;
+
+try {
+  const res = await portalFetch(`/esim/${iccid}`, {}, jwt);
+  if (res.ok) esim = await res.json();
+} catch {}
+
+if (!esim) return Astro.redirect('/dashboard/esims');
+
+const statusMap: Record<string, { label: string; badge: string }> = {
+  ENABLED:  { label: 'Active',              badge: 'badge-success' },
+  RELEASED: { label: 'Awaiting Activation', badge: 'badge-warning' },
+  DISABLED: { label: 'Inactive',            badge: 'badge-danger' },
+  deleted:  { label: 'Expired',             badge: 'badge-danger' },
+};
+const status = statusMap[esim.state] ?? { label: esim.state, badge: 'badge-info' };
+
+const plans = esim.plans ?? esim.bundles ?? [];
+---
+
+<Base title={`eSIM ${iccid}`}>
+  <div style="min-height: calc(100vh - 140px); background: #f9fafb; padding: 2rem 1rem;">
+    <div style="max-width: 680px; margin: 0 auto;">
+      <a href="/dashboard/esims" style="color: #9ca3af; font-size: 0.8rem; text-decoration: none; display: block; margin-bottom: 0.5rem;">← My eSIMs</a>
+
+      <!-- eSIM Card -->
+      <div style="background: linear-gradient(135deg, #162544, #0d1b36); border-radius: 1.5rem; padding: 2rem; margin-bottom: 1.5rem; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: rgba(3,222,243,0.08); border-radius: 9999px;"></div>
+        <div style="position: relative; z-index: 1;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+            <span style="color: #9ca3af; font-size: 0.8rem; font-weight: 600;">WoWo SIM eSIM</span>
+            <span class={status.badge}>{status.label}</span>
+          </div>
+          <p style="color: white; font-size: 0.75rem; font-weight: 500; margin: 0 0 0.4rem; opacity: 0.6;">ICCID</p>
+          <p style="color: white; font-size: 1rem; font-weight: 700; margin: 0 0 1.5rem; letter-spacing: 0.05em;">{iccid}</p>
+          {esim.qr_code_url && (
+            <div style="background: white; border-radius: 0.75rem; padding: 1rem; display: inline-block;">
+              <img src={esim.qr_code_url} alt="QR Code" style="width: 100px; height: 100px; display: block;" />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <!-- Plans / Bundles -->
+      {plans.length > 0 && (
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <h2 style="font-size: 1rem; font-weight: 700; color: #162544; margin: 0 0 1rem;">Data Bundles</h2>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            {plans.map((plan: any) => {
+              const planStatus = plan.status === 'ACTIVE' ? 'badge-success' : plan.status === 'NOT_ACTIVE' || plan.status === 'ENABLED' ? 'badge-warning' : 'badge-danger';
+              const planLabel = plan.status === 'ACTIVE' ? 'Active' : plan.status === 'NOT_ACTIVE' ? 'Pending' : plan.status ?? 'Unknown';
+              const usedBytes = plan.data_usage_bytes ?? 0;
+              const totalBytes = plan.data_quota_bytes ?? plan.data_bytes ?? 1;
+              const pct = Math.min(100, Math.round((usedBytes / totalBytes) * 100));
+              return (
+                <div style="background: #f9fafb; border-radius: 0.75rem; padding: 1rem; border: 1px solid #f3f4f6;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <div>
+                      <p style="font-weight: 600; color: #162544; font-size: 0.875rem; margin: 0 0 0.2rem;">{plan.name ?? plan.plan_name ?? 'Data Plan'}</p>
+                      <p style="color: #9ca3af; font-size: 0.75rem; margin: 0;">{plan.duration_days ?? plan.validity ?? '—'} days</p>
+                    </div>
+                    <span class={planStatus}>{planLabel}</span>
+                  </div>
+                  <!-- Data Usage Bar -->
+                  <div style="background: #e5e7eb; border-radius: 9999px; height: 6px; overflow: hidden;">
+                    <div style={`background: ${pct > 80 ? '#ef4444' : '#03def3'}; width: ${pct}%; height: 100%; border-radius: 9999px; transition: width 0.5s;`}></div>
+                  </div>
+                  <p style="font-size: 0.72rem; color: #9ca3af; margin: 0.4rem 0 0; text-align: right;">{pct}% used</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      <div class="card">
+        <h2 style="font-size: 1rem; font-weight: 700; color: #162544; margin: 0 0 1rem;">Need More Data?</h2>
+        <a href="/" class="btn-primary" style="font-size: 0.875rem; padding: 0.65rem 1.5rem;">Browse Top-up Plans →</a>
+      </div>
+    </div>
+  </div>
+</Base>

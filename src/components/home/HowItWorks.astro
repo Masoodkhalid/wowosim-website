@@ -1,0 +1,43 @@
+---
+const steps = [
+  { icon: '🔍', title: 'Choose Your Plan', desc: 'Select a country or regional plan that matches your travel destination and data needs.' },
+  { icon: '💳', title: 'Purchase Instantly', desc: 'Pay securely with card, Apple Pay, Google Pay or PayPal in seconds.' },
+  { icon: '📲', title: 'Scan QR Code', desc: 'Receive your eSIM QR code by email immediately. Scan it on your device.' },
+  { icon: '📶', title: 'Stay Connected', desc: 'Arrive at your destination and your data activates automatically.' },
+];
+---
+
+<section style="padding: 5rem 2rem; background: #f9fafb;">
+  <div style="max-width: 80rem; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 3.5rem;">
+      <span style="color: #03def3; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;">Simple Setup</span>
+      <h2 style="font-size: 2.5rem; font-weight: 900; color: #162544; margin: 0.5rem 0 0.75rem; letter-spacing: -0.5px;">How It Works</h2>
+      <p style="color: #6b7280; max-width: 450px; margin: 0 auto; font-size: 0.95rem;">Get connected in 4 simple steps — takes less than 5 minutes.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; position: relative;">
+      <!-- Connector line -->
+      <div style="position: absolute; top: 2.5rem; left: 12.5%; right: 12.5%; height: 2px; background: linear-gradient(to right, #03def3, rgba(3,222,243,0.1)); z-index: 0;"></div>
+
+      {steps.map((step, i) => (
+        <div style="position: relative; z-index: 1; text-align: center;" class="step-card">
+          <div class="step-icon" style="width: 5rem; height: 5rem; border-radius: 1.25rem; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #f3f4f6; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem; transition: all 0.3s;">
+            {step.icon}
+          </div>
+          <div style="width: 1.5rem; height: 1.5rem; border-radius: 9999px; background: #03def3; color: #162544; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+            {i + 1}
+          </div>
+          <h3 style="font-size: 0.95rem; font-weight: 700; color: #162544; margin: 0 0 0.5rem;">{step.title}</h3>
+          <p style="font-size: 0.8rem; color: #9ca3af; line-height: 1.6; margin: 0;">{step.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .step-card:hover .step-icon {
+    background: #03def3;
+    transform: scale(1.1);
+  }
+</style>
