@@ -3,54 +3,300 @@ import Base from '../../layouts/Base.astro';
 
 const { slug } = Astro.params;
 
-// Static blog data — replace with CMS/API when ready
 const posts: Record<string, any> = {
   'best-esim-europe-2026': {
     title: 'Best eSIM for Europe 2026: Compare Prices, Coverage & Plans',
     category: 'Featured', date: 'Apr 14, 2026', emoji: '🇪🇺',
-    content: 'Travelling to Europe? An eSIM gives you instant data connectivity across 30+ countries without swapping SIM cards or paying roaming fees. WoWo SIM offers regional plans starting from just $4.50 covering France, Germany, Italy, Spain, and more.',
+    readTime: '8 min read',
+    desc: 'Find the best eSIM for your European trip with our detailed comparison of plans, prices and coverage across 30+ countries.',
+    sections: [
+      { h: 'Why You Need an eSIM for Europe', body: `Traveling through Europe used to mean either racking up enormous roaming charges or hunting for a new SIM card every time you crossed a border. With eSIM technology, those days are over. A single WoWo SIM Europe plan covers 30+ countries including France, Germany, Italy, Spain, the Netherlands, Switzerland, and more — all on one seamless data plan.\n\neSIMs are embedded directly into your phone and activated via a QR code. There's no physical card to insert, no queuing at airports, and no fumbling with tiny SIM trays. You buy your plan online, receive the QR code by email, scan it in your phone settings, and you're connected — often before you even board the plane.` },
+      { h: 'WoWo SIM Europe Plans — What\'s Available', body: `WoWo SIM offers several tiers of Europe regional plans to suit every type of traveler:\n\n• **1GB / 30 days** — from $4.50 — Perfect for light travelers who mainly use messaging apps and maps.\n• **3GB / 30 days** — from $10.00 — Great for a week-long trip with social media and streaming.\n• **5GB / 30 days** — from $15.00 — Ideal for two weeks of regular browsing and navigation.\n• **10GB / 30 days** — from $22.00 — For heavy users, digital nomads, or longer European adventures.\n• **20GB / 30 days** — for power users who work remotely while traveling across Europe.\n\nAll plans include 4G LTE connectivity, with 5G available in select cities across major European nations.` },
+      { h: 'Coverage: Which Countries Are Included?', body: `The WoWo SIM Europe plan covers over 30 countries across the continent:\n\nFrance, Germany, Italy, Spain, Portugal, Netherlands, Belgium, Austria, Switzerland, Sweden, Norway, Denmark, Finland, Poland, Czech Republic, Hungary, Romania, Greece, Croatia, Bulgaria, Estonia, Latvia, Lithuania, Luxembourg, Malta, Cyprus, Iceland, Ireland, Albania, Serbia, and more.\n\nYou seamlessly roam between all these countries on a single data plan. Your connection switches to local networks automatically as you cross borders — no manual intervention required.` },
+      { h: 'How to Install Your Europe eSIM', body: `Getting started takes just 3 steps:\n\n1. **Purchase your plan** on WoWoSIM.com. Select your data size and checkout securely.\n2. **Receive your QR code** by email within seconds of payment confirmation.\n3. **Scan and activate** — go to Settings → Mobile Data (or Cellular) → Add eSIM, then scan the QR code. Done!\n\nPro tip: Install the eSIM before you leave home while you still have your regular connection. This way you're ready to go the moment you land.` },
+      { h: 'Tips for Getting the Most from Your Europe eSIM', body: `**Pre-download maps:** Before you travel, download offline maps of your European destinations in Google Maps or Maps.me. This drastically reduces data usage during your trip.\n\n**Use Wi-Fi where available:** Hotels, cafes, and restaurants across Europe typically offer free Wi-Fi. Save your mobile data for when you're out exploring.\n\n**Monitor your usage:** Check your data usage in your phone settings (Settings → Mobile Data) to track how much you've used and avoid running out at a critical moment.\n\n**Consider a larger plan for longer trips:** If you're spending more than two weeks in Europe, opt for a 10GB or 20GB plan. Running out mid-trip is inconvenient and a top-up costs more than getting a bigger plan upfront.` },
+    ],
+    related: ['what-is-esim-how-does-it-work', 'best-esim-international-travel-2026'],
+    cta_dest: '/europe',
+    cta_text: 'Browse Europe Plans',
   },
+
+  'china-festivals-april-may-2026': {
+    title: 'China Festivals April & May 2026: Celebrations, Culture & Top Visiting Countries',
+    category: 'Travel Tips', date: 'Apr 14, 2026', emoji: '🇨🇳',
+    readTime: '7 min read',
+    desc: 'Discover the biggest spring festivals in China and how to stay connected during your visit.',
+    sections: [
+      { h: 'Spring Festivals in China: April & May 2026', body: `Spring is one of the most vibrant times to visit China. April and May bring a string of national holidays, cultural festivals, and local celebrations that offer a unique window into Chinese culture. Here\'s what to expect and how to make the most of your visit.` },
+      { h: 'Qingming Festival (Tomb Sweeping Day) — Early April', body: `Qingming (清明节) falls on April 4–5, 2026. It\'s a public holiday when Chinese families visit the graves of ancestors to clean, pay respects, and make offerings. While solemnly observed in cemeteries, the festival also coincides with spring outings and kite flying as families enjoy the season. Parks across China are packed with families picnicking and enjoying cherry blossoms. Beijing\'s parks and West Lake in Hangzhou are particularly stunning during this period.` },
+      { h: 'Labour Day Golden Week — May 1–5', body: `China\'s Labour Day holiday (劳动节) has been extended to a 5-day "mini Golden Week" running May 1–5, 2026. This is one of the busiest travel periods in China, with hundreds of millions of domestic tourists taking trips. Popular destinations like the Great Wall, the Terracotta Warriors in Xi\'an, and Zhangjiajie National Park see huge crowds.\n\nIf you\'re visiting China during this period, book accommodation and transport well in advance. Popular tourist spots will be packed but also beautifully festive.` },
+      { h: 'Connectivity in China — What You Need to Know', body: `Staying connected in China presents unique challenges. The "Great Firewall" blocks popular Western services including Google, WhatsApp, Facebook, Instagram, and many VPN services. Here\'s how to navigate this:\n\n**WoWo SIM China eSIM:** Our China-specific data plans give you reliable internet access. However, accessing blocked apps still requires a VPN that works in China — set this up before arriving as the App Store/Google Play may be restricted once you\'re in-country.\n\n**WeChat is essential:** Download WeChat before you travel. It\'s the primary messaging, payments, and social media platform in China. Chinese restaurants, shops, and transport often require WeChat Pay.\n\n**Offline is your friend:** Download offline maps (Baidu Maps works in China), translation apps with offline mode, and your itinerary before arrival.` },
+      { h: 'Top Destinations for Spring 2026', body: `**Beijing:** Visit the Great Wall (avoid May holiday crowds — go early morning), the Forbidden City, and the Temple of Heaven. Cherry blossoms line the streets in April.\n\n**Chengdu:** See pandas at the Giant Panda Research Base, explore Jinli Ancient Street, and eat authentic Sichuan hotpot.\n\n**Guilin and Yangshuo:** The famous karst limestone landscape along the Li River is at its most lush and green in spring. Take a cruise or cycle through the countryside.\n\n**Shanghai:** The city\'s museums, French Concession, and Bund waterfront are vibrant year-round. Spring means comfortable temperatures and fewer tourists than summer.` },
+    ],
+    related: ['what-is-esim-how-does-it-work', 'how-to-make-travel-itinerary'],
+    cta_dest: '/china',
+    cta_text: 'Browse China Plans',
+  },
+
   'japan-visa-americans-2026': {
     title: 'Japan Visa for Americans: Do You Need One? 2026 Entry Guide',
     category: 'Travel Tips', date: 'Apr 13, 2026', emoji: '🇯🇵',
-    content: 'Great news for American travelers — US citizens can visit Japan visa-free for up to 90 days for tourism or business. Simply show your valid US passport on arrival. No pre-registration is required as of 2026.',
+    readTime: '6 min read',
+    desc: 'Complete guide to Japan entry requirements for US citizens in 2026 including visa-free travel rules.',
+    sections: [
+      { h: 'Do Americans Need a Visa for Japan?', body: `Great news for US travelers: American citizens do NOT need a visa to visit Japan for tourism or business purposes. Under the Japan-US visa exemption agreement, US passport holders can enter Japan visa-free for stays of up to 90 days.\n\nThis visa waiver has been in place for decades and remains valid as of 2026. Simply show your valid US passport at immigration, state that your visit is for tourism, and you\'ll receive a stamp allowing a 90-day stay.` },
+      { h: 'Entry Requirements for Americans in 2026', body: `To enter Japan visa-free, American travelers need:\n\n**Valid US Passport:** Your passport must be valid for the duration of your stay in Japan. Japan does not require 6 months validity — it just needs to cover your planned travel dates.\n\n**Return/Onward Ticket:** Immigration officers may ask to see proof of a return flight or onward travel. Have your booking confirmation accessible.\n\n**Proof of Funds:** While rarely checked, you should theoretically be able to demonstrate you have sufficient funds for your stay (roughly $100 USD per day is a commonly cited guideline).\n\n**No Criminal Record:** Travelers with certain criminal convictions may be denied entry. Japan is strict about this.` },
+      { h: 'Japan\'s Visit Japan Web — Register Before You Fly', body: `Japan\'s digital immigration system "Visit Japan Web" allows travelers to pre-register their passport details, customs declaration, and quarantine information before arrival. This significantly speeds up the immigration and customs process.\n\nRegister at vjw-lp.digital.go.jp before your trip. It takes about 20 minutes and the QR codes you receive let you breeze through arrival formalities faster.` },
+      { h: 'Staying Connected in Japan', body: `Japan has excellent 4G LTE and 5G coverage in cities, though rural areas can have patchy connectivity. The best options for staying connected:\n\n**WoWo SIM Japan eSIM:** Our Japan eSIM plans connect to top local networks including NTT Docomo and SoftBank. Plans start from $4.50 for 1GB and go up to unlimited data for longer stays. The eSIM is installed before you leave home and activates the moment you land at Narita, Haneda, or Kansai airports.\n\n**Pocket WiFi:** A portable WiFi router is an alternative but requires returning the device at the end of your trip and usually costs more than an eSIM.\n\n**Local SIM card:** Available at airports but requires waiting in queues. eSIM is far more convenient.` },
+      { h: 'Practical Tips for Visiting Japan', body: `**Cash is still king:** While digital payments are growing, many traditional restaurants, temples, and small shops in Japan are still cash-only. Withdraw yen at 7-Eleven ATMs, which reliably accept foreign cards.\n\n**IC Cards:** Get a Suica or Pasmo card (rechargeable transit cards) at any airport for seamless travel on trains, subways, and even convenience store purchases in major cities.\n\n**Etiquette matters:** Remove shoes when entering homes and traditional restaurants, bow as a greeting, avoid eating while walking, and keep voices low on public transport.\n\n**Language:** Download Google Translate with Japanese offline. The camera translation feature is invaluable for reading menus and signs.` },
+    ],
+    related: ['best-esim-international-travel-2026', 'what-is-esim-how-does-it-work'],
+    cta_dest: '/japan',
+    cta_text: 'Browse Japan eSIM Plans',
   },
+
+  'morocco-visa-europeans-2026': {
+    title: 'Morocco Visa for Europeans: Do You Need One? 2026 Entry Guide',
+    category: 'Travel Tips', date: 'Apr 8, 2026', emoji: '🇲🇦',
+    readTime: '5 min read',
+    desc: 'Everything European travelers need to know about visiting Morocco in 2026.',
+    sections: [
+      { h: 'Do Europeans Need a Visa for Morocco?', body: `Citizens of most EU and European countries do NOT need a visa to visit Morocco for stays of up to 90 days. This visa exemption applies to passport holders from France, Germany, Spain, Italy, Netherlands, Belgium, Portugal, UK, Ireland, and most other European nations.\n\nNon-EU European countries including Switzerland, Norway, and Iceland also typically enjoy visa-free access to Morocco. Always verify with the Moroccan embassy for your specific nationality before travel.` },
+      { h: 'What to Expect at Moroccan Immigration', body: `Entering Morocco is generally straightforward for Europeans. At the border (whether by air at Casablanca Mohammed V, Marrakech, or Agadir airports, or by ferry from Spain):\n\n• Present your valid European passport\n• Fill in the arrival card (provided on the plane/ferry)\n• State the purpose of your visit (tourism)\n• You may be asked about accommodation — have your hotel name ready\n\nYou\'ll receive a stamp permitting a 90-day stay in Morocco.` },
+      { h: 'Connectivity in Morocco', body: `Morocco has solid 4G LTE coverage in cities and tourist areas. Marrakech, Casablanca, Fes, and Agadir have excellent connectivity. Remote desert areas and the Atlas Mountains have limited or no coverage.\n\n**WoWo SIM Morocco eSIM:** Our Morocco plans provide reliable data through top local networks. Plans start from $5.00 with options for data-only connections during your entire trip. Buy before you leave — no queue at the airport, QR code in your email within seconds.\n\nAlternatively, local SIM cards from Maroc Telecom, Orange Maroc, or Inwi are available at airports and in cities, typically providing good value for longer stays.` },
+      { h: 'Essential Tips for Visiting Morocco', body: `**Respect local customs:** Morocco is a predominantly Muslim country. Dress modestly when visiting medinas, mosques, and rural areas. Shoulders and knees should be covered. During Ramadan (dates vary annually), be respectful of those fasting.\n\n**Bargaining is normal:** In souks (markets), prices are rarely fixed. Polite negotiation is expected and part of the experience. Start at around 50–60% of the asking price.\n\n**Learn basic French/Arabic phrases:** French is widely spoken in Morocco's cities, especially for business and tourism. A few words of Arabic (marhaba = hello, shukran = thank you) go a long way.\n\n**Dirham currency:** The Moroccan dirham (MAD) is not exchangeable outside Morocco. Change money on arrival at banks or exchange offices (avoid touts offering informal exchange).` },
+    ],
+    related: ['best-esim-international-travel-2026', 'how-to-make-travel-itinerary'],
+    cta_dest: '/morocco',
+    cta_text: 'Browse Morocco Plans',
+  },
+
+  'indonesia-visa-australians-2026': {
+    title: 'Indonesia Visa for Australians: Do You Need One? 2026 Entry Guide',
+    category: 'Informative', date: 'Apr 7, 2026', emoji: '🇮🇩',
+    readTime: '6 min read',
+    desc: 'Complete guide for Australian travelers planning a trip to Indonesia in 2026.',
+    sections: [
+      { h: 'Do Australians Need a Visa for Indonesia/Bali?', body: `Australian passport holders CAN visit Indonesia without a prior visa for short stays, using the free Visa on Arrival (VOA) available at major Indonesian airports and ports. This includes Bali\'s Ngurah Rai International Airport.\n\nThe VOA allows a 30-day stay, extendable once for an additional 30 days (total 60 days) at the local immigration office in Bali for a fee of approximately 500,000 IDR (~$31 AUD).` },
+      { h: 'Visa Options for Australians Visiting Indonesia', body: `**Free Visa on Arrival (30 days):** Available at Ngurah Rai (Bali), Soekarno-Hatta (Jakarta), Juanda (Surabaya), and other major entry points. Present your Australian passport, return ticket, and proof of accommodation.\n\n**E-VOA (Online VOA):** Apply in advance at molina.imigrasi.go.id. Costs the same as on-arrival ($35 USD) but saves time queuing at the airport. Recommended for peak travel season.\n\n**Visit Visa (60+ days):** For longer stays, apply for a B211A Tourist/Visitor Visa through an Indonesian embassy or visa agent before departure. Allows up to 60 days with extension possibilities.` },
+      { h: 'Staying Connected in Indonesia', body: `Indonesia is a vast archipelago with varying connectivity quality. Bali, Jakarta, and major tourist areas have excellent 4G LTE. Rural areas and smaller islands may have limited coverage.\n\n**WoWo SIM Indonesia eSIM:** The easiest way to get connected. Plans start from $4.00 and provide access through Indonesia\'s top networks. Buy before you depart, scan the QR code, and you\'re connected the moment you land. No queuing, no fumbling with physical SIMs on arrival.\n\n**Local SIM options:** Telkomsel, XL Axiata, and Indosat Ooredoo offer tourist SIM packages at airports. These are good value but require standing in queues on arrival.` },
+      { h: 'What to Know Before Visiting Bali', body: `**Currency:** Indonesian Rupiah (IDR). ATMs are widely available in Bali and Jakarta. Be cautious of "dynamic currency conversion" scams at ATMs — always choose to be charged in IDR.\n\n**Scams to avoid:** Unofficial taxi drivers at Bali airport charge inflated rates. Use the official taxi counter inside the arrivals hall or use Grab/Gojek (Indonesia\'s ride-sharing apps).\n\n**Motorbike rentals:** Popular for exploring Bali independently. Ensure you have an international driving permit or the relevant motorbike license. Wear a helmet.\n\n**Offender Temple etiquette:** When visiting temples (puras), wear a sarong (often provided at temple entrances). Women are generally asked not to enter during menstruation.` },
+    ],
+    related: ['what-is-esim-how-does-it-work', 'how-to-make-travel-itinerary'],
+    cta_dest: '/indonesia',
+    cta_text: 'Browse Indonesia Plans',
+  },
+
+  'china-visa-europeans-2026': {
+    title: 'China Visa Requirements for European Citizens: Complete 2026 Entry Guide',
+    category: 'Informative', date: 'Apr 6, 2026', emoji: '🇨🇳',
+    readTime: '7 min read',
+    desc: 'Detailed visa requirements, application process, and connectivity guide for European citizens visiting China in 2026.',
+    sections: [
+      { h: 'Do Europeans Need a Visa for China?', body: `The situation changed significantly in 2024–2026. China has implemented a visa-free policy for short-term stays for citizens of many European countries. As of 2026, the following EU/European countries enjoy visa-free entry to China for stays of up to 15 days (recently extended to 30 days in some cases): France, Germany, Italy, Spain, Netherlands, Belgium, Portugal, Austria, Switzerland, Ireland, and more.\n\nAlways verify the current policy at the Chinese embassy in your country before traveling, as visa policies can change.` },
+      { h: 'Standard Tourist Visa (L Visa) for China', body: `For countries not covered by the visa-free arrangement, or for stays longer than the visa-free period, you\'ll need a Chinese tourist visa (L Visa).\n\n**Application process:**\n1. Complete the online application form at the Visa Application Service Center website\n2. Book an appointment at a Chinese Visa Application Service Center (CVASC) or Chinese Embassy/Consulate\n3. Attend your appointment with required documents\n4. Collect your visa (typically 4–7 working days)\n\n**Required documents:** Valid passport (6+ months validity), completed application form, recent passport photos, flight itinerary, hotel bookings, bank statements, travel insurance.\n\n**Visa fees:** Approximately €80–€120 depending on nationality and visa type.` },
+      { h: 'Connectivity Challenge: China\'s Great Firewall', body: `Internet access in China is heavily restricted by the "Great Firewall." The following services are blocked: Google (Search, Maps, Gmail, YouTube), Facebook, Instagram, WhatsApp, Twitter/X, and many Western news sites.\n\n**What works without a VPN:** WeChat, Weibo, Baidu, local Chinese apps, most banking apps, and basic browsing of Chinese websites.\n\n**VPN:** Technically required to access blocked services. Set up a working VPN (ExpressVPN and NordVPN have China-specific servers) BEFORE arriving in China, as downloading VPNs from within China is difficult.\n\n**WoWo SIM China eSIM:** Provides reliable data connectivity through local Chinese networks. However, VPN access to blocked services is a separate matter governed by Chinese regulations.` },
+      { h: 'Practical Essentials for China Travel', body: `**WeChat is mandatory:** Set up WeChat (including WeChat Pay) before arrival. Nearly every merchant, restaurant, and attraction in China accepts WeChat Pay. Link your international credit card to WeChat Pay for convenience.\n\n**Alipay:** The other major digital payment platform. Also useful to set up before arrival.\n\n**Translation:** Download Google Translate with offline Chinese language pack. Pleco is an excellent dedicated Chinese dictionary app.\n\n**Emergency contacts:** Save the number of your country\'s embassy in China. The police emergency number is 110, medical emergency is 120.` },
+    ],
+    related: ['china-festivals-april-may-2026', 'what-is-esim-how-does-it-work'],
+    cta_dest: '/china',
+    cta_text: 'Browse China eSIM Plans',
+  },
+
+  'how-to-make-travel-itinerary': {
+    title: 'How to Make a Travel Itinerary: A Step-by-Step Guide for Smarter Trips',
+    category: 'Travel Tips', date: 'Mar 27, 2026', emoji: '📋',
+    readTime: '8 min read',
+    desc: 'Step-by-step guide to planning the perfect travel itinerary for any destination.',
+    sections: [
+      { h: 'Why a Good Itinerary Matters', body: `A well-crafted travel itinerary is the difference between a stressful trip and a seamless adventure. It doesn\'t have to mean scheduling every hour — in fact, the best itineraries build in flexibility. The goal is to have a framework that ensures you see what you came for, with breathing room for spontaneous discoveries along the way.` },
+      { h: 'Step 1: Define Your Trip Goals', body: `Before opening a single booking website, ask yourself:\n\n• **What type of traveler am I?** Do you prefer cultural immersion, adventure activities, relaxation, food experiences, or a mix?\n• **How many days do I have?** Be realistic about travel time between destinations.\n• **What\'s my budget?** This determines accommodation quality, dining choices, and activities.\n• **Who am I traveling with?** Solo, couple, family, or group trips require very different planning approaches.\n\nWrite down your top 5 "must see/do" experiences for the destination. These become the anchor points of your itinerary.` },
+      { h: 'Step 2: Research Your Destination', body: `Use a mix of resources for thorough research:\n\n**Guidebooks:** Lonely Planet and Rough Guides offer structured, reliable destination information.\n**Travel blogs:** First-hand experiences from recent travelers are invaluable. Search "[destination] travel guide [current year]" for up-to-date advice.\n**YouTube:** Video guides give a visual sense of destinations and activities.\n**Reddit:** The r/travel and destination-specific subreddits contain candid traveler experiences and advice.\n**Google Maps:** Use the "Saved" feature to bookmark restaurants, hotels, and attractions. This becomes a visual map of your itinerary.` },
+      { h: 'Step 3: Plan Logistics First', body: `Book your anchor points before filling in the details:\n\n1. **Flights:** Book in advance for the best prices. Use Google Flights to track prices and set alerts.\n2. **Accommodation:** Prioritize location. Staying central costs more but saves time and transport costs. Book refundable rates where possible.\n3. **Internal transport:** Research train passes, domestic flights, or car rental. Book popular routes (like the Shinkansen in Japan or Eurostar) well in advance.\n4. **Key attractions:** For popular sites with timed entry (Colosseum, Sagrada Família, Uffizi Gallery), book tickets months ahead.` },
+      { h: 'Step 4: Build Your Day-by-Day Plan', body: `With logistics confirmed, build your itinerary:\n\n• **Group activities by location:** Avoid zigzagging across a city. Cluster morning activities near each other, afternoon activities in another area.\n• **Build in buffer time:** Flights run late, queues form, restaurants close. Build 30–60 minute buffers between activities.\n• **Plan slower days:** Not every day needs to be packed. A slow morning at a local café or an afternoon reading in a park refreshes you for the next day.\n• **Keep digital and physical copies:** Save your itinerary to Google Drive, your phone\'s notes app, and print a copy for emergencies.` },
+      { h: 'Step 5: Connectivity — Staying Online During Your Trip', body: `Modern travel relies heavily on having reliable internet: navigation, translations, booking changes, communicating with home. Plan your connectivity before you leave:\n\n**WoWo SIM eSIM:** The simplest solution for international travelers. Buy a data plan for your destination before departure, receive a QR code, scan it in your phone settings, and you\'re connected the moment you land. Plans start from $3.50 and cover 195+ countries.\n\n**Download offline essentials:** Before traveling, download offline maps (Google Maps), translation packs (Google Translate), and your itinerary to cloud storage. This ensures you have backup access even if connectivity is temporarily unavailable.` },
+    ],
+    related: ['best-esim-international-travel-2026', 'what-is-esim-how-does-it-work'],
+    cta_dest: '/',
+    cta_text: 'Find Your Destination eSIM',
+  },
+
+  'esports-gaming-global-connectivity': {
+    title: 'Esports Gaming Without Limits: How Global Connectivity Powers Competitive Players',
+    category: 'Informative', date: 'Mar 26, 2026', emoji: '🎮',
+    readTime: '6 min read',
+    desc: 'How eSIM technology is revolutionizing connectivity for competitive gamers who travel internationally for tournaments.',
+    sections: [
+      { h: 'The Rise of International Esports Travel', body: `The global esports industry has exploded in scale and ambition. Major tournaments like The International (Dota 2), League of Legends World Championship, CS2 Majors, and Valorant Champions now draw teams from dozens of countries to compete for prize pools in the tens of millions of dollars.\n\nFor professional players, coaches, analysts, and content creators, international travel is now as routine as it is for traditional athletes. And like any traveling professional, staying connected is essential for performance, communication, and content creation.` },
+      { h: 'Why Connectivity Matters for Esports Professionals', body: `**Team communication:** Modern esports teams use Discord, Slack, and proprietary tools for real-time communication during training sessions and tournament preparation. Reliable, low-latency internet is non-negotiable.\n\n**Scrimmages and online preparation:** Even during tournament travel, teams continue online practice. This requires a stable, fast connection — hotel Wi-Fi often doesn\'t cut it.\n\n**Content creation:** Streamers and content creators traveling with teams capture behind-the-scenes content for YouTube, Twitch, and TikTok. Uploading large video files requires high-speed mobile data.\n\n**Tournament registration and check-in:** Event platforms, ticketing systems, and communication with organizers all require reliable internet access.` },
+      { h: 'eSIM: The Esports Traveler\'s Best Tool', body: `Traditional options for international connectivity (roaming plans, local SIM cards) are expensive, time-consuming to set up, or both. eSIM technology offers a clean solution:\n\n• **No physical SIM required:** Teams don\'t waste time hunting for SIM card shops in unfamiliar cities.\n• **Instant activation:** Buy a plan online, scan the QR code, connect immediately.\n• **Multiple plans:** eSIM-capable phones can store multiple profiles. Keep your home carrier active for calls, use WoWo SIM for data.\n• **Cost-effective:** Flat-rate data plans are far cheaper than roaming on home carrier plans.` },
+      { h: 'Best Destinations for Esports Events in 2026', body: `**South Korea (Seoul):** The spiritual home of esports, with world-class venues, outstanding 5G coverage, and a gaming culture unlike anywhere else. WoWo SIM Korea plans ensure you stay connected throughout.\n\n**United States:** Major events in cities including New York, Dallas, Chicago, and Los Angeles. Strong 4G/5G infrastructure nationwide.\n\n**Germany (Cologne, Berlin):** Europe\'s esports hub. IEM Cologne, ESL One, and Dreamhack events draw global audiences.\n\n**Japan (Tokyo):** Growing rapidly as an esports destination with excellent infrastructure and world-class connectivity.` },
+    ],
+    related: ['what-is-esim-how-does-it-work', 'global-connectivity-digital-nomads-2026'],
+    cta_dest: '/',
+    cta_text: 'Get Connected Worldwide',
+  },
+
+  'best-esim-turkey-2026': {
+    title: 'Best eSIM for Turkey 2026: Cheap Plans That Actually Work',
+    category: 'Travel Tips', date: 'Mar 25, 2026', emoji: '🇹🇷',
+    readTime: '6 min read',
+    desc: 'Honest review of the best eSIM options for Turkey in 2026. Compare prices, coverage, and find the cheapest plan that works.',
+    sections: [
+      { h: 'Why Use an eSIM in Turkey?', body: `Turkey is an extraordinary destination spanning two continents, with Istanbul\'s incredible history, Cappadocia\'s surreal landscapes, the turquoise coast, and the ruins of ancient civilizations. Staying connected helps you navigate Istanbul\'s maze-like bazaars, translate menus in local restaurants, and share those hot air balloon sunrise photos over Göreme in real time.\n\nTurkey has excellent 4G LTE coverage in cities and tourist areas, with 5G rolling out in major urban centers. The question is how to get connected affordably as a foreign visitor.` },
+      { h: 'WoWo SIM Turkey Plans', body: `WoWo SIM offers Turkey-specific eSIM plans starting from $4.50, connecting to top Turkish networks for reliable coverage across the country.\n\n**1GB / 7 days** — from $4.50 — For short city breaks in Istanbul or Ankara\n**3GB / 15 days** — from $9.00 — For a week-long trip including coastal towns\n**5GB / 30 days** — from $14.00 — For longer explorations including Cappadocia, Ephesus, and the coast\n**10GB / 30 days** — for extended stays or digital nomads\n\nAll plans provide 4G LTE connectivity. No registration with Turkish authorities required (unlike local SIM cards purchased in Turkey).` },
+      { h: 'The Local SIM Registration Problem', body: `If you buy a local Turkish SIM card, there\'s an important complication: foreign phone numbers must be registered with the Turkish telecommunications authority (BTK) within 120 days, or the SIM will be locked to Turkey-only calling. This registration fee costs around $50 USD.\n\nFor tourists on short visits, this is an absurd bureaucratic hurdle. An eSIM completely bypasses this requirement — there\'s no local registration needed. This is one of the strongest arguments for using WoWo SIM in Turkey rather than a local SIM.` },
+      { h: 'Coverage: Istanbul, Cappadocia, and Beyond', body: `**Istanbul:** Excellent coverage throughout the city, including the historic Sultanahmet peninsula, the Grand Bazaar, and across the Bosphorus in Kadıköy and Üsküdar. The metro, buses, and ferries all have good coverage.\n\n**Cappadocia:** Good coverage in Göreme, Ürgüp, and Avanos. Coverage on balloon rides varies by altitude but is generally fine for sharing photos.\n\n**Aegean and Mediterranean Coast:** Strong coverage in Bodrum, Antalya, Alanya, and Marmaris. Beach resort areas are well covered.\n\n**Rural areas:** Coverage thins out in mountainous eastern Turkey. Download offline maps before venturing into remote areas.` },
+    ],
+    related: ['best-esim-international-travel-2026', 'how-to-make-travel-itinerary'],
+    cta_dest: '/turkey',
+    cta_text: 'Browse Turkey eSIM Plans',
+  },
+
+  'internet-thailand-travelers-2026': {
+    title: 'Internet in Thailand for Travelers (2026): Your Complete Connectivity Guide',
+    category: 'Travel Tips', date: 'Mar 9, 2026', emoji: '🇹🇭',
+    readTime: '7 min read',
+    desc: 'Everything you need to know about staying connected in Thailand in 2026.',
+    sections: [
+      { h: 'Thailand Connectivity Overview', body: `Thailand consistently ranks among Southeast Asia\'s best-connected countries for travelers. 4G LTE coverage is excellent in Bangkok, Chiang Mai, Phuket, Koh Samui, and other tourist hubs. 5G has launched in Bangkok and is expanding to major cities.\n\nRural areas, islands, and national parks have varying connectivity. Remote islands like Koh Tao have basic coverage; popular ones like Koh Phi Phi and Koh Samui have strong 4G.` },
+      { h: 'eSIM vs Local SIM in Thailand', body: `**WoWo SIM Thailand eSIM (recommended for most travelers):**\n\n• Buy before you travel — QR code in your email within seconds\n• Activate automatically on arrival at Suvarnabhumi or Don Mueang airports\n• Plans from $3.50 connecting to DTAC, True Move H, or AIS networks\n• No language barrier, no airport queues\n• Keep your home number active for calls/SMS\n\n**Local Tourist SIMs:**\n\n• Available at airport counters from AIS (recommended), TrueMove H, and DTAC\n• Good value for longer stays (7-day unlimited data from around 300 THB / $8)\n• Require passport registration at purchase\n• Need to return and replace when you move on to the next country` },
+      { h: 'Coverage by Destination', body: `**Bangkok:** Excellent coverage everywhere. BTS Skytrain, MRT, rivers ferries, all markets, all tourist areas. You will not have coverage issues in Bangkok.\n\n**Chiang Mai:** Great coverage in the old city, night markets, and surrounding temples. Doi Inthanon National Park has coverage near the main viewpoints but thins out on hiking trails.\n\n**Phuket:** Strong 4G across the island including Patong, Kata, Karon, and Rawai beaches. Boat trips between islands have intermittent connectivity.\n\n**Koh Samui:** Good coverage on most of the island. Remote jungle areas may have limited signal.\n\n**Pai and Northern Thailand:** Coverage exists in towns but expect gaps on mountain passes.` },
+      { h: 'Using the Internet Safely in Thailand', body: `**VPN use:** Thailand occasionally blocks certain websites and social media platforms. A VPN (used within legal parameters) helps maintain full internet access.\n\n**Banking apps:** Most international banking apps work fine in Thailand. Notify your bank before traveling to avoid transactions being blocked.\n\n**Grab app:** Thailand\'s equivalent of Uber. Essential for navigating Bangkok without overpaying for taxis. Requires mobile data to function.\n\n**Google Maps vs Maps.me:** Both work well in Thailand. Download offline maps for areas with limited connectivity.` },
+    ],
+    related: ['best-esim-international-travel-2026', 'how-to-make-travel-itinerary'],
+    cta_dest: '/thailand',
+    cta_text: 'Browse Thailand eSIM Plans',
+  },
+
+  'global-connectivity-digital-nomads-2026': {
+    title: 'Global Connectivity for Digital Nomads: The Complete 2026 Guide',
+    category: 'Informative', date: 'Mar 9, 2026', emoji: '💻',
+    readTime: '9 min read',
+    desc: 'The complete guide to staying connected as a digital nomad in 2026.',
+    sections: [
+      { h: 'The Digital Nomad Reality in 2026', body: `An estimated 40 million people globally now identify as digital nomads — location-independent workers who leverage technology to work from anywhere. From developers and designers to content creators and consultants, more professionals than ever are working while exploring the world.\n\nThe single biggest challenge? Reliable internet. Hotels offer Wi-Fi that drops during video calls. Cafes have shared connections that crawl during peak hours. Co-working spaces are the gold standard but not everywhere.\n\nThe smart solution is a combination: a reliable eSIM for mobile data backup, and targeted use of co-working spaces and hotel connections for heavy-bandwidth work.` },
+      { h: 'eSIM Strategy for Digital Nomads', body: `**WoWo SIM Global Plan:** For nomads who move frequently between countries, the WoWo SIM global plan offers coverage in 195+ countries on a single plan. This eliminates the need to research, buy, and configure a new SIM card in each new country.\n\n**Country-specific plans:** For nomads who slow-travel (staying 1–3 months per country), buying a high-data local plan (10GB or 20GB) for each country usually offers better value per GB than a global plan.\n\n**Dual eSIM setup:** Most modern smartphones support two eSIM profiles simultaneously. Keep your home country number active for banking authentication and emergency contacts, and run WoWo SIM on the second profile for data.` },
+      { h: 'Top Digital Nomad Cities and Their Connectivity', body: `**Chiang Mai, Thailand:** Legendary among nomads. Fast internet (100Mbps+ common in cafes), abundant co-working spaces, low cost of living, excellent food. 4G coverage throughout.\n\n**Lisbon, Portugal:** Europe\'s top nomad destination. Fast fiber broadband in apartments, great co-working scene, year-round mild weather, EU legal framework. WoWo SIM Europe plan covers Portugal.\n\n**Medellín, Colombia:** Transformed city with great infrastructure. Fast internet, affordable co-working, thriving expat community. Good 4G coverage in El Poblado and Laureles districts.\n\n**Bali (Canggu), Indonesia:** The quintessential nomad scene. Dozens of co-working spaces, strong 4G in tourist areas. WoWo SIM Indonesia plan recommended.\n\n**Berlin, Germany:** Tech hub with outstanding infrastructure, fast internet, and a huge startup/freelancer community. Covered by WoWo SIM Europe plan.` },
+      { h: 'Tools Every Digital Nomad Needs', body: `**Connectivity:**\n• WoWo SIM eSIM (primary data) + home SIM (calls/banking)\n• Speedify (combines multiple connections for reliability)\n• NordVPN or ExpressVPN for security on public networks\n\n**Productivity:**\n• Notion or Obsidian for notes and project management\n• Toggl for time tracking\n• Loom for async video communication\n• Zoom/Google Meet for client calls\n\n**Finance:**\n• Wise (international bank transfers with low fees)\n• Revolut (multi-currency card with excellent exchange rates)\n• 1Password (secure password management across devices)\n\n**Community:**\n• Nomad List (city rankings, remote jobs, community forums)\n• Digital Nomads Around the World Facebook group\n• Workfrom.co (find remote work-friendly cafes worldwide)` },
+    ],
+    related: ['what-is-esim-how-does-it-work', 'best-esim-international-travel-2026'],
+    cta_dest: '/global',
+    cta_text: 'Browse Global eSIM Plans',
+  },
+
   'what-is-esim-how-does-it-work': {
     title: 'What is an eSIM and How Does It Work?',
-    category: 'Informative', date: 'Mar 28, 2026', emoji: '📱',
-    content: 'An eSIM (embedded SIM) is a digital version of the traditional SIM card built directly into your device. Instead of inserting a physical card, you scan a QR code to download a mobile plan. WoWo SIM makes it easy to activate data in 195+ countries instantly.',
+    category: 'Informative', date: 'Mar 9, 2026', emoji: '📱',
+    readTime: '7 min read',
+    desc: 'A complete beginner\'s guide to understanding eSIM technology — what it is, how to install one, and why travelers love it.',
+    sections: [
+      { h: 'What is an eSIM?', body: `An eSIM (embedded SIM) is a digital version of the traditional SIM card built directly into your device. While a physical SIM is a small removable chip you insert into your phone, an eSIM is soldered into the phone\'s motherboard during manufacturing. It cannot be removed.\n\nInstead of inserting a physical card to activate a mobile plan, you download a "profile" from a carrier wirelessly, typically by scanning a QR code. This profile contains all the information the eSIM needs to connect to that carrier\'s network.\n\nSince 2018, major smartphone manufacturers including Apple, Samsung, and Google have included eSIM capabilities in their flagship devices. Today, most phones released from 2020 onwards support eSIM.` },
+      { h: 'How is eSIM Different from a Physical SIM?', body: `**Physical SIM:**\n• Removable chip that slots into your phone\n• Tied to one carrier at a time (unless dual-SIM)\n• Must be physically replaced to switch carriers\n• Can be lost or damaged\n• Requires visiting a store or waiting for mail delivery\n\n**eSIM:**\n• Built into the phone, cannot be removed or lost\n• Can store multiple carrier profiles simultaneously\n• Switch between carriers/plans instantly via settings\n• Activated wirelessly by scanning a QR code\n• Works across international carriers — perfect for travel\n\nThe practical result: you can have your home carrier on eSIM profile 1 (for calls and SMS from family) and a WoWo SIM travel plan on eSIM profile 2 (for cheap international data).` },
+      { h: 'Step-by-Step: How to Install a WoWo SIM eSIM', body: `**Step 1 — Purchase your plan:**\nVisit WoWoSIM.com, select your destination and data plan, and complete checkout. Payment takes seconds.\n\n**Step 2 — Receive your QR code:**\nWithin seconds of purchase, you\'ll receive an email containing your eSIM QR code and installation instructions.\n\n**Step 3 — Open your phone settings:**\n• iPhone: Settings → Mobile Data → Add eSIM\n• Android (Samsung): Settings → Connections → SIM Manager → Add mobile plan\n• Android (Google Pixel): Settings → Network & Internet → SIMs → Add a SIM\n\n**Step 4 — Scan the QR code:**\nPoint your phone\'s camera at the QR code on screen or printed email. Your phone downloads and installs the eSIM profile automatically.\n\n**Step 5 — Set data preferences:**\nChoose which line (home SIM or WoWo SIM) to use for data. Select WoWo SIM for data while keeping your home SIM for calls and SMS.` },
+      { h: 'Which Devices Support eSIM?', body: `**Apple:**\niPhone XR, XS, XS Max (2018) and all newer iPhones through the iPhone 17 series support eSIM. iPhone 14 and later (US models) are eSIM-only with no physical SIM tray.\n\niPad Pro (3rd generation+), iPad Air (3rd generation+), iPad mini (5th generation+), and iPad (7th generation+) with cellular also support eSIM.\n\n**Samsung:**\nGalaxy S20 series and newer, Galaxy Z Fold 3+, Galaxy Z Flip 3+, Galaxy Note 20+, and many recent Galaxy A series devices.\n\n**Google:**\nPixel 3 and all newer Pixel devices through Pixel 9 series.\n\n**Other Android:**\nMotorola Razr 2019+, select OnePlus, Xiaomi, OPPO, and Huawei models.\n\n**To check:** Go to Settings → About Phone (Android) or Settings → General → About (iPhone) and look for "EID" — if present, your device supports eSIM.` },
+      { h: 'Common eSIM Questions', body: `**Q: Can I use two phone numbers at once?**\nYes! With dual-SIM/dual-eSIM phones, you can keep your home number active for calls and SMS while using WoWo SIM for data simultaneously.\n\n**Q: What happens if I run out of data?**\nYou\'ll receive a notification. Simply buy a new WoWo SIM plan from your dashboard — it activates within seconds.\n\n**Q: Can I reuse my eSIM QR code?**\nNo — each QR code is single-use. Once scanned and installed, the QR code is consumed. Keep your account login details to manage and reorder plans.\n\n**Q: Will eSIM work if my phone is locked to a carrier?**\nPotentially not. Check if your phone is unlocked (works with any carrier) before purchasing an eSIM from a different carrier. Contact your home carrier to unlock your phone if needed.` },
+    ],
+    related: ['best-esim-europe-2026', 'best-esim-international-travel-2026'],
+    cta_dest: '/',
+    cta_text: 'Browse All eSIM Plans',
+  },
+
+  'best-esim-international-travel-2026': {
+    title: 'Best eSIM for International Travel in 2026 – Complete Guide for Travelers',
+    category: 'Featured', date: 'Mar 9, 2026', emoji: '✈️',
+    readTime: '10 min read',
+    desc: 'Our comprehensive comparison of the best eSIM providers for international travel in 2026.',
+    sections: [
+      { h: 'Why eSIM Has Become the Standard for Travelers', body: `Five years ago, eSIM was a niche technology understood only by tech enthusiasts. In 2026, it\'s the standard for international travelers. Apple\'s iPhone 14 (US models) shipped without a physical SIM tray at all — a bold statement that eSIM is the future.\n\nThe reason travelers love eSIM is simple: it eliminates the most frustrating aspects of international travel connectivity. No more hunting for SIM card shops in unfamiliar airports. No more paying absurd roaming fees. No more carrying multiple physical SIM cards and remembering which slot you put which one in.` },
+      { h: 'What to Look for in a Travel eSIM', body: `**Coverage:** Does the provider cover all the countries on your itinerary? Some providers specialize in regional coverage (great value for single-region trips) while others offer global plans.\n\n**Price per GB:** The most important metric. Compare the total data price, not just headline rates. Watch for plans that throttle data after a threshold.\n\n**Network quality:** Which local networks does the eSIM connect to? Top-tier local networks (NTT Docomo in Japan, T-Mobile in the US, Vodafone in Germany) deliver better speeds and reliability than smaller operators.\n\n**Customer support:** When you\'re in a foreign country and your data stops working, responsive support is invaluable. Look for providers with 24/7 live chat.\n\n**Hotspot support:** If you want to share your connection with a laptop or tablet, ensure the plan supports tethering.` },
+      { h: 'WoWo SIM: Our Recommendation', body: `After extensive testing across 30+ countries, WoWo SIM delivers on the metrics that matter most for travelers:\n\n**Coverage:** 195+ countries, including regional plans for Europe (30+ countries), Asia Pacific (20+ countries), and global plans for frequent multi-continent travelers.\n\n**Pricing:** Highly competitive. Europe plans from $4.50 for 1GB, USA from $3.50, Japan from $4.50. Regional and global plans offer significant savings over single-country plans when visiting multiple destinations.\n\n**Network quality:** Connects to tier-1 local carriers in each country for maximum speed and reliability. 4G LTE standard, 5G available in supported areas.\n\n**Support:** 24/7 live chat support available directly from your dashboard.\n\n**Ease of use:** Buy online, receive QR code by email in seconds, scan and go. The entire process takes under 5 minutes.` },
+      { h: 'Tips for Getting the Most from Your Travel eSIM', body: `**Buy before you fly:** Purchase and install your eSIM before departure. This way you\'re connected the moment you land, without needing Wi-Fi to set up the plan.\n\n**Enable data roaming:** After installing the eSIM, go to your phone settings and enable data roaming for the WoWo SIM profile. This is different from enabling roaming on your home SIM — it allows the eSIM to use local networks.\n\n**Set WoWo SIM as default data line:** In Settings → Mobile Data (iPhone) or Settings → Network & Internet (Android), set your WoWo SIM profile as the primary data line.\n\n**Keep your home SIM for calls:** Keep your home carrier SIM active for incoming calls from family, banking OTP messages, and other uses that require your original phone number.\n\n**Monitor data usage:** Check your data balance in phone settings to avoid running out at inconvenient moments. Buy a new plan proactively rather than waiting to run out.` },
+    ],
+    related: ['what-is-esim-how-does-it-work', 'best-esim-europe-2026'],
+    cta_dest: '/',
+    cta_text: 'Browse All Plans',
   },
 };
 
 const post = posts[slug ?? ''];
 if (!post) return Astro.redirect('/blog');
+
+const relatedPosts = (post.related ?? []).map((s: string) => posts[s]).filter(Boolean);
 ---
 
-<Base title={post.title} description={post.content.slice(0, 160)}>
-  <article style="max-width: 720px; margin: 0 auto; padding: 4rem 2rem;">
-    <!-- Back -->
-    <a href="/blog" style="display: inline-flex; align-items: center; gap: 0.4rem; color: #9ca3af; font-size: 0.8rem; text-decoration: none; margin-bottom: 2rem;">
-      ← Back to Blog
-    </a>
+<Base title={`${post.title} | WoWo SIM Blog`} description={post.desc}>
+  <article>
 
-    <!-- Header -->
-    <div style="background: linear-gradient(135deg, #f0fdff, white); border-radius: 1.5rem; padding: 2.5rem; text-align: center; margin-bottom: 2.5rem;">
-      <div style="font-size: 4rem; margin-bottom: 1rem;">{post.emoji}</div>
-      <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #03def3; letter-spacing: 0.05em;">{post.category}</span>
-      <h1 style="font-size: 1.75rem; font-weight: 900; color: #162544; margin: 0.75rem 0 0.5rem; line-height: 1.25; letter-spacing: -0.3px;">{post.title}</h1>
-      <p style="color: #9ca3af; font-size: 0.8rem; margin: 0;">{post.date}</p>
+    <!-- Hero -->
+    <div style="background:linear-gradient(135deg,#162544,#0d1b36);padding:3rem 2rem;text-align:center;">
+      <div style="max-width:720px;margin:0 auto;">
+        <div style="font-size:4rem;margin-bottom:1rem;">{post.emoji}</div>
+        <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;color:#03def3;letter-spacing:0.08em;">{post.category}</span>
+        <h1 style="font-size:1.9rem;font-weight:900;color:white;margin:0.75rem 0 0.75rem;line-height:1.25;letter-spacing:-0.3px;">{post.title}</h1>
+        <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:0.78rem;color:#9ca3af;flex-wrap:wrap;">
+          <span>📅 {post.date}</span>
+          <span>⏱️ {post.readTime}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div style="background:white;border-bottom:1px solid #f3f4f6;padding:0.75rem 2rem;">
+      <div style="max-width:720px;margin:0 auto;display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:#9ca3af;">
+        <a href="/" style="color:#9ca3af;text-decoration:none;" onmouseover="this.style.color='#03def3'" onmouseout="this.style.color='#9ca3af'">Home</a>
+        <span>›</span>
+        <a href="/blog" style="color:#9ca3af;text-decoration:none;" onmouseover="this.style.color='#03def3'" onmouseout="this.style.color='#9ca3af'">Blog</a>
+        <span>›</span>
+        <span style="color:#162544;">{post.title.slice(0, 40)}…</span>
+      </div>
     </div>
 
     <!-- Content -->
-    <div style="color: #374151; font-size: 0.95rem; line-height: 1.8;">
-      <p>{post.content}</p>
-    </div>
+    <div style="max-width:720px;margin:0 auto;padding:3rem 2rem;">
 
-    <!-- CTA -->
-    <div style="background: linear-gradient(135deg, #162544, #0d1b36); border-radius: 1.25rem; padding: 2rem; margin-top: 3rem; text-align: center;">
-      <h2 style="font-size: 1.25rem; font-weight: 800; color: white; margin: 0 0 0.5rem;">Ready to travel connected?</h2>
-      <p style="color: #9ca3af; font-size: 0.875rem; margin: 0 0 1.5rem;">Get your WoWo SIM eSIM from $3.50. Instant delivery, no contracts.</p>
-      <a href="/" class="btn-primary" style="font-size: 0.9rem;">Browse Plans →</a>
+      <!-- Lead paragraph -->
+      <p style="font-size:1.05rem;color:#374151;line-height:1.8;margin:0 0 2.5rem;font-weight:400;">{post.desc}</p>
+
+      <!-- Sections -->
+      {post.sections.map((section: any) => (
+        <div style="margin-bottom:2.5rem;">
+          <h2 style="font-size:1.3rem;font-weight:800;color:#162544;margin:0 0 1rem;letter-spacing:-0.3px;padding-bottom:0.5rem;border-bottom:2px solid #f3f4f6;">{section.h}</h2>
+          <div style="color:#374151;font-size:0.95rem;line-height:1.8;white-space:pre-line;">{section.body}</div>
+        </div>
+      ))}
+
+      <!-- CTA box -->
+      <div style="background:linear-gradient(135deg,#162544,#0d1b36);border-radius:1.5rem;padding:2.25rem;margin:3rem 0;text-align:center;">
+        <h2 style="font-size:1.3rem;font-weight:800;color:white;margin:0 0 0.5rem;">Ready to travel connected?</h2>
+        <p style="color:#9ca3af;font-size:0.875rem;margin:0 0 1.5rem;">Get instant eSIM data from $3.50. Instant QR code delivery. No contracts.</p>
+        <a href={post.cta_dest} class="btn-primary" style="font-size:0.9rem;padding:0.8rem 1.75rem;">{post.cta_text} →</a>
+      </div>
+
+      <!-- Related posts -->
+      {relatedPosts.length > 0 && (
+        <div>
+          <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">Related Articles</h3>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;">
+            {relatedPosts.map((rp: any) => (
+              <a href={`/blog/${post.related[relatedPosts.indexOf(rp)]}`}
+                 style="background:#f9fafb;border-radius:1rem;padding:1.25rem;text-decoration:none;border:1.5px solid #f0f0f0;transition:all 0.2s;"
+                 onmouseover="this.style.borderColor='#03def3';this.style.background='#f0fdff'" onmouseout="this.style.borderColor='#f0f0f0';this.style.background='#f9fafb'">
+                <span style="font-size:1.5rem;display:block;margin-bottom:0.5rem;">{rp.emoji}</span>
+                <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;color:#03def3;letter-spacing:0.05em;display:block;margin-bottom:0.3rem;">{rp.category}</span>
+                <span style="font-size:0.85rem;font-weight:600;color:#162544;line-height:1.4;">{rp.title}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Back to blog -->
+      <div style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #f3f4f6;">
+        <a href="/blog" style="display:inline-flex;align-items:center;gap:0.4rem;color:#9ca3af;font-size:0.8rem;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#162544'" onmouseout="this.style.color='#9ca3af'">
+          ← Back to Blog
+        </a>
+      </div>
     </div>
   </article>
 </Base>

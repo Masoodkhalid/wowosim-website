@@ -1,0 +1,65 @@
+---
+const posts = [
+  {
+    title: 'Best eSIM for Europe 2026: Compare Prices, Coverage & Plans',
+    category: 'Featured',
+    date: 'Apr 14, 2026',
+    slug: 'best-esim-europe-2026',
+    emoji: '🇪🇺',
+    desc: 'Find the best eSIM for your European trip with our detailed comparison of plans, prices and coverage across 30+ countries.',
+  },
+  {
+    title: 'Japan Visa for Americans: Do You Need One? 2026 Entry Guide',
+    category: 'Travel Tips',
+    date: 'Apr 13, 2026',
+    slug: 'japan-visa-americans-2026',
+    emoji: '🇯🇵',
+    desc: 'Complete guide to Japan entry requirements for US citizens in 2026 including visa-free travel rules and how to stay connected.',
+  },
+  {
+    title: 'What is an eSIM and How Does It Work?',
+    category: 'Informative',
+    date: 'Mar 28, 2026',
+    slug: 'what-is-esim-how-does-it-work',
+    emoji: '📱',
+    desc: 'A complete beginner\'s guide to understanding eSIM technology — what it is, how to install one, and why travelers love it.',
+  },
+];
+---
+
+<section style="padding:4rem 2rem;background:white;">
+  <div style="max-width:80rem;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;">From the Blog</span>
+        <h2 style="font-size:1.75rem;font-weight:900;color:#162544;margin:0.4rem 0 0;letter-spacing:-0.5px;">Travel Tips & eSIM Guides</h2>
+      </div>
+      <a href="/blog" style="display:inline-flex;align-items:center;gap:0.4rem;color:#162544;font-weight:700;font-size:0.875rem;text-decoration:none;border:2px solid #e5e7eb;padding:0.55rem 1.25rem;border-radius:9999px;transition:all 0.2s;" onmouseover="this.style.borderColor='#03def3';this.style.color='#03def3'" onmouseout="this.style.borderColor='#e5e7eb';this.style.color='#162544'">View All Posts →</a>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+      {posts.map(p => (
+        <a href={`/blog/${p.slug}`}
+           style="background:white;border-radius:1.25rem;overflow:hidden;border:1.5px solid #f0f0f0;text-decoration:none;display:flex;flex-direction:column;transition:all 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.05);"
+           onmouseover="this.style.boxShadow='0 8px 28px rgba(0,0,0,0.1)';this.style.transform='translateY(-3px)';this.style.borderColor='#e5e7eb'" onmouseout="this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)';this.style.transform='';this.style.borderColor='#f0f0f0'">
+          <div style="background:linear-gradient(135deg,#f0fdff,#e0f9ff);padding:2.5rem;text-align:center;font-size:3rem;">{p.emoji}</div>
+          <div style="padding:1.5rem;flex:1;display:flex;flex-direction:column;">
+            <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;color:#03def3;letter-spacing:0.05em;margin-bottom:0.5rem;display:block;">{p.category}</span>
+            <h3 style="font-size:0.95rem;font-weight:700;color:#162544;margin:0 0 0.6rem;line-height:1.4;">{p.title}</h3>
+            <p style="font-size:0.82rem;color:#9ca3af;line-height:1.5;margin:0 0 1rem;flex:1;">{p.desc}</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:0.75rem;color:#9ca3af;">{p.date}</span>
+              <span style="font-size:0.75rem;color:#03def3;font-weight:600;">Read more →</span>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  @media (max-width: 768px) {
+    section > div > div:last-child { grid-template-columns: 1fr !important; }
+  }
+</style>

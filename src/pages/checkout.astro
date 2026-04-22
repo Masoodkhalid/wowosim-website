@@ -263,24 +263,68 @@ const loggedIn = isLoggedIn(Astro.cookies);
   });
 
   // Coupon apply
-  document.getElementById('applyCoupon')?.addEventListener('click', () => {
+  let appliedDiscount = 0;
+  let appliedType = 'percent';
+
+  function updateTotals() {
+    const cart = getCart();
+    const subtotal = cart.reduce((s, i) => s + getPrice(i) * (i.quantity ?? 1), 0);
+    const subtotalEl = document.getElementById('cartSubtotal') as HTMLElement;
+    const totalEl = document.getElementById('cartTotal') as HTMLElement;
+    const discountRow = document.getElementById('discountRow') as HTMLElement;
+    const discountAmountEl = document.getElementById('discountAmount') as HTMLElement;
+
+    if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+
+    let discount = 0;
+    if (appliedDiscount > 0) {
+      discount = appliedType === 'percent' ? subtotal * appliedDiscount / 100 : appliedDiscount;
+      if (discountRow) discountRow.style.display = 'flex';
+      if (discountAmountEl) discountAmountEl.textContent = `-$${discount.toFixed(2)}`;
+    } else {
+      if (discountRow) discountRow.style.display = 'none';
+    }
+    if (totalEl) totalEl.textContent = `$${Math.max(0, subtotal - discount).toFixed(2)}`;
+  }
+
+  document.getElementById('applyCoupon')?.addEventListener('click', async () => {
     const code = (document.getElementById('couponInput') as HTMLInputElement)?.value.trim();
     const msg  = document.getElementById('couponMsg') as HTMLElement;
+    const btn  = document.getElementById('applyCoupon') as HTMLButtonElement;
     if (!code) {
-      msg.style.display = 'block';
-      msg.style.color = '#dc2626';
-      msg.textContent = 'Please enter a promo code.';
-      return;
+      msg.style.display = 'block'; msg.style.color = '#dc2626';
+      msg.textContent = 'Please enter a promo code.'; return;
     }
-    msg.style.display = 'block';
-    msg.style.color = '#6b7280';
-    msg.textContent = 'Checking code...';
-    // Simulate coupon check (replace with real API call)
-    setTimeout(() => {
-      msg.style.color = '#dc2626';
-      msg.textContent = 'Promo code not found or expired.';
-    }, 800);
+    msg.style.display = 'block'; msg.style.color = '#6b7280'; msg.textContent = 'Checking code…';
+    btn.disabled = true;
+    const cart = getCart();
+    const subtotal = cart.reduce((s, i) => s + getPrice(i) * (i.quantity ?? 1), 0);
+    try {
+      const res = await fetch('/api/coupon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, subtotal }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        appliedDiscount = data.discount;
+        appliedType = data.type;
+        msg.style.color = '#15803d';
+        msg.textContent = `✓ ${data.label} applied! You save $${data.discountAmount?.toFixed(2) ?? '—'}`;
+        updateTotals();
+      } else {
+        msg.style.color = '#dc2626';
+        msg.textContent = data.message ?? 'Promo code not found or expired.';
+      }
+    } catch {
+      msg.style.color = '#dc2626'; msg.textContent = 'Could not validate code. Try again.';
+    } finally {
+      btn.disabled = false;
+    }
   });
+
+  // Update totals on load
+  updateTotals();
 </script>
 
 <style>

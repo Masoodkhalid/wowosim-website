@@ -1,0 +1,241 @@
+---
+import Base from '../layouts/Base.astro';
+
+const countries = [
+  // A
+  { name:'Afghanistan', slug:'afghanistan', flag:'🇦🇫', region:'Asia' },
+  { name:'Albania', slug:'albania', flag:'🇦🇱', region:'Europe' },
+  { name:'Algeria', slug:'algeria', flag:'🇩🇿', region:'Africa' },
+  { name:'Argentina', slug:'argentina', flag:'🇦🇷', region:'Latin America' },
+  { name:'Armenia', slug:'armenia', flag:'🇦🇲', region:'Caucasus' },
+  { name:'Australia', slug:'australia', flag:'🇦🇺', region:'Asia Pacific' },
+  { name:'Austria', slug:'austria', flag:'🇦🇹', region:'Europe' },
+  { name:'Azerbaijan', slug:'azerbaijan', flag:'🇦🇿', region:'Caucasus' },
+  // B
+  { name:'Bahrain', slug:'bahrain', flag:'🇧🇭', region:'Middle East' },
+  { name:'Bangladesh', slug:'bangladesh', flag:'🇧🇩', region:'Asia' },
+  { name:'Belgium', slug:'belgium', flag:'🇧🇪', region:'Europe' },
+  { name:'Bolivia', slug:'bolivia', flag:'🇧🇴', region:'Latin America' },
+  { name:'Brazil', slug:'brazil', flag:'🇧🇷', region:'Latin America' },
+  { name:'Bulgaria', slug:'bulgaria', flag:'🇧🇬', region:'Europe' },
+  // C
+  { name:'Cambodia', slug:'cambodia', flag:'🇰🇭', region:'Asia' },
+  { name:'Canada', slug:'canada', flag:'🇨🇦', region:'North America' },
+  { name:'Chile', slug:'chile', flag:'🇨🇱', region:'Latin America' },
+  { name:'China', slug:'china', flag:'🇨🇳', region:'Asia' },
+  { name:'Colombia', slug:'colombia', flag:'🇨🇴', region:'Latin America' },
+  { name:'Costa Rica', slug:'costa-rica', flag:'🇨🇷', region:'Latin America' },
+  { name:'Croatia', slug:'croatia', flag:'🇭🇷', region:'Europe' },
+  { name:'Cyprus', slug:'cyprus', flag:'🇨🇾', region:'Europe' },
+  { name:'Czech Republic', slug:'czech-republic', flag:'🇨🇿', region:'Europe' },
+  // D
+  { name:'Denmark', slug:'denmark', flag:'🇩🇰', region:'Europe' },
+  // E
+  { name:'Ecuador', slug:'ecuador', flag:'🇪🇨', region:'Latin America' },
+  { name:'Egypt', slug:'egypt', flag:'🇪🇬', region:'Middle East' },
+  { name:'Estonia', slug:'estonia', flag:'🇪🇪', region:'Europe' },
+  { name:'Ethiopia', slug:'ethiopia', flag:'🇪🇹', region:'Africa' },
+  // F
+  { name:'Finland', slug:'finland', flag:'🇫🇮', region:'Europe' },
+  { name:'France', slug:'france', flag:'🇫🇷', region:'Europe' },
+  // G
+  { name:'Georgia', slug:'georgia', flag:'🇬🇪', region:'Caucasus' },
+  { name:'Germany', slug:'germany', flag:'🇩🇪', region:'Europe' },
+  { name:'Ghana', slug:'ghana', flag:'🇬🇭', region:'Africa' },
+  { name:'Greece', slug:'greece', flag:'🇬🇷', region:'Europe' },
+  // H
+  { name:'Hong Kong', slug:'hong-kong', flag:'🇭🇰', region:'Asia' },
+  { name:'Hungary', slug:'hungary', flag:'🇭🇺', region:'Europe' },
+  // I
+  { name:'Iceland', slug:'iceland', flag:'🇮🇸', region:'Europe' },
+  { name:'India', slug:'india', flag:'🇮🇳', region:'Asia' },
+  { name:'Indonesia', slug:'indonesia', flag:'🇮🇩', region:'Asia Pacific' },
+  { name:'Ireland', slug:'ireland', flag:'🇮🇪', region:'Europe' },
+  { name:'Israel', slug:'israel', flag:'🇮🇱', region:'Middle East' },
+  { name:'Italy', slug:'italy', flag:'🇮🇹', region:'Europe' },
+  // J
+  { name:'Japan', slug:'japan', flag:'🇯🇵', region:'Asia Pacific' },
+  { name:'Jordan', slug:'jordan', flag:'🇯🇴', region:'Middle East' },
+  // K
+  { name:'Kazakhstan', slug:'kazakhstan', flag:'🇰🇿', region:'Asia' },
+  { name:'Kenya', slug:'kenya', flag:'🇰🇪', region:'Africa' },
+  { name:'Kuwait', slug:'kuwait', flag:'🇰🇼', region:'Middle East' },
+  // L
+  { name:'Laos', slug:'laos', flag:'🇱🇦', region:'Asia' },
+  { name:'Latvia', slug:'latvia', flag:'🇱🇻', region:'Europe' },
+  { name:'Lithuania', slug:'lithuania', flag:'🇱🇹', region:'Europe' },
+  { name:'Luxembourg', slug:'luxembourg', flag:'🇱🇺', region:'Europe' },
+  // M
+  { name:'Macau', slug:'macau', flag:'🇲🇴', region:'Asia' },
+  { name:'Malaysia', slug:'malaysia', flag:'🇲🇾', region:'Asia Pacific' },
+  { name:'Malta', slug:'malta', flag:'🇲🇹', region:'Europe' },
+  { name:'Mexico', slug:'mexico', flag:'🇲🇽', region:'North America' },
+  { name:'Mongolia', slug:'mongolia', flag:'🇲🇳', region:'Asia' },
+  { name:'Morocco', slug:'morocco', flag:'🇲🇦', region:'Africa' },
+  { name:'Myanmar', slug:'myanmar', flag:'🇲🇲', region:'Asia' },
+  // N
+  { name:'Nepal', slug:'nepal', flag:'🇳🇵', region:'Asia' },
+  { name:'Netherlands', slug:'netherlands', flag:'🇳🇱', region:'Europe' },
+  { name:'New Zealand', slug:'new-zealand', flag:'🇳🇿', region:'Asia Pacific' },
+  { name:'Nigeria', slug:'nigeria', flag:'🇳🇬', region:'Africa' },
+  { name:'Norway', slug:'norway', flag:'🇳🇴', region:'Europe' },
+  // O
+  { name:'Oman', slug:'oman', flag:'🇴🇲', region:'Middle East' },
+  // P
+  { name:'Pakistan', slug:'pakistan', flag:'🇵🇰', region:'Asia' },
+  { name:'Panama', slug:'panama', flag:'🇵🇦', region:'Latin America' },
+  { name:'Peru', slug:'peru', flag:'🇵🇪', region:'Latin America' },
+  { name:'Philippines', slug:'philippines', flag:'🇵🇭', region:'Asia Pacific' },
+  { name:'Poland', slug:'poland', flag:'🇵🇱', region:'Europe' },
+  { name:'Portugal', slug:'portugal', flag:'🇵🇹', region:'Europe' },
+  // Q
+  { name:'Qatar', slug:'qatar', flag:'🇶🇦', region:'Middle East' },
+  // R
+  { name:'Romania', slug:'romania', flag:'🇷🇴', region:'Europe' },
+  { name:'Russia', slug:'russia', flag:'🇷🇺', region:'Asia' },
+  // S
+  { name:'Saudi Arabia', slug:'saudi-arabia', flag:'🇸🇦', region:'Middle East' },
+  { name:'Serbia', slug:'serbia', flag:'🇷🇸', region:'Europe' },
+  { name:'Singapore', slug:'singapore', flag:'🇸🇬', region:'Asia Pacific' },
+  { name:'Slovakia', slug:'slovakia', flag:'🇸🇰', region:'Europe' },
+  { name:'Slovenia', slug:'slovenia', flag:'🇸🇮', region:'Europe' },
+  { name:'South Africa', slug:'south-africa', flag:'🇿🇦', region:'Africa' },
+  { name:'South Korea', slug:'south-korea', flag:'🇰🇷', region:'Asia Pacific' },
+  { name:'Spain', slug:'spain', flag:'🇪🇸', region:'Europe' },
+  { name:'Sri Lanka', slug:'sri-lanka', flag:'🇱🇰', region:'Asia' },
+  { name:'Sweden', slug:'sweden', flag:'🇸🇪', region:'Europe' },
+  { name:'Switzerland', slug:'switzerland', flag:'🇨🇭', region:'Europe' },
+  // T
+  { name:'Taiwan', slug:'taiwan', flag:'🇹🇼', region:'Asia' },
+  { name:'Tanzania', slug:'tanzania', flag:'🇹🇿', region:'Africa' },
+  { name:'Thailand', slug:'thailand', flag:'🇹🇭', region:'Asia Pacific' },
+  { name:'Turkey', slug:'turkey', flag:'🇹🇷', region:'Asia' },
+  // U
+  { name:'UAE', slug:'uae', flag:'🇦🇪', region:'Middle East' },
+  { name:'Ukraine', slug:'ukraine', flag:'🇺🇦', region:'Europe' },
+  { name:'United Kingdom', slug:'united-kingdom', flag:'🇬🇧', region:'Europe' },
+  { name:'United States', slug:'united-states', flag:'🇺🇸', region:'North America' },
+  { name:'Uruguay', slug:'uruguay', flag:'🇺🇾', region:'Latin America' },
+  { name:'Uzbekistan', slug:'uzbekistan', flag:'🇺🇿', region:'Asia' },
+  // V
+  { name:'Venezuela', slug:'venezuela', flag:'🇻🇪', region:'Latin America' },
+  { name:'Vietnam', slug:'vietnam', flag:'🇻🇳', region:'Asia Pacific' },
+  // Z
+  { name:'Zimbabwe', slug:'zimbabwe', flag:'🇿🇼', region:'Africa' },
+];
+
+const regions = [
+  { name:'Europe',        slug:'europe',        flag:'🌍', count:'30+' },
+  { name:'Asia Pacific',  slug:'asia-pacific',  flag:'🌏', count:'20+' },
+  { name:'North America', slug:'north-america', flag:'🌎', count:'3' },
+  { name:'Latin America', slug:'latin-america', flag:'🌎', count:'15+' },
+  { name:'Middle East',   slug:'middle-east',   flag:'🌍', count:'10+' },
+  { name:'Caribbean',     slug:'caribbean',     flag:'🏖️',  count:'20+' },
+  { name:'Caucasus',      slug:'caucasus-region', flag:'🏔️', count:'3' },
+  { name:'Global',        slug:'global',        flag:'🌐', count:'195+' },
+];
+
+const allRegions = [...new Set(countries.map(c => c.region))].sort();
+---
+
+<Base title="All eSIM Destinations — 195+ Countries | WoWo SIM" description="Browse WoWo SIM eSIM plans for 195+ countries and 8 regional plans. Find your destination and compare data plans.">
+
+  <!-- Hero -->
+  <section style="background:linear-gradient(135deg,#162544,#0d1b36);padding:4rem 2rem;text-align:center;">
+    <div style="max-width:600px;margin:0 auto;">
+      <span style="color:#03def3;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.75rem;">Destinations</span>
+      <h1 style="font-size:2.5rem;font-weight:900;color:white;margin:0 0 0.75rem;letter-spacing:-0.5px;">195+ Countries. One Account.</h1>
+      <p style="color:#9ca3af;font-size:0.95rem;margin:0 0 1.5rem;">Instant eSIM data for wherever your travels take you. Buy before you fly.</p>
+      <!-- Search -->
+      <div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:0.875rem;padding:0.5rem 1rem;display:flex;align-items:center;gap:0.5rem;max-width:400px;margin:0 auto;">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.2-5.2m0 0A7.5 7.5 0 105.2 15.8 7.5 7.5 0 0015.8 15.8z"/></svg>
+        <input id="destSearch" type="text" placeholder="Search destinations..." autocomplete="off"
+          style="flex:1;background:none;border:none;outline:none;color:white;font-size:0.875rem;font-family:inherit;" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Regional Plans -->
+  <section style="padding:3rem 2rem;background:white;border-bottom:1px solid #f3f4f6;">
+    <div style="max-width:80rem;margin:0 auto;">
+      <h2 style="font-size:1.25rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">Regional Plans</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;">
+        {regions.map(r => (
+          <a href={`/${r.slug}`}
+             style="background:linear-gradient(135deg,#f0fdff,#e8f8ff);border:1.5px solid #e0f4ff;border-radius:1.25rem;padding:1.25rem;text-decoration:none;transition:all 0.2s;"
+             onmouseover="this.style.borderColor='#03def3';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 20px rgba(3,222,243,0.15)'" onmouseout="this.style.borderColor='#e0f4ff';this.style.transform='';this.style.boxShadow=''">
+            <span style="font-size:2rem;display:block;margin-bottom:0.5rem;">{r.flag}</span>
+            <p style="font-size:0.9rem;font-weight:700;color:#162544;margin:0;">{r.name}</p>
+            <p style="font-size:0.72rem;color:#0ea5e9;margin:0.15rem 0 0;font-weight:600;">{r.count} countries</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- All Countries -->
+  <section style="padding:3rem 2rem;background:#f9fafb;">
+    <div style="max-width:80rem;margin:0 auto;">
+      <!-- Region filter -->
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.75rem;align-items:center;">
+        <button class="region-filter active" data-region="All" style="padding:0.35rem 0.9rem;border-radius:9999px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1.5px solid #03def3;background:#03def3;color:#162544;transition:all 0.2s;">All</button>
+        {allRegions.map(r => (
+          <button class="region-filter" data-region={r} style="padding:0.35rem 0.9rem;border-radius:9999px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1.5px solid #e5e7eb;background:white;color:#6b7280;transition:all 0.2s;">{r}</button>
+        ))}
+      </div>
+
+      <div id="countriesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.875rem;">
+        {countries.map(c => (
+          <a href={`/${c.slug}`} data-region={c.region}
+             style="background:white;border:1.5px solid #f0f0f0;border-radius:1rem;padding:1rem;text-decoration:none;display:flex;align-items:center;gap:0.6rem;transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.04);"
+             onmouseover="this.style.borderColor='#03def3';this.style.background='#f0fdff';this.style.boxShadow='0 4px 12px rgba(3,222,243,0.12)'" onmouseout="this.style.borderColor='#f0f0f0';this.style.background='white';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.04)'">
+            <span style="font-size:1.4rem;flex-shrink:0;">{c.flag}</span>
+            <span style="font-size:0.8rem;font-weight:600;color:#162544;line-height:1.3;">{c.name}</span>
+          </a>
+        ))}
+      </div>
+      <p id="noResults" style="display:none;text-align:center;padding:3rem;color:#9ca3af;">No destinations found. Try a different search.</p>
+    </div>
+  </section>
+
+</Base>
+
+<script>
+  const search = document.getElementById('destSearch') as HTMLInputElement;
+  const grid = document.getElementById('countriesGrid') as HTMLElement;
+  const noResults = document.getElementById('noResults') as HTMLElement;
+  const cards = Array.from(grid.querySelectorAll('a[data-region]')) as HTMLElement[];
+  let activeRegion = 'All';
+
+  function filterCards() {
+    const q = search.value.toLowerCase().trim();
+    let visible = 0;
+    cards.forEach(card => {
+      const name = card.querySelector('span:last-child')?.textContent?.toLowerCase() ?? '';
+      const region = card.dataset.region ?? '';
+      const matchSearch = !q || name.includes(q);
+      const matchRegion = activeRegion === 'All' || region === activeRegion;
+      const show = matchSearch && matchRegion;
+      card.style.display = show ? 'flex' : 'none';
+      if (show) visible++;
+    });
+    noResults.style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  search?.addEventListener('input', filterCards);
+
+  document.querySelectorAll('.region-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.region-filter').forEach((b: any) => {
+        b.style.background = 'white'; b.style.color = '#6b7280'; b.style.borderColor = '#e5e7eb';
+        b.classList.remove('active');
+      });
+      (btn as HTMLElement).style.background = '#03def3';
+      (btn as HTMLElement).style.color = '#162544';
+      (btn as HTMLElement).style.borderColor = '#03def3';
+      btn.classList.add('active');
+      activeRegion = (btn as HTMLElement).dataset.region ?? 'All';
+      filterCards();
+    });
+  });
+</script>

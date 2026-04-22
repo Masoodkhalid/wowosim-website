@@ -1,0 +1,113 @@
+---
+const localDestinations = [
+  { name:'United States', slug:'united-states', flag:'🇺🇸', iso3:'USA', from:'3.50' },
+  { name:'United Kingdom', slug:'united-kingdom', flag:'🇬🇧', iso3:'GBR', from:'4.00' },
+  { name:'Japan',          slug:'japan',          flag:'🇯🇵', iso3:'JPN', from:'4.50' },
+  { name:'Australia',      slug:'australia',      flag:'🇦🇺', iso3:'AUS', from:'5.00' },
+  { name:'France',         slug:'france',         flag:'🇫🇷', iso3:'FRA', from:'4.50' },
+  { name:'Germany',        slug:'germany',        flag:'🇩🇪', iso3:'DEU', from:'4.50' },
+  { name:'Italy',          slug:'italy',          flag:'🇮🇹', iso3:'ITA', from:'4.50' },
+  { name:'Canada',         slug:'canada',         flag:'🇨🇦', iso3:'CAN', from:'4.00' },
+  { name:'Spain',          slug:'spain',          flag:'🇪🇸', iso3:'ESP', from:'4.50' },
+  { name:'Thailand',       slug:'thailand',       flag:'🇹🇭', iso3:'THA', from:'3.50' },
+  { name:'South Korea',    slug:'south-korea',    flag:'🇰🇷', iso3:'KOR', from:'4.00' },
+  { name:'Singapore',      slug:'singapore',      flag:'🇸🇬', iso3:'SGP', from:'4.50' },
+];
+
+const regionalDestinations = [
+  { name:'Europe',        slug:'europe',        flag:'🌍', cover:'30+ countries', from:'4.50' },
+  { name:'Asia Pacific',  slug:'asia-pacific',  flag:'🌏', cover:'20+ countries', from:'5.00' },
+  { name:'North America', slug:'north-america', flag:'🌎', cover:'USA + Canada + Mexico', from:'6.00' },
+  { name:'Latin America', slug:'latin-america', flag:'🌎', cover:'15+ countries', from:'7.00' },
+  { name:'Middle East',   slug:'middle-east',   flag:'🌍', cover:'10+ countries', from:'6.50' },
+  { name:'Caribbean',     slug:'caribbean',     flag:'🏖️',  cover:'20+ islands', from:'7.00' },
+  { name:'Caucasus',      slug:'caucasus-region', flag:'🏔️', cover:'Georgia, Armenia, Azerbaijan', from:'5.00' },
+  { name:'Global',        slug:'global',        flag:'🌐', cover:'195+ countries', from:'14.00' },
+];
+---
+
+<section style="padding:4rem 2rem;background:white;">
+  <div style="max-width:80rem;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:2.5rem;">
+      <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;">Browse Plans</span>
+      <h2 style="font-size:2rem;font-weight:900;color:#162544;margin:0.5rem 0 0.5rem;letter-spacing:-0.5px;">Find Your Perfect eSIM Plan</h2>
+      <p style="color:#9ca3af;font-size:0.9rem;max-width:480px;margin:0 auto;">Local, regional, or global — we have a plan for every trip and every traveler.</p>
+    </div>
+
+    <!-- Tab buttons -->
+    <div style="display:flex;justify-content:center;gap:0.5rem;margin-bottom:2rem;">
+      {[
+        { id:'local',    label:'🏳️ Local Plans',    desc:'Single country' },
+        { id:'regional', label:'🌍 Regional Plans',  desc:'Multi-country' },
+      ].map((tab, i) => (
+        <button class="plan-tab-btn" data-tab={tab.id}
+          style={`padding:0.6rem 1.75rem;border-radius:9999px;font-size:0.875rem;font-weight:700;cursor:pointer;border:2px solid ${i===0?'#03def3':'#e5e7eb'};background:${i===0?'#03def3':'white'};color:${i===0?'#162544':'#6b7280'};transition:all 0.2s;`}>
+          {tab.label}
+        </button>
+      ))}
+    </div>
+
+    <!-- Local Plans Grid -->
+    <div id="tab-local" class="plan-tab-content">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:1rem;">
+        {localDestinations.map(d => (
+          <a href={`/${d.slug}`}
+             style="background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:1.25rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:0.6rem;transition:all 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.05);"
+             onmouseover="this.style.borderColor='#03def3';this.style.boxShadow='0 8px 25px rgba(3,222,243,0.15)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#f0f0f0';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)';this.style.transform=''">
+            <span style="font-size:2rem;">{d.flag}</span>
+            <div style="text-align:center;">
+              <p style="font-size:0.85rem;font-weight:700;color:#162544;margin:0;">{d.name}</p>
+              <p style="font-size:0.72rem;color:#9ca3af;margin:0.15rem 0 0;">from <strong style="color:#162544;">${d.from}</strong></p>
+            </div>
+            <span style="font-size:0.7rem;background:#f0fdff;color:#0ea5e9;padding:0.2rem 0.6rem;border-radius:9999px;font-weight:600;">View Plans →</span>
+          </a>
+        ))}
+      </div>
+      <div style="text-align:center;margin-top:2rem;">
+        <a href="/destinations" style="display:inline-flex;align-items:center;gap:0.4rem;color:#162544;font-weight:700;font-size:0.875rem;text-decoration:none;border:2px solid #e5e7eb;padding:0.65rem 1.75rem;border-radius:9999px;transition:all 0.2s;" onmouseover="this.style.borderColor='#03def3';this.style.color='#03def3'" onmouseout="this.style.borderColor='#e5e7eb';this.style.color='#162544'">
+          View All 195+ Destinations →
+        </a>
+      </div>
+    </div>
+
+    <!-- Regional Plans Grid -->
+    <div id="tab-regional" class="plan-tab-content" style="display:none;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem;">
+        {regionalDestinations.map(d => (
+          <a href={`/${d.slug}`}
+             style="background:linear-gradient(135deg,#f0fdff,#e8f8ff);border:1.5px solid #e0f4ff;border-radius:1.25rem;padding:1.5rem;text-decoration:none;transition:all 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.05);"
+             onmouseover="this.style.borderColor='#03def3';this.style.boxShadow='0 8px 25px rgba(3,222,243,0.15)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#e0f4ff';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)';this.style.transform=''">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+              <span style="font-size:2rem;">{d.flag}</span>
+              <div>
+                <p style="font-size:0.95rem;font-weight:800;color:#162544;margin:0;">{d.name}</p>
+                <p style="font-size:0.72rem;color:#0ea5e9;margin:0;font-weight:600;">{d.cover}</p>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:0.78rem;color:#6b7280;">from <strong style="color:#162544;font-size:1rem;">${d.from}</strong></span>
+              <span style="font-size:0.72rem;background:#03def3;color:#162544;padding:0.25rem 0.65rem;border-radius:9999px;font-weight:700;">View Plans →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.plan-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = (btn as HTMLElement).dataset.tab;
+      document.querySelectorAll('.plan-tab-btn').forEach((b: any) => {
+        b.style.background = 'white'; b.style.color = '#6b7280'; b.style.borderColor = '#e5e7eb';
+      });
+      (btn as HTMLElement).style.background = '#03def3';
+      (btn as HTMLElement).style.color = '#162544';
+      (btn as HTMLElement).style.borderColor = '#03def3';
+      document.querySelectorAll('.plan-tab-content').forEach((c: any) => c.style.display = 'none');
+      const el = document.getElementById(`tab-${tab}`);
+      if (el) el.style.display = 'block';
+    });
+  });
+</script>

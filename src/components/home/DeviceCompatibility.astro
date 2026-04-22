@@ -1,0 +1,165 @@
+---
+const iosDevices = [
+  'iPhone 17 Pro Max', 'iPhone 17 Pro', 'iPhone 17 Plus', 'iPhone 17',
+  'iPhone 16 Pro Max', 'iPhone 16 Pro', 'iPhone 16 Plus', 'iPhone 16',
+  'iPhone 15 Pro Max', 'iPhone 15 Pro', 'iPhone 15 Plus', 'iPhone 15',
+  'iPhone 14 Pro Max', 'iPhone 14 Pro', 'iPhone 14 Plus', 'iPhone 14',
+  'iPhone 13 Pro Max', 'iPhone 13 Pro', 'iPhone 13 mini', 'iPhone 13',
+  'iPhone 12 Pro Max', 'iPhone 12 Pro', 'iPhone 12 mini', 'iPhone 12',
+  'iPhone 11 Pro Max', 'iPhone 11 Pro', 'iPhone 11',
+  'iPhone XS Max', 'iPhone XS', 'iPhone XR',
+  'iPad Pro (M4)', 'iPad Pro (M2)', 'iPad Pro 12.9" (3rd+)', 'iPad Pro 11" (1st+)',
+  'iPad Air (M2)', 'iPad Air (5th gen+)', 'iPad mini (5th gen+)',
+  'iPad (10th gen)', 'iPad (7th, 8th, 9th gen)',
+];
+
+const androidDevices = [
+  'Samsung Galaxy S24 Ultra', 'Samsung Galaxy S24+', 'Samsung Galaxy S24',
+  'Samsung Galaxy S23 Ultra', 'Samsung Galaxy S23+', 'Samsung Galaxy S23',
+  'Samsung Galaxy S22 Ultra', 'Samsung Galaxy S22+', 'Samsung Galaxy S22',
+  'Samsung Galaxy S21 Ultra', 'Samsung Galaxy S21+', 'Samsung Galaxy S21',
+  'Samsung Galaxy Z Fold 5', 'Samsung Galaxy Z Fold 4', 'Samsung Galaxy Z Fold 3',
+  'Samsung Galaxy Z Flip 5', 'Samsung Galaxy Z Flip 4', 'Samsung Galaxy Z Flip 3',
+  'Samsung Galaxy Note 20 Ultra', 'Samsung Galaxy Note 20',
+  'Samsung Galaxy A54 5G', 'Samsung Galaxy A34 5G',
+  'Google Pixel 9 Pro XL', 'Google Pixel 9 Pro', 'Google Pixel 9',
+  'Google Pixel 8 Pro', 'Google Pixel 8', 'Google Pixel 8a',
+  'Google Pixel 7 Pro', 'Google Pixel 7', 'Google Pixel 7a',
+  'Google Pixel 6 Pro', 'Google Pixel 6', 'Google Pixel 6a',
+  'Google Pixel 5', 'Google Pixel 4a 5G',
+  'Motorola Razr 2024', 'Motorola Razr 2023', 'Motorola Edge 50',
+  'OnePlus 12', 'OPPO Find X7', 'Xiaomi 14 Pro',
+  'Huawei P40', 'Huawei Mate 40 Pro',
+];
+
+const windowsDevices = [
+  'Microsoft Surface Pro X', 'Microsoft Surface Pro 9 (5G)',
+  'Microsoft Surface Laptop 4 (LTE)', 'Microsoft Surface Go 3 (LTE)',
+  'Lenovo ThinkPad X1 Carbon (LTE)', 'HP EliteBook x360 (LTE)',
+  'Dell Latitude 9510 (LTE)', 'Acer Swift 3 (LTE)',
+];
+---
+
+<section style="padding:4rem 2rem;background:#f9fafb;">
+  <div style="max-width:80rem;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:2.5rem;">
+      <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;">Device Support</span>
+      <h2 style="font-size:2rem;font-weight:900;color:#162544;margin:0.5rem 0 0.5rem;letter-spacing:-0.5px;">Compatible Devices</h2>
+      <p style="color:#9ca3af;font-size:0.9rem;max-width:480px;margin:0 auto;">WoWo SIM works with hundreds of eSIM-compatible devices. Check if yours is supported.</p>
+    </div>
+
+    <!-- Tab buttons -->
+    <div style="display:flex;justify-content:center;gap:0.5rem;margin-bottom:2rem;">
+      {[
+        { id:'ios',     label:'🍎 iOS / iPadOS' },
+        { id:'android', label:'🤖 Android' },
+        { id:'windows', label:'💻 Windows' },
+      ].map((tab, i) => (
+        <button class="dev-tab-btn" data-tab={tab.id}
+          style={`padding:0.55rem 1.5rem;border-radius:9999px;font-size:0.82rem;font-weight:700;cursor:pointer;border:2px solid ${i===0?'#03def3':'#e5e7eb'};background:${i===0?'#03def3':'white'};color:${i===0?'#162544':'#6b7280'};transition:all 0.2s;`}>
+          {tab.label}
+        </button>
+      ))}
+    </div>
+
+    <!-- iOS -->
+    <div id="dev-ios" class="dev-tab-content">
+      <div style="background:white;border-radius:1.25rem;border:1px solid #f0f0f0;padding:1.75rem;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;">
+          <div style="width:40px;height:40px;background:#f0fdff;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;">🍎</div>
+          <div>
+            <h3 style="font-size:0.95rem;font-weight:800;color:#162544;margin:0;">Apple iPhone & iPad</h3>
+            <p style="font-size:0.75rem;color:#9ca3af;margin:0;">{iosDevices.length} supported models</p>
+          </div>
+        </div>
+        <div id="iosGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:0.5rem;max-height:320px;overflow:hidden;">
+          {iosDevices.map(d => (
+            <div style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.6rem;border-radius:0.5rem;background:#f9fafb;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span style="font-size:0.78rem;color:#374151;font-weight:500;">{d}</span>
+            </div>
+          ))}
+        </div>
+        <button id="iosToggle" style="margin-top:1rem;background:none;border:none;color:#03def3;font-size:0.8rem;font-weight:700;cursor:pointer;padding:0;">Show all {iosDevices.length} devices ↓</button>
+      </div>
+    </div>
+
+    <!-- Android -->
+    <div id="dev-android" class="dev-tab-content" style="display:none;">
+      <div style="background:white;border-radius:1.25rem;border:1px solid #f0f0f0;padding:1.75rem;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;">
+          <div style="width:40px;height:40px;background:#f0fdff;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;">🤖</div>
+          <div>
+            <h3 style="font-size:0.95rem;font-weight:800;color:#162544;margin:0;">Android Devices</h3>
+            <p style="font-size:0.75rem;color:#9ca3af;margin:0;">{androidDevices.length}+ supported models</p>
+          </div>
+        </div>
+        <div id="androidGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:0.5rem;max-height:320px;overflow:hidden;">
+          {androidDevices.map(d => (
+            <div style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.6rem;border-radius:0.5rem;background:#f9fafb;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span style="font-size:0.78rem;color:#374151;font-weight:500;">{d}</span>
+            </div>
+          ))}
+        </div>
+        <button id="androidToggle" style="margin-top:1rem;background:none;border:none;color:#03def3;font-size:0.8rem;font-weight:700;cursor:pointer;padding:0;">Show all {androidDevices.length} devices ↓</button>
+      </div>
+    </div>
+
+    <!-- Windows -->
+    <div id="dev-windows" class="dev-tab-content" style="display:none;">
+      <div style="background:white;border-radius:1.25rem;border:1px solid #f0f0f0;padding:1.75rem;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;">
+          <div style="width:40px;height:40px;background:#f0fdff;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;">💻</div>
+          <div>
+            <h3 style="font-size:0.95rem;font-weight:800;color:#162544;margin:0;">Windows Devices</h3>
+            <p style="font-size:0.75rem;color:#9ca3af;margin:0;">LTE/5G capable laptops & tablets</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0.5rem;">
+          {windowsDevices.map(d => (
+            <div style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.6rem;border-radius:0.5rem;background:#f9fafb;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span style="font-size:0.78rem;color:#374151;font-weight:500;">{d}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <p style="text-align:center;font-size:0.78rem;color:#9ca3af;margin-top:1.5rem;">
+      Not sure if your device supports eSIM?
+      <a href="/help-center" style="color:#03def3;font-weight:600;text-decoration:none;">Check our full compatibility guide →</a>
+    </p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.dev-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = (btn as HTMLElement).dataset.tab;
+      document.querySelectorAll('.dev-tab-btn').forEach((b: any) => {
+        b.style.background = 'white'; b.style.color = '#6b7280'; b.style.borderColor = '#e5e7eb';
+      });
+      (btn as HTMLElement).style.background = '#03def3';
+      (btn as HTMLElement).style.color = '#162544';
+      (btn as HTMLElement).style.borderColor = '#03def3';
+      document.querySelectorAll('.dev-tab-content').forEach((c: any) => c.style.display = 'none');
+      const el = document.getElementById(`dev-${tab}`);
+      if (el) el.style.display = 'block';
+    });
+  });
+
+  function setupToggle(btnId: string, gridId: string, total: number) {
+    const btn = document.getElementById(btnId);
+    const grid = document.getElementById(gridId);
+    let expanded = false;
+    btn?.addEventListener('click', () => {
+      expanded = !expanded;
+      if (grid) grid.style.maxHeight = expanded ? 'none' : '320px';
+      if (btn) btn.textContent = expanded ? 'Show less ↑' : `Show all ${total} devices ↓`;
+    });
+  }
+  setupToggle('iosToggle', 'iosGrid', 39);
+  setupToggle('androidToggle', 'androidGrid', 33);
+</script>

@@ -1,0 +1,29 @@
+---
+const partners = [
+  'T-Mobile','Vodafone','AT&T','Orange','Telstra','SingTel','KDDI','SK Telecom',
+  'China Mobile','Airtel','Verizon','Deutsche Telekom','Telefónica','China Unicom',
+  'Etisalat','STC','Turkcell','Zain','Maxis','Globe Telecom',
+];
+---
+<section style="padding:2rem 2rem;background:#f9fafb;border-bottom:1px solid #f3f4f6;overflow:hidden;">
+  <div style="max-width:80rem;margin:0 auto;">
+    <p style="text-align:center;font-size:0.72rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 1.25rem;">Powered by the world's leading networks</p>
+    <div style="position:relative;overflow:hidden;">
+      <div id="partnerTrack" style="display:flex;gap:1.5rem;width:max-content;animation:scrollPartners 28s linear infinite;">
+        {[...partners, ...partners].map(p => (
+          <div style="background:white;border:1px solid #f0f0f0;border-radius:0.75rem;padding:0.6rem 1.25rem;font-size:0.78rem;font-weight:700;color:#374151;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,0.04);flex-shrink:0;">
+            {p}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes scrollPartners {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  #partnerTrack:hover { animation-play-state: paused; }
+</style>

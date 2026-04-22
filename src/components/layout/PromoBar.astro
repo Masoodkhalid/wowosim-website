@@ -1,7 +1,25 @@
 ---
 ---
-<div style="background: #03def3; color: #162544; text-align: center; font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1rem;">
-  🌍 April Sale Alert! Save further 10% with code
-  <span style="background: #162544; color: #03def3; padding: 0.15rem 0.5rem; border-radius: 0.25rem; font-weight: 700; margin-left: 0.25rem;">APRIL10</span>
-  <span style="margin-left: 0.5rem; opacity: 0.7;">⏰ Limited time</span>
+<div id="promoBar" style="background:#03def3;color:#162544;text-align:center;font-size:0.82rem;font-weight:600;padding:0.45rem 1rem;position:relative;z-index:60;">
+  🌍 April Sale Alert! Save 10% with code
+  <span style="background:#162544;color:#03def3;padding:0.15rem 0.5rem;border-radius:0.25rem;font-weight:800;margin:0 0.3rem;letter-spacing:0.05em;">APRIL10</span>
+  ⏰ Ends in: <span id="cdTimer" style="font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:0.03em;">23:59:59</span>
+  <button id="promoClose" aria-label="Dismiss" style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#162544;font-size:1.3rem;line-height:1;padding:0;opacity:0.7;">×</button>
 </div>
+<script>
+(function(){
+  const bar = document.getElementById('promoBar');
+  document.getElementById('promoClose')?.addEventListener('click', () => { if(bar) bar.style.display='none'; });
+  function tick() {
+    const now = new Date(), end = new Date();
+    end.setHours(23,59,59,999);
+    const d = Math.max(0, end.getTime() - now.getTime());
+    const h = String(Math.floor(d/3600000)).padStart(2,'0');
+    const m = String(Math.floor((d%3600000)/60000)).padStart(2,'0');
+    const s = String(Math.floor((d%60000)/1000)).padStart(2,'0');
+    const el = document.getElementById('cdTimer');
+    if(el) el.textContent = `${h}:${m}:${s}`;
+  }
+  tick(); setInterval(tick, 1000);
+})();
+</script>
