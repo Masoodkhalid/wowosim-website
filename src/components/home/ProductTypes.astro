@@ -1,60 +1,101 @@
 ---
 const types = [
   {
-    emoji: '🗺️',
     title: 'Local eSIMs',
     desc: 'Country-specific plans for single destinations. Best rates for focused travel.',
     from: '$3.50',
     href: '/united-states',
     featured: false,
+    color: '#162544',
+    lightColor: '#f0fdff',
+    icon: `<svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+    </svg>`,
+    perks: ['Single country', 'Local network', 'Best local rates'],
   },
   {
-    emoji: '🌍',
     title: 'Regional eSIMs',
     desc: 'Multi-country plans covering entire regions. Perfect for multi-stop trips.',
     from: '$4.50',
     href: '/europe',
     featured: true,
+    color: '#03def3',
+    lightColor: '#f0fdff',
+    icon: `<svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/>
+    </svg>`,
+    perks: ['Multiple countries', 'Seamless roaming', 'One plan, many stops'],
   },
   {
-    emoji: '🌐',
     title: 'Global eSIMs',
     desc: 'One eSIM for 115+ countries worldwide. Ideal for frequent travelers.',
     from: '$7.99',
     href: '/global',
     featured: false,
+    color: '#162544',
+    lightColor: '#f9fafb',
+    icon: `<svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+    </svg>`,
+    perks: ['115+ countries', 'One eSIM', 'Frequent travelers'],
   },
 ];
 ---
 
-<section id="plans" style="padding: 5rem 2rem; background: white;">
-  <div style="max-width: 80rem; margin: 0 auto;">
-    <div style="text-align: center; margin-bottom: 3.5rem;">
-      <span style="color: #03def3; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;">Our Plans</span>
-      <h2 style="font-size: 2.5rem; font-weight: 900; color: #162544; margin: 0.5rem 0 0.75rem; letter-spacing: -0.5px;">Choose Your Coverage</h2>
-      <p style="color: #6b7280; max-width: 500px; margin: 0 auto; font-size: 0.95rem;">
-        Whether you're visiting one country or travelling across continents, we have the right plan for you.
+<section style="padding:5rem 1.5rem;background:white;">
+  <div style="max-width:80rem;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:3.5rem;">
+      <span class="section-label">Our Plans</span>
+      <h2 class="section-title">Choose Your Coverage</h2>
+      <p class="section-sub" style="max-width:480px;margin:0 auto;">
+        Whether you're visiting one country or travelling across continents, we have the perfect plan.
       </p>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
       {types.map(t => (
-        <a href={t.href} style={`position: relative; display: block; background: ${t.featured ? 'linear-gradient(135deg, #f0fdff, white)' : 'white'}; border-radius: 1.25rem; padding: 2rem; border: ${t.featured ? '2px solid #03def3' : '1px solid #f3f4f6'}; box-shadow: ${t.featured ? '0 8px 30px rgba(3,222,243,0.12)' : '0 1px 4px rgba(0,0,0,0.06)'}; text-decoration: none; transition: all 0.25s; cursor: pointer;`}
-           onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 40px rgba(0,0,0,0.12)'" onmouseout={`this.style.transform='translateY(0)'; this.style.boxShadow='${t.featured ? '0 8px 30px rgba(3,222,243,0.12)' : '0 1px 4px rgba(0,0,0,0.06)'}'`}>
+        <a href={t.href}
+           style={`position:relative;display:flex;flex-direction:column;background:${t.featured ? 'linear-gradient(145deg,#162544,#1e3560)' : 'white'};border-radius:1.5rem;padding:2rem;border:${t.featured ? '2px solid #03def3' : '1.5px solid #f0f0f0'};box-shadow:${t.featured ? '0 16px 48px rgba(3,222,243,0.2),0 4px 12px rgba(22,37,68,0.3)' : '0 2px 8px rgba(0,0,0,0.06)'};text-decoration:none;transition:all 0.28s;`}
+           onmouseover={`this.style.transform='translateY(-5px)';this.style.boxShadow='${t.featured ? '0 24px 60px rgba(3,222,243,0.28)' : '0 12px 40px rgba(0,0,0,0.12)'}'`}
+           onmouseout={`this.style.transform='translateY(0)';this.style.boxShadow='${t.featured ? '0 16px 48px rgba(3,222,243,0.2),0 4px 12px rgba(22,37,68,0.3)' : '0 2px 8px rgba(0,0,0,0.06)'}'`}>
+
           {t.featured && (
-            <span style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #03def3; color: #162544; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.75rem; border-radius: 9999px; white-space: nowrap;">
-              Most Popular
+            <span style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#03def3;color:#162544;font-size:0.7rem;font-weight:800;padding:0.25rem 0.9rem;border-radius:9999px;white-space:nowrap;letter-spacing:0.04em;">
+              ★ Most Popular
             </span>
           )}
-          <div style="font-size: 2.5rem; margin-bottom: 1rem;">{t.emoji}</div>
-          <h3 style="font-size: 1.1rem; font-weight: 800; color: #162544; margin: 0 0 0.5rem;">{t.title}</h3>
-          <p style="color: #6b7280; font-size: 0.85rem; line-height: 1.6; margin: 0 0 1.25rem;">{t.desc}</p>
-          <p style="font-size: 1rem; font-weight: 700; color: #162544; margin: 0 0 1rem;">
-            From <span style="color: #03def3; font-size: 1.25rem;">{t.from}</span>
-          </p>
-          <span style="display: inline-flex; align-items: center; gap: 0.25rem; color: #03def3; font-size: 0.85rem; font-weight: 600;">
-            Browse plans →
-          </span>
+
+          <!-- Icon -->
+          <div style={`width:64px;height:64px;border-radius:1.25rem;background:${t.featured ? 'rgba(3,222,243,0.15)' : t.lightColor};display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;color:${t.featured ? '#03def3' : '#162544'};transition:all 0.25s;`}>
+            <Fragment set:html={t.icon} />
+          </div>
+
+          <h3 style={`font-size:1.2rem;font-weight:800;color:${t.featured ? 'white' : '#162544'};margin:0 0 0.6rem;`}>{t.title}</h3>
+          <p style={`color:${t.featured ? 'rgba(255,255,255,0.65)' : '#6b7280'};font-size:0.875rem;line-height:1.65;margin:0 0 1.25rem;flex:1;`}>{t.desc}</p>
+
+          <!-- Perks -->
+          <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:0.4rem;">
+            {t.perks.map(perk => (
+              <li style={`display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:${t.featured ? 'rgba(255,255,255,0.7)' : '#6b7280'};`}>
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" style={`color:${t.featured ? '#03def3' : '#03def3'};flex-shrink:0;`} stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                {perk}
+              </li>
+            ))}
+          </ul>
+
+          <!-- Price + CTA -->
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <span style={`font-size:0.72rem;font-weight:600;color:${t.featured ? 'rgba(255,255,255,0.5)' : '#9ca3af'};text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:0.1rem;`}>From</span>
+              <span style={`font-size:1.75rem;font-weight:900;color:${t.featured ? '#03def3' : '#162544'};letter-spacing:-0.5px;`}>{t.from}</span>
+            </div>
+            <span style={`display:inline-flex;align-items:center;gap:0.3rem;background:${t.featured ? '#03def3' : '#162544'};color:${t.featured ? '#162544' : 'white'};font-size:0.82rem;font-weight:700;padding:0.55rem 1.1rem;border-radius:9999px;`}>
+              Browse →
+            </span>
+          </div>
         </a>
       ))}
     </div>

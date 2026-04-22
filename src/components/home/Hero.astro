@@ -1,152 +1,256 @@
 ---
 const topDestinations = [
-  { name:'United States', slug:'united-states', flag:'🇺🇸' },
-  { name:'United Kingdom', slug:'united-kingdom', flag:'🇬🇧' },
-  { name:'Japan',          slug:'japan',          flag:'🇯🇵' },
-  { name:'Australia',      slug:'australia',      flag:'🇦🇺' },
-  { name:'France',         slug:'france',         flag:'🇫🇷' },
-  { name:'Germany',        slug:'germany',        flag:'🇩🇪' },
-  { name:'Italy',          slug:'italy',          flag:'🇮🇹' },
-  { name:'Canada',         slug:'canada',         flag:'🇨🇦' },
-  { name:'Spain',          slug:'spain',          flag:'🇪🇸' },
-  { name:'Thailand',       slug:'thailand',       flag:'🇹🇭' },
+  { name:'United States', slug:'united-states', flag:'🇺🇸', code:'us' },
+  { name:'United Kingdom', slug:'united-kingdom', flag:'🇬🇧', code:'gb' },
+  { name:'Japan',          slug:'japan',          flag:'🇯🇵', code:'jp' },
+  { name:'Australia',      slug:'australia',      flag:'🇦🇺', code:'au' },
+  { name:'France',         slug:'france',         flag:'🇫🇷', code:'fr' },
+  { name:'Germany',        slug:'germany',        flag:'🇩🇪', code:'de' },
+  { name:'Italy',          slug:'italy',          flag:'🇮🇹', code:'it' },
+  { name:'Canada',         slug:'canada',         flag:'🇨🇦', code:'ca' },
+  { name:'Spain',          slug:'spain',          flag:'🇪🇸', code:'es' },
+  { name:'Thailand',       slug:'thailand',       flag:'🇹🇭', code:'th' },
 ];
 ---
 
-<section style="position:relative;overflow:hidden;background:linear-gradient(135deg,#ffffff 0%,#f0fdff 40%,#e8fffe 70%,#ffffff 100%);padding:4.5rem 1.5rem 5rem;">
+<section style="position:relative;overflow:hidden;background:linear-gradient(150deg,#ffffff 0%,#f0fdff 45%,#e0f9ff 75%,#ffffff 100%);padding:4rem 1.5rem 5rem;">
   <!-- Decorative blobs -->
-  <div style="position:absolute;top:-120px;right:-120px;width:500px;height:500px;background:radial-gradient(circle,rgba(3,222,243,0.08) 0%,transparent 70%);border-radius:50%;pointer-events:none;"></div>
-  <div style="position:absolute;bottom:-80px;left:-80px;width:350px;height:350px;background:radial-gradient(circle,rgba(59,130,246,0.06) 0%,transparent 70%);border-radius:50%;pointer-events:none;"></div>
-  <!-- Grid pattern -->
-  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(3,222,243,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(3,222,243,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;"></div>
+  <div style="position:absolute;top:-100px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(3,222,243,0.07) 0%,transparent 65%);border-radius:50%;pointer-events:none;"></div>
+  <div style="position:absolute;bottom:-60px;left:-60px;width:400px;height:400px;background:radial-gradient(circle,rgba(22,37,68,0.04) 0%,transparent 70%);border-radius:50%;pointer-events:none;"></div>
+  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(3,222,243,0.06) 1.5px,transparent 1.5px);background-size:28px 28px;pointer-events:none;"></div>
 
-  <div style="max-width:72rem;margin:0 auto;position:relative;z-index:1;">
+  <div style="max-width:76rem;margin:0 auto;position:relative;z-index:1;">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
 
-      <!-- Left: Content -->
+      <!-- ── Left: Content ── -->
       <div>
         <!-- Trust badge -->
-        <div style="display:inline-flex;align-items:center;gap:0.5rem;background:white;border:1px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,0.06);padding:0.4rem 1rem;border-radius:9999px;margin-bottom:1.5rem;font-size:0.8rem;font-weight:600;color:#374151;">
-          <span style="color:#f59e0b;">★★★★★</span>
-          <span>4.6 Trustpilot</span>
-          <span style="color:#d1d5db;">·</span>
-          <span>50,000+ travelers</span>
+        <div style="display:inline-flex;align-items:center;gap:0.5rem;background:white;border:1.5px solid #e5e7eb;box-shadow:0 2px 12px rgba(0,0,0,0.06);padding:0.45rem 1.1rem;border-radius:9999px;margin-bottom:1.75rem;font-size:0.78rem;font-weight:700;color:#374151;">
+          <span style="color:#f59e0b;letter-spacing:0.05em;">★★★★★</span>
+          <span>4.6 on Trustpilot</span>
+          <span style="width:1px;height:12px;background:#e5e7eb;display:inline-block;"></span>
+          <span style="color:#6b7280;">50k+ travelers</span>
         </div>
 
-        <h1 style="font-size:3.25rem;font-weight:900;color:#162544;line-height:1.08;margin:0 0 1.25rem;letter-spacing:-1.5px;">
-          Travel the World<br/>
+        <h1 style="font-size:3.5rem;font-weight:900;color:#162544;line-height:1.06;margin:0 0 1.25rem;letter-spacing:-2px;">
+          Travel Smart.<br/>
           <span style="position:relative;display:inline-block;">
-            <span style="color:#03def3;">Connected</span>
-            <svg style="position:absolute;bottom:-4px;left:0;width:100%;height:8px;" viewBox="0 0 200 8" preserveAspectRatio="none">
-              <path d="M0,6 Q50,0 100,5 Q150,10 200,4" stroke="#03def3" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>
-            </svg>
+            <span style="background:linear-gradient(90deg,#03def3,#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Stay Connected.</span>
           </span>
-          <br/>with WoWo SIM
         </h1>
 
-        <p style="color:#6b7280;font-size:1.05rem;line-height:1.7;margin:0 0 2rem;max-width:460px;">
-          Instant eSIM data in <strong style="color:#162544;">195+ countries</strong>. No physical SIM card, no roaming charges. Activate before you even board your flight.
+        <p style="color:#6b7280;font-size:1.05rem;line-height:1.72;margin:0 0 2rem;max-width:440px;">
+          Instant eSIM data in <strong style="color:#162544;">195+ countries</strong>. No physical SIM. No roaming charges. Activate in under 2 minutes.
         </p>
 
         <!-- Search bar -->
-        <div style="background:white;border:1.5px solid #e5e7eb;border-radius:1rem;padding:0.5rem;display:flex;align-items:center;gap:0.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.08);max-width:460px;margin-bottom:1.75rem;">
-          <span style="padding:0.5rem 0.5rem 0.5rem 0.75rem;font-size:1.1rem;">🔍</span>
-          <input id="heroSearch" type="text" placeholder="Search destination (e.g. Japan, Europe...)"
-            style="flex:1;border:none;outline:none;font-size:0.875rem;color:#374151;background:transparent;" />
-          <a href="#destinations" id="heroSearchBtn" class="btn-primary" style="font-size:0.8rem;padding:0.6rem 1rem;border-radius:0.65rem;white-space:nowrap;">
-            Find eSIM
-          </a>
+        <div style="position:relative;max-width:460px;margin-bottom:1.75rem;">
+          <div style="background:white;border:2px solid #e5e7eb;border-radius:1rem;padding:0.4rem 0.4rem 0.4rem 0.9rem;display:flex;align-items:center;gap:0.5rem;box-shadow:0 4px 24px rgba(0,0,0,0.08);transition:border-color 0.2s;" id="searchWrapper">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2.2" style="flex-shrink:0;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.2-5.2m0 0A7.5 7.5 0 105.2 15.8 7.5 7.5 0 0015.8 15.8z"/>
+            </svg>
+            <input id="heroSearch" type="text" placeholder="Search country or region..."
+              style="flex:1;border:none;outline:none;font-size:0.9rem;color:#374151;background:transparent;font-family:inherit;"
+              autocomplete="off" aria-label="Search destinations" aria-autocomplete="list" aria-controls="heroDropdown" aria-expanded="false" />
+            <button id="heroSearchBtn" class="btn-primary" style="font-size:0.825rem;padding:0.6rem 1.1rem;border-radius:0.65rem;white-space:nowrap;flex-shrink:0;">
+              Find Plans
+            </button>
+          </div>
+          <!-- Autocomplete dropdown -->
+          <div id="heroDropdown" class="search-dropdown" role="listbox">
+            <!-- filled by JS -->
+          </div>
         </div>
 
         <!-- Stats row -->
-        <div style="display:flex;gap:2rem;">
+        <div style="display:flex;gap:2.5rem;flex-wrap:wrap;">
           {[
-            { n:'195+', l:'Countries' },
-            { n:'$3.50', l:'From only' },
-            { n:'2 min', l:'Setup time' },
+            { n:'195+',  l:'Countries covered' },
+            { n:'$3.50', l:'Plans from' },
+            { n:'2 min', l:'Avg. setup time' },
           ].map(s => (
             <div>
-              <p style="font-size:1.5rem;font-weight:900;color:#162544;margin:0;line-height:1;">{s.n}</p>
-              <p style="font-size:0.75rem;color:#9ca3af;margin:0.2rem 0 0;">{s.l}</p>
+              <p style="font-size:1.6rem;font-weight:900;color:#162544;margin:0;line-height:1;letter-spacing:-0.5px;">{s.n}</p>
+              <p style="font-size:0.72rem;color:#9ca3af;margin:0.25rem 0 0;font-weight:500;">{s.l}</p>
             </div>
           ))}
         </div>
       </div>
 
-      <!-- Right: Visual -->
-      <div style="position:relative;display:flex;justify-content:center;align-items:center;">
-        <!-- Phone mockup -->
-        <div style="position:relative;z-index:2;">
-          <div style="width:200px;height:380px;background:linear-gradient(145deg,#1e2d4f,#162544);border-radius:2.5rem;box-shadow:0 30px 80px rgba(22,37,68,0.35),0 0 0 8px rgba(255,255,255,0.08);position:relative;overflow:hidden;margin:0 auto;">
-            <!-- Screen notch -->
-            <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:60px;height:22px;background:#162544;border-radius:0 0 1rem 1rem;z-index:10;"></div>
-            <!-- Screen content -->
-            <div style="padding:2.5rem 1rem 1rem;height:100%;display:flex;flex-direction:column;gap:0.5rem;">
-              <div style="background:rgba(3,222,243,0.15);border-radius:0.75rem;padding:0.75rem;text-align:center;">
-                <p style="color:#03def3;font-size:0.6rem;font-weight:700;margin:0 0 0.2rem;text-transform:uppercase;letter-spacing:0.05em;">Active eSIM</p>
-                <p style="color:white;font-size:0.85rem;font-weight:800;margin:0;">🇺🇸 United States</p>
-              </div>
-              <!-- Data usage arc -->
-              <div style="background:rgba(255,255,255,0.05);border-radius:0.75rem;padding:0.75rem;text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-                <svg width="90" height="90" viewBox="0 0 90 90">
-                  <circle cx="45" cy="45" r="36" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
-                  <circle cx="45" cy="45" r="36" fill="none" stroke="#03def3" stroke-width="8"
-                    stroke-dasharray="226" stroke-dashoffset="68" stroke-linecap="round"
-                    transform="rotate(-90 45 45)"/>
-                  <text x="45" y="40" text-anchor="middle" fill="white" font-size="11" font-weight="800">7.2 GB</text>
-                  <text x="45" y="53" text-anchor="middle" fill="#9ca3af" font-size="7">remaining</text>
-                </svg>
-                <p style="color:#9ca3af;font-size:0.62rem;margin:0.25rem 0 0;">of 10 GB · 18 days left</p>
-              </div>
-              <div style="background:rgba(3,222,243,0.1);border-radius:0.65rem;padding:0.5rem;text-align:center;">
-                <p style="color:#03def3;font-size:0.62rem;font-weight:700;margin:0;">✓ Connected · T-Mobile 5G</p>
-              </div>
-            </div>
-          </div>
+      <!-- ── Right: Globe Mascot ── -->
+      <div style="position:relative;display:flex;justify-content:center;align-items:center;min-height:420px;">
+
+        <!-- Outer orbit ring -->
+        <div class="animate-spin-slow" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;height:380px;border:2px dashed rgba(3,222,243,0.18);border-radius:50%;pointer-events:none;"></div>
+
+        <!-- Globe Character SVG -->
+        <div class="animate-globe" style="position:relative;z-index:2;filter:drop-shadow(0 20px 40px rgba(3,222,243,0.25)) drop-shadow(0 10px 20px rgba(22,37,68,0.15));">
+          <svg width="260" height="260" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="WoWo SIM globe mascot">
+
+            <!-- Globe body (main circle) -->
+            <circle cx="130" cy="130" r="115" fill="url(#globeGradient)"/>
+            <circle cx="130" cy="130" r="115" fill="url(#globeSheen)" opacity="0.4"/>
+
+            <!-- Latitude lines -->
+            <ellipse cx="130" cy="130" rx="115" ry="40" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+            <ellipse cx="130" cy="130" rx="115" ry="70" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <!-- Vertical meridian -->
+            <line x1="130" y1="15" x2="130" y2="245" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+            <!-- Equator -->
+            <line x1="15" y1="130" x2="245" y2="130" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+
+            <!-- Continent shapes (stylized flat) -->
+            <!-- North America -->
+            <path d="M65 88 C55 78 48 90 52 105 C56 118 70 122 80 118 C88 115 90 108 95 100 C98 93 90 80 80 82 Z"
+                  fill="#03def3" opacity="0.9"/>
+            <!-- South America -->
+            <path d="M80 128 C74 124 68 130 70 142 C72 154 80 160 88 158 C95 156 98 148 96 138 C94 130 86 126 80 128 Z"
+                  fill="#03def3" opacity="0.75"/>
+            <!-- Europe -->
+            <path d="M130 80 C124 74 118 78 120 88 C122 96 130 98 136 94 C140 91 140 84 136 80 Z"
+                  fill="#03def3" opacity="0.85"/>
+            <!-- Africa -->
+            <path d="M130 98 C122 96 116 106 118 120 C120 134 128 142 136 140 C144 138 148 128 146 116 C144 106 138 96 130 98 Z"
+                  fill="#03def3" opacity="0.8"/>
+            <!-- Asia (large) -->
+            <path d="M148 72 C138 66 130 74 132 86 C134 96 142 100 152 100 C162 100 172 92 174 82 C176 72 160 64 148 72 Z"
+                  fill="#03def3" opacity="0.9"/>
+            <path d="M172 88 C166 84 160 90 162 100 C164 108 172 112 180 110 C186 108 188 100 186 92 Z"
+                  fill="#03def3" opacity="0.7"/>
+            <!-- Australia -->
+            <path d="M180 140 C174 136 168 142 170 152 C172 160 180 164 188 162 C194 160 196 152 192 144 Z"
+                  fill="#03def3" opacity="0.8"/>
+
+            <!-- Face area overlay (white ellipse to create "face zone") -->
+            <ellipse cx="130" cy="138" rx="50" ry="44" fill="white" opacity="0.15"/>
+
+            <!-- Eyes -->
+            <!-- Left eye -->
+            <circle cx="112" cy="126" r="9" fill="white"/>
+            <circle cx="112" cy="126" r="5.5" fill="#162544"/>
+            <circle cx="114" cy="124" r="2" fill="white" opacity="0.8"/>
+            <!-- Right eye -->
+            <circle cx="148" cy="126" r="9" fill="white"/>
+            <circle cx="148" cy="126" r="5.5" fill="#162544"/>
+            <circle cx="150" cy="124" r="2" fill="white" opacity="0.8"/>
+
+            <!-- Eyebrows (friendly slightly raised) -->
+            <path d="M104 113 Q112 108 120 112" stroke="#162544" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+            <path d="M140 112 Q148 108 156 113" stroke="#162544" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+
+            <!-- Smile -->
+            <path d="M113 148 Q130 162 147 148" stroke="white" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <!-- Cheek blushes -->
+            <ellipse cx="100" cy="142" rx="8" ry="5" fill="rgba(255,100,100,0.25)"/>
+            <ellipse cx="160" cy="142" rx="8" ry="5" fill="rgba(255,100,100,0.25)"/>
+
+            <!-- Small arms holding phone -->
+            <!-- Left arm -->
+            <path d="M22 145 Q35 140 50 148 Q56 152 62 168 L55 172 Q48 158 44 154 Q32 148 20 152 Z"
+                  fill="#162544" opacity="0.85"/>
+            <!-- Right arm -->
+            <path d="M238 145 Q225 140 210 148 Q204 152 198 168 L205 172 Q212 158 216 154 Q228 148 240 152 Z"
+                  fill="#162544" opacity="0.85"/>
+
+            <!-- Phone in left hand -->
+            <rect x="34" y="160" width="30" height="52" rx="5" fill="#0f172a"/>
+            <rect x="37" y="165" width="24" height="40" rx="3" fill="#1e293b"/>
+            <!-- Phone screen glow -->
+            <rect x="38" y="166" width="22" height="38" rx="2" fill="url(#phoneScreen)"/>
+            <!-- WiFi icon on phone -->
+            <path d="M49 178 Q44 173 39 177" stroke="#03def3" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M49 178 Q46 175 43 177" stroke="#03def3" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <circle cx="49" cy="178" r="1.5" fill="#03def3"/>
+            <!-- "eSIM" text on phone -->
+            <text x="49" y="198" text-anchor="middle" fill="#03def3" font-size="5.5" font-weight="800" font-family="system-ui">eSIM</text>
+
+            <!-- Globe shine highlight -->
+            <ellipse cx="94" cy="72" rx="30" ry="18" fill="white" opacity="0.12" transform="rotate(-30 94 72)"/>
+
+            <!-- Defs -->
+            <defs>
+              <radialGradient id="globeGradient" cx="35%" cy="30%" r="65%">
+                <stop offset="0%"   stop-color="#1a3766"/>
+                <stop offset="60%"  stop-color="#162544"/>
+                <stop offset="100%" stop-color="#0d1a33"/>
+              </radialGradient>
+              <radialGradient id="globeSheen" cx="30%" cy="25%" r="60%">
+                <stop offset="0%"   stop-color="white" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="white" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="phoneScreen" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"  stop-color="#0ea5e9"/>
+                <stop offset="100%" stop-color="#162544"/>
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
 
-        <!-- Floating cards -->
-        <div style="position:absolute;top:0;left:-10px;background:white;border-radius:1rem;padding:0.65rem 0.9rem;box-shadow:0 8px 25px rgba(0,0,0,0.1);display:flex;align-items:center;gap:0.5rem;animation:float 3s ease-in-out infinite;" id="floatCard1">
-          <span style="font-size:1.2rem;">✈️</span>
+        <!-- Floating Info Cards -->
+        <div class="animate-float" style="position:absolute;top:20px;left:-20px;background:white;border-radius:1rem;padding:0.7rem 1rem;box-shadow:0 8px 32px rgba(0,0,0,0.12);display:flex;align-items:center;gap:0.6rem;z-index:3;">
+          <div style="width:36px;height:36px;background:#f0fdff;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
           <div>
-            <p style="font-size:0.68rem;font-weight:700;color:#162544;margin:0;">Instant</p>
-            <p style="font-size:0.62rem;color:#9ca3af;margin:0;">Activation</p>
+            <p style="font-size:0.72rem;font-weight:800;color:#162544;margin:0;">Instant</p>
+            <p style="font-size:0.65rem;color:#9ca3af;margin:0;">Activation</p>
           </div>
         </div>
 
-        <div style="position:absolute;bottom:2rem;right:-10px;background:white;border-radius:1rem;padding:0.65rem 0.9rem;box-shadow:0 8px 25px rgba(0,0,0,0.1);display:flex;align-items:center;gap:0.5rem;animation:float 3s ease-in-out infinite;animation-delay:1.2s;" id="floatCard2">
-          <span style="font-size:1.2rem;">🌍</span>
+        <div class="animate-float" style="position:absolute;top:20px;right:-20px;background:white;border-radius:1rem;padding:0.7rem 1rem;box-shadow:0 8px 32px rgba(0,0,0,0.12);display:flex;align-items:center;gap:0.6rem;z-index:3;animation-delay:0.8s;">
+          <div style="width:36px;height:36px;background:#f0fdff;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/>
+            </svg>
+          </div>
           <div>
-            <p style="font-size:0.68rem;font-weight:700;color:#162544;margin:0;">195+</p>
-            <p style="font-size:0.62rem;color:#9ca3af;margin:0;">Countries</p>
+            <p style="font-size:0.72rem;font-weight:800;color:#162544;margin:0;">195+</p>
+            <p style="font-size:0.65rem;color:#9ca3af;margin:0;">Countries</p>
           </div>
         </div>
 
-        <div style="position:absolute;bottom:6rem;left:-15px;background:white;border-radius:1rem;padding:0.65rem 0.9rem;box-shadow:0 8px 25px rgba(0,0,0,0.1);display:flex;align-items:center;gap:0.5rem;animation:float 3s ease-in-out infinite;animation-delay:0.6s;">
-          <span style="font-size:1.2rem;">💳</span>
+        <div class="animate-float" style="position:absolute;bottom:30px;left:-10px;background:white;border-radius:1rem;padding:0.7rem 1rem;box-shadow:0 8px 32px rgba(0,0,0,0.12);display:flex;align-items:center;gap:0.6rem;z-index:3;animation-delay:1.6s;">
+          <div style="width:36px;height:36px;background:#f0fdff;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
           <div>
-            <p style="font-size:0.68rem;font-weight:700;color:#162544;margin:0;">No Roaming</p>
-            <p style="font-size:0.62rem;color:#9ca3af;margin:0;">Fees Ever</p>
+            <p style="font-size:0.72rem;font-weight:800;color:#162544;margin:0;">No Roaming</p>
+            <p style="font-size:0.65rem;color:#9ca3af;margin:0;">Ever</p>
           </div>
         </div>
 
-        <!-- Background circle decoration -->
-        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;border:2px dashed rgba(3,222,243,0.15);border-radius:50%;pointer-events:none;animation:spin 30s linear infinite;"></div>
+        <div class="animate-float" style="position:absolute;bottom:30px;right:-15px;background:#162544;border-radius:1rem;padding:0.7rem 1rem;box-shadow:0 8px 32px rgba(22,37,68,0.25);display:flex;align-items:center;gap:0.6rem;z-index:3;animation-delay:2.2s;">
+          <div style="width:36px;height:36px;background:rgba(3,222,243,0.15);border-radius:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div>
+            <p style="font-size:0.72rem;font-weight:800;color:#03def3;margin:0;">From $3.50</p>
+            <p style="font-size:0.65rem;color:rgba(255,255,255,0.5);margin:0;">Best prices</p>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Top destinations quick links -->
-    <div id="destinations" style="margin-top:3.5rem;padding-top:3rem;border-top:1px solid #f3f4f6;">
-      <p style="font-size:0.8rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 1rem;">Popular Destinations</p>
+    <!-- ── Popular destinations ── -->
+    <div id="destinations" style="margin-top:3.5rem;padding-top:2.75rem;border-top:1px solid #e5e7eb;">
+      <p style="font-size:0.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 1rem;">Popular Destinations</p>
       <div style="display:flex;flex-wrap:wrap;gap:0.6rem;">
         {topDestinations.map(d => (
-          <a href={`/${d.slug}`} style="display:inline-flex;align-items:center;gap:0.4rem;background:white;border:1.5px solid #e5e7eb;padding:0.45rem 0.9rem;border-radius:9999px;font-size:0.82rem;font-weight:500;color:#374151;text-decoration:none;transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.05);"
-             onmouseover="this.style.borderColor='#03def3';this.style.color='#162544';this.style.background='#f0fdff'" onmouseout="this.style.borderColor='#e5e7eb';this.style.color='#374151';this.style.background='white'">
+          <a href={`/${d.slug}`}
+             style="display:inline-flex;align-items:center;gap:0.45rem;background:white;border:1.5px solid #e5e7eb;padding:0.45rem 0.9rem;border-radius:9999px;font-size:0.82rem;font-weight:500;color:#374151;text-decoration:none;transition:all 0.18s;box-shadow:0 1px 3px rgba(0,0,0,0.04);"
+             onmouseover="this.style.borderColor='#03def3';this.style.color='#162544';this.style.background='#f0fdff';this.style.boxShadow='0 2px 8px rgba(3,222,243,0.2)'" onmouseout="this.style.borderColor='#e5e7eb';this.style.color='#374151';this.style.background='white';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.04)'">
             {d.flag} {d.name}
           </a>
         ))}
-        <a href="/destinations" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;border-radius:9999px;font-size:0.82rem;font-weight:600;color:#03def3;text-decoration:none;transition:all 0.2s;"
-           onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+        <a href="/destinations"
+           style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.45rem 0.9rem;border-radius:9999px;font-size:0.82rem;font-weight:700;color:#03def3;text-decoration:none;transition:all 0.18s;"
+           onmouseover="this.style.background='#f0fdff'" onmouseout="this.style.background='transparent'">
           View all 195+ →
         </a>
       </div>
@@ -155,24 +259,218 @@ const topDestinations = [
 </section>
 
 <script>
-  // Hero search
-  const input = document.getElementById('heroSearch') as HTMLInputElement;
-  const btn = document.getElementById('heroSearchBtn') as HTMLAnchorElement;
+// ── Country autocomplete data ──
+const COUNTRIES: Array<{ name: string; slug: string; flag: string }> = [
+  { name: 'Afghanistan', slug: 'afghanistan', flag: '🇦🇫' },
+  { name: 'Albania', slug: 'albania', flag: '🇦🇱' },
+  { name: 'Algeria', slug: 'algeria', flag: '🇩🇿' },
+  { name: 'Argentina', slug: 'argentina', flag: '🇦🇷' },
+  { name: 'Armenia', slug: 'armenia', flag: '🇦🇲' },
+  { name: 'Australia', slug: 'australia', flag: '🇦🇺' },
+  { name: 'Austria', slug: 'austria', flag: '🇦🇹' },
+  { name: 'Azerbaijan', slug: 'azerbaijan', flag: '🇦🇿' },
+  { name: 'Bahrain', slug: 'bahrain', flag: '🇧🇭' },
+  { name: 'Bangladesh', slug: 'bangladesh', flag: '🇧🇩' },
+  { name: 'Belgium', slug: 'belgium', flag: '🇧🇪' },
+  { name: 'Bolivia', slug: 'bolivia', flag: '🇧🇴' },
+  { name: 'Brazil', slug: 'brazil', flag: '🇧🇷' },
+  { name: 'Bulgaria', slug: 'bulgaria', flag: '🇧🇬' },
+  { name: 'Cambodia', slug: 'cambodia', flag: '🇰🇭' },
+  { name: 'Canada', slug: 'canada', flag: '🇨🇦' },
+  { name: 'Chile', slug: 'chile', flag: '🇨🇱' },
+  { name: 'China', slug: 'china', flag: '🇨🇳' },
+  { name: 'Colombia', slug: 'colombia', flag: '🇨🇴' },
+  { name: 'Costa Rica', slug: 'costa-rica', flag: '🇨🇷' },
+  { name: 'Croatia', slug: 'croatia', flag: '🇭🇷' },
+  { name: 'Cyprus', slug: 'cyprus', flag: '🇨🇾' },
+  { name: 'Czech Republic', slug: 'czech-republic', flag: '🇨🇿' },
+  { name: 'Denmark', slug: 'denmark', flag: '🇩🇰' },
+  { name: 'Ecuador', slug: 'ecuador', flag: '🇪🇨' },
+  { name: 'Egypt', slug: 'egypt', flag: '🇪🇬' },
+  { name: 'Estonia', slug: 'estonia', flag: '🇪🇪' },
+  { name: 'Ethiopia', slug: 'ethiopia', flag: '🇪🇹' },
+  { name: 'Finland', slug: 'finland', flag: '🇫🇮' },
+  { name: 'France', slug: 'france', flag: '🇫🇷' },
+  { name: 'Georgia', slug: 'georgia', flag: '🇬🇪' },
+  { name: 'Germany', slug: 'germany', flag: '🇩🇪' },
+  { name: 'Ghana', slug: 'ghana', flag: '🇬🇭' },
+  { name: 'Greece', slug: 'greece', flag: '🇬🇷' },
+  { name: 'Hong Kong', slug: 'hong-kong', flag: '🇭🇰' },
+  { name: 'Hungary', slug: 'hungary', flag: '🇭🇺' },
+  { name: 'Iceland', slug: 'iceland', flag: '🇮🇸' },
+  { name: 'India', slug: 'india', flag: '🇮🇳' },
+  { name: 'Indonesia', slug: 'indonesia', flag: '🇮🇩' },
+  { name: 'Ireland', slug: 'ireland', flag: '🇮🇪' },
+  { name: 'Israel', slug: 'israel', flag: '🇮🇱' },
+  { name: 'Italy', slug: 'italy', flag: '🇮🇹' },
+  { name: 'Japan', slug: 'japan', flag: '🇯🇵' },
+  { name: 'Jordan', slug: 'jordan', flag: '🇯🇴' },
+  { name: 'Kazakhstan', slug: 'kazakhstan', flag: '🇰🇿' },
+  { name: 'Kenya', slug: 'kenya', flag: '🇰🇪' },
+  { name: 'Kuwait', slug: 'kuwait', flag: '🇰🇼' },
+  { name: 'Laos', slug: 'laos', flag: '🇱🇦' },
+  { name: 'Latvia', slug: 'latvia', flag: '🇱🇻' },
+  { name: 'Lithuania', slug: 'lithuania', flag: '🇱🇹' },
+  { name: 'Luxembourg', slug: 'luxembourg', flag: '🇱🇺' },
+  { name: 'Macau', slug: 'macau', flag: '🇲🇴' },
+  { name: 'Malaysia', slug: 'malaysia', flag: '🇲🇾' },
+  { name: 'Malta', slug: 'malta', flag: '🇲🇹' },
+  { name: 'Mexico', slug: 'mexico', flag: '🇲🇽' },
+  { name: 'Mongolia', slug: 'mongolia', flag: '🇲🇳' },
+  { name: 'Morocco', slug: 'morocco', flag: '🇲🇦' },
+  { name: 'Myanmar', slug: 'myanmar', flag: '🇲🇲' },
+  { name: 'Nepal', slug: 'nepal', flag: '🇳🇵' },
+  { name: 'Netherlands', slug: 'netherlands', flag: '🇳🇱' },
+  { name: 'New Zealand', slug: 'new-zealand', flag: '🇳🇿' },
+  { name: 'Nigeria', slug: 'nigeria', flag: '🇳🇬' },
+  { name: 'Norway', slug: 'norway', flag: '🇳🇴' },
+  { name: 'Oman', slug: 'oman', flag: '🇴🇲' },
+  { name: 'Pakistan', slug: 'pakistan', flag: '🇵🇰' },
+  { name: 'Panama', slug: 'panama', flag: '🇵🇦' },
+  { name: 'Peru', slug: 'peru', flag: '🇵🇪' },
+  { name: 'Philippines', slug: 'philippines', flag: '🇵🇭' },
+  { name: 'Poland', slug: 'poland', flag: '🇵🇱' },
+  { name: 'Portugal', slug: 'portugal', flag: '🇵🇹' },
+  { name: 'Qatar', slug: 'qatar', flag: '🇶🇦' },
+  { name: 'Romania', slug: 'romania', flag: '🇷🇴' },
+  { name: 'Russia', slug: 'russia', flag: '🇷🇺' },
+  { name: 'Saudi Arabia', slug: 'saudi-arabia', flag: '🇸🇦' },
+  { name: 'Singapore', slug: 'singapore', flag: '🇸🇬' },
+  { name: 'Slovakia', slug: 'slovakia', flag: '🇸🇰' },
+  { name: 'Slovenia', slug: 'slovenia', flag: '🇸🇮' },
+  { name: 'South Africa', slug: 'south-africa', flag: '🇿🇦' },
+  { name: 'South Korea', slug: 'south-korea', flag: '🇰🇷' },
+  { name: 'Spain', slug: 'spain', flag: '🇪🇸' },
+  { name: 'Sri Lanka', slug: 'sri-lanka', flag: '🇱🇰' },
+  { name: 'Sweden', slug: 'sweden', flag: '🇸🇪' },
+  { name: 'Switzerland', slug: 'switzerland', flag: '🇨🇭' },
+  { name: 'Taiwan', slug: 'taiwan', flag: '🇹🇼' },
+  { name: 'Tanzania', slug: 'tanzania', flag: '🇹🇿' },
+  { name: 'Thailand', slug: 'thailand', flag: '🇹🇭' },
+  { name: 'Turkey', slug: 'turkey', flag: '🇹🇷' },
+  { name: 'Uganda', slug: 'uganda', flag: '🇺🇬' },
+  { name: 'Ukraine', slug: 'ukraine', flag: '🇺🇦' },
+  { name: 'United Arab Emirates', slug: 'united-arab-emirates', flag: '🇦🇪' },
+  { name: 'United Kingdom', slug: 'united-kingdom', flag: '🇬🇧' },
+  { name: 'United States', slug: 'united-states', flag: '🇺🇸' },
+  { name: 'Uruguay', slug: 'uruguay', flag: '🇺🇾' },
+  { name: 'Uzbekistan', slug: 'uzbekistan', flag: '🇺🇿' },
+  { name: 'Venezuela', slug: 'venezuela', flag: '🇻🇪' },
+  { name: 'Vietnam', slug: 'vietnam', flag: '🇻🇳' },
+  { name: 'Zimbabwe', slug: 'zimbabwe', flag: '🇿🇼' },
+  // Regions
+  { name: 'Europe', slug: 'europe', flag: '🌍' },
+  { name: 'Asia Pacific', slug: 'asia-pacific', flag: '🌏' },
+  { name: 'North America', slug: 'north-america', flag: '🌎' },
+  { name: 'Latin America', slug: 'latin-america', flag: '🌎' },
+  { name: 'Middle East', slug: 'middle-east', flag: '🌍' },
+  { name: 'Caribbean', slug: 'caribbean', flag: '🏖️' },
+];
 
-  input?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
+const input = document.getElementById('heroSearch') as HTMLInputElement;
+const dropdown = document.getElementById('heroDropdown') as HTMLElement;
+const wrapper = document.getElementById('searchWrapper') as HTMLElement;
+const searchBtn = document.getElementById('heroSearchBtn') as HTMLButtonElement;
+
+let highlighted = -1;
+let filteredResults: typeof COUNTRIES = [];
+
+function showDropdown(results: typeof COUNTRIES) {
+  filteredResults = results;
+  highlighted = -1;
+  if (results.length === 0) {
+    dropdown.innerHTML = '';
+    dropdown.classList.remove('open');
+    input.setAttribute('aria-expanded', 'false');
+    return;
+  }
+  dropdown.innerHTML = results.slice(0, 8).map((c, i) => `
+    <div class="search-option" data-slug="${c.slug}" data-idx="${i}" role="option">
+      <span style="font-size:1.1rem;">${c.flag}</span>
+      <span>${c.name}</span>
+    </div>
+  `).join('');
+  dropdown.classList.add('open');
+  input.setAttribute('aria-expanded', 'true');
+
+  dropdown.querySelectorAll('.search-option').forEach(opt => {
+    opt.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      const slug = (opt as HTMLElement).dataset.slug;
+      if (slug) navigate(slug);
+    });
+  });
+}
+
+function hideDropdown() {
+  dropdown.classList.remove('open');
+  input.setAttribute('aria-expanded', 'false');
+  highlighted = -1;
+}
+
+function navigate(slug: string) {
+  window.location.href = `/${slug}`;
+}
+
+function filterCountries(query: string) {
+  const q = query.toLowerCase().trim();
+  if (!q) return [];
+  return COUNTRIES.filter(c => c.name.toLowerCase().includes(q) || c.slug.includes(q));
+}
+
+input?.addEventListener('input', () => {
+  const val = input.value;
+  if (val.trim().length < 1) { hideDropdown(); return; }
+  showDropdown(filterCountries(val));
+});
+
+input?.addEventListener('keydown', (e) => {
+  const opts = dropdown.querySelectorAll('.search-option');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    highlighted = Math.min(highlighted + 1, opts.length - 1);
+    opts.forEach((o, i) => (o as HTMLElement).classList.toggle('highlighted', i === highlighted));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    highlighted = Math.max(highlighted - 1, -1);
+    opts.forEach((o, i) => (o as HTMLElement).classList.toggle('highlighted', i === highlighted));
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (highlighted >= 0 && filteredResults[highlighted]) {
+      navigate(filteredResults[highlighted].slug);
+    } else {
       const val = input.value.trim().toLowerCase().replace(/\s+/g, '-');
-      if (val) window.location.href = `/${val}`;
+      if (val) navigate(val);
     }
-  });
+  } else if (e.key === 'Escape') {
+    hideDropdown();
+  }
+});
 
-  input?.addEventListener('input', () => {
-    const val = input.value.trim().toLowerCase().replace(/\s+/g, '-');
-    if (btn) btn.href = val ? `/${val}` : '#destinations';
-  });
+input?.addEventListener('focus', () => {
+  if (wrapper) wrapper.style.borderColor = '#03def3';
+  if (input.value.trim().length >= 1) showDropdown(filterCountries(input.value));
+});
+
+input?.addEventListener('blur', () => {
+  if (wrapper) wrapper.style.borderColor = '#e5e7eb';
+  setTimeout(hideDropdown, 150);
+});
+
+searchBtn?.addEventListener('click', (e) => {
+  const val = input?.value.trim().toLowerCase().replace(/\s+/g, '-');
+  if (val) { e.preventDefault(); navigate(val); }
+});
 </script>
 
 <style>
-  @keyframes spin { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
-  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @media (max-width: 768px) {
+    section > div > div:first-child {
+      grid-template-columns: 1fr !important;
+    }
+    section > div > div:first-child > div:last-child {
+      display: none !important;
+    }
+    h1 { font-size: 2.5rem !important; }
+  }
 </style>

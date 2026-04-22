@@ -5,70 +5,125 @@ import { isLoggedIn } from '../lib/auth';
 const loggedIn = isLoggedIn(Astro.cookies);
 ---
 
-<Base title="Checkout">
-  <section style="min-height: calc(100vh - 140px); background: #f9fafb; padding: 3rem 1rem;">
-    <div style="max-width: 960px; margin: 0 auto;">
-      <h1 style="font-size: 1.75rem; font-weight: 800; color: #162544; margin: 0 0 2rem;">Checkout</h1>
+<Base title="Checkout" description="Complete your WoWo SIM eSIM purchase securely.">
+  <section style="min-height:calc(100vh - 140px);background:#f9fafb;padding:3rem 1rem;">
+    <div style="max-width:960px;margin:0 auto;">
 
-      <div style="display: grid; grid-template-columns: 1fr 380px; gap: 2rem; align-items: start;">
+      <!-- Page header -->
+      <div style="margin-bottom:2rem;">
+        <a href="/" style="display:inline-flex;align-items:center;gap:0.3rem;color:#9ca3af;font-size:0.8rem;text-decoration:none;margin-bottom:0.5rem;transition:color 0.15s;" onmouseover="this.style.color='#162544'" onmouseout="this.style.color='#9ca3af'">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          Continue Shopping
+        </a>
+        <h1 style="font-size:1.75rem;font-weight:900;color:#162544;margin:0;letter-spacing:-0.5px;">Checkout</h1>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 380px;gap:2rem;align-items:start;">
 
         <!-- Left: Auth + Payment -->
-        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div style="display:flex;flex-direction:column;gap:1.5rem;">
 
+          <!-- Not logged in -->
           {!loggedIn && (
             <div class="card">
-              <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.25rem;">Sign in to continue</h2>
-              <p style="color: #9ca3af; font-size: 0.825rem; margin: 0 0 1.5rem;">You need an account to complete your purchase</p>
-              <div style="display: flex; gap: 0.75rem;">
-                <a href="/login" class="btn-primary" style="flex: 1; justify-content: center; font-size: 0.875rem;">Sign In</a>
-                <a href="/signup" class="btn-outline" style="flex: 1; justify-content: center; font-size: 0.875rem;">Create Account</a>
+              <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;">
+                <div style="width:40px;height:40px;background:#fef9c3;border-radius:0.875rem;display:flex;align-items:center;justify-content:center;">
+                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#d97706" stroke-width="2.2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h2 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 0.1rem;">Sign in to continue</h2>
+                  <p style="color:#9ca3af;font-size:0.8rem;margin:0;">You need an account to complete your purchase</p>
+                </div>
+              </div>
+              <div style="display:flex;gap:0.75rem;">
+                <a href="/login?next=/checkout" class="btn-primary" style="flex:1;justify-content:center;font-size:0.875rem;padding:0.75rem;">Sign In</a>
+                <a href="/signup" class="btn-outline" style="flex:1;justify-content:center;font-size:0.875rem;padding:0.75rem;">Create Account</a>
               </div>
             </div>
           )}
 
+          <!-- Logged in: Payment options -->
           {loggedIn && (
             <div class="card">
-              <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 1.25rem;">Payment</h2>
-              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                <button id="payCardBtn" class="btn-primary" style="width: 100%; justify-content: center; font-size: 0.9rem; padding: 0.9rem;">
-                  💳 Pay with Card
+              <h2 style="font-size:1.1rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">Payment Method</h2>
+              <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                <button id="payCardBtn" class="btn-primary" style="width:100%;justify-content:center;font-size:0.925rem;padding:0.9rem;border-radius:0.875rem;gap:0.6rem;">
+                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                  </svg>
+                  Pay with Card
                 </button>
-                <button id="payPaypalBtn" style="width: 100%; padding: 0.9rem; border-radius: 9999px; border: 2px solid #e5e7eb; background: white; font-size: 0.9rem; font-weight: 600; color: #374151; cursor: pointer; transition: all 0.2s;"
-                   onmouseover="this.style.borderColor='#003087'; this.style.color='#003087'" onmouseout="this.style.borderColor='#e5e7eb'; this.style.color='#374151'">
-                  🅿️ Pay with PayPal
+                <button id="payPaypalBtn"
+                  style="width:100%;padding:0.9rem;border-radius:0.875rem;border:2px solid #e5e7eb;background:white;font-size:0.925rem;font-weight:700;color:#003087;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:0.6rem;"
+                  onmouseover="this.style.borderColor='#003087';this.style.background='#f0f4ff'" onmouseout="this.style.borderColor='#e5e7eb';this.style.background='white'">
+                  <svg width="18" height="14" viewBox="0 0 24 18" fill="none">
+                    <text y="14" font-size="13" font-weight="800" fill="#003087">Pay</text>
+                    <text x="28" y="14" font-size="13" font-weight="800" fill="#009cde">Pal</text>
+                  </svg>
+                  Pay with PayPal
                 </button>
               </div>
-              <div id="checkoutMsg" style="display: none; margin-top: 1rem; font-size: 0.8rem; padding: 0.75rem; border-radius: 0.65rem; text-align: center;"></div>
+              <div id="checkoutMsg" style="display:none;margin-top:1rem;font-size:0.8rem;padding:0.75rem;border-radius:0.75rem;text-align:center;"></div>
             </div>
           )}
 
-          <!-- Coupon -->
+          <!-- Coupon code -->
           {loggedIn && (
             <div class="card">
-              <h2 style="font-size: 1rem; font-weight: 700; color: #162544; margin: 0 0 1rem;">Have a coupon?</h2>
-              <div style="display: flex; gap: 0.5rem;">
-                <input type="text" id="couponInput" placeholder="Enter coupon code"
-                  style="flex: 1; padding: 0.7rem 1rem; border: 1.5px solid #e5e7eb; border-radius: 0.65rem; font-size: 0.85rem; outline: none; transition: border 0.2s;"
-                  onfocus="this.style.borderColor='#03def3'" onblur="this.style.borderColor='#e5e7eb'" />
-                <button id="applyCoupon" class="btn-primary" style="font-size: 0.85rem; padding: 0.7rem 1.25rem; border-radius: 0.65rem; white-space: nowrap;">Apply</button>
+              <h2 style="font-size:1rem;font-weight:700;color:#162544;margin:0 0 1rem;">Have a promo code?</h2>
+              <div style="display:flex;gap:0.5rem;">
+                <input type="text" id="couponInput" placeholder="Enter promo code"
+                  class="form-input" style="flex:1;" />
+                <button id="applyCoupon" class="btn-primary" style="font-size:0.85rem;padding:0.7rem 1.25rem;border-radius:0.75rem;white-space:nowrap;">Apply</button>
               </div>
-              <div id="couponMsg" style="display: none; margin-top: 0.6rem; font-size: 0.78rem;"></div>
+              <div id="couponMsg" style="display:none;margin-top:0.6rem;font-size:0.78rem;"></div>
             </div>
           )}
+
+          <!-- Trust signals -->
+          <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;padding:1rem 0;">
+            {[
+              { icon: '🔒', text: '256-bit SSL encryption' },
+              { icon: '⚡', text: 'Instant activation' },
+              { icon: '💬', text: '24/7 support' },
+            ].map(t => (
+              <span style="display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;color:#9ca3af;">
+                <span style="font-size:1rem;">{t.icon}</span>
+                {t.text}
+              </span>
+            ))}
+          </div>
         </div>
 
-        <!-- Right: Cart Summary -->
-        <div class="card" id="cartSummary">
-          <h2 style="font-size: 1rem; font-weight: 700; color: #162544; margin: 0 0 1rem;">Order Summary</h2>
-          <div id="cartItems" style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem;">
-            <p style="color: #9ca3af; font-size: 0.85rem; text-align: center; padding: 1.5rem 0;">Your cart is empty</p>
+        <!-- Right: Order Summary -->
+        <div class="card" id="cartSummary" style="position:sticky;top:80px;">
+          <h2 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">Order Summary</h2>
+          <div id="cartItems" style="display:flex;flex-direction:column;gap:0.875rem;margin-bottom:1rem;min-height:60px;">
+            <p style="color:#9ca3af;font-size:0.85rem;text-align:center;padding:1.5rem 0;" id="cartEmptyMsg">
+              Your cart is empty
+            </p>
           </div>
-          <div style="border-top: 1px solid #f3f4f6; padding-top: 1rem;">
-            <div style="display: flex; justify-content: space-between; font-weight: 700; color: #162544;">
-              <span>Total</span>
-              <span id="cartTotal">$0.00</span>
+
+          <div style="border-top:1.5px solid #f3f4f6;padding-top:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+              <span style="font-size:0.85rem;color:#9ca3af;">Subtotal</span>
+              <span id="cartSubtotal" style="font-size:0.875rem;color:#374151;font-weight:600;">$0.00</span>
+            </div>
+            <div id="discountRow" style="display:none;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+              <span style="font-size:0.85rem;color:#22c55e;">Promo discount</span>
+              <span id="discountAmount" style="font-size:0.875rem;color:#22c55e;font-weight:700;">-$0.00</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-top:0.75rem;border-top:1px solid #f3f4f6;">
+              <span style="font-size:1rem;font-weight:800;color:#162544;">Total</span>
+              <span id="cartTotal" style="font-size:1.5rem;font-weight:900;color:#162544;letter-spacing:-0.5px;">$0.00</span>
             </div>
           </div>
+
+          <p style="font-size:0.72rem;color:#9ca3af;text-align:center;margin:0.75rem 0 0;">
+            Secure checkout. Instant delivery to your email.
+          </p>
         </div>
       </div>
     </div>
@@ -76,51 +131,162 @@ const loggedIn = isLoggedIn(Astro.cookies);
 </Base>
 
 <script>
-  // Load cart from cookie
-  function getCart() {
+  interface CartItem {
+    name?: string;
+    country?: string;
+    flag?: string;
+    quota?: number | string;
+    valadity?: number | string;
+    price_usd?: number | string;
+    price?: number | string;
+    quantity?: number;
+  }
+
+  function getCart(): CartItem[] {
     try {
       const raw = document.cookie.match(/wordpress_cart=([^;]+)/)?.[1];
       return raw ? JSON.parse(decodeURIComponent(raw)) : [];
     } catch { return []; }
   }
 
-  const cart = getCart();
-  const itemsEl = document.getElementById('cartItems');
-  const totalEl = document.getElementById('cartTotal');
-
-  if (cart.length > 0 && itemsEl) {
-    let total = 0;
-    itemsEl.innerHTML = '';
-    cart.forEach((item: any) => {
-      total += parseFloat(item.price ?? 0) * (item.quantity ?? 1);
-      const div = document.createElement('div');
-      div.style.cssText = 'display:flex; justify-content:space-between; align-items:center;';
-      div.innerHTML = `<div><p style="font-size:0.85rem;font-weight:600;color:#162544;margin:0;">${item.name ?? 'eSIM Plan'}</p><p style="font-size:0.75rem;color:#9ca3af;margin:0;">${item.data ?? ''} · ${item.duration ?? ''}</p></div><span style="font-weight:700;color:#162544;font-size:0.875rem;">$${parseFloat(item.price ?? 0).toFixed(2)}</span>`;
-      itemsEl.appendChild(div);
-    });
-    if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+  function getPrice(item: CartItem): number {
+    return parseFloat(String(item.price_usd ?? item.price ?? 0));
   }
 
-  // Card pay
+  function renderCart() {
+    const cart = getCart();
+    const itemsEl   = document.getElementById('cartItems') as HTMLElement;
+    const totalEl   = document.getElementById('cartTotal') as HTMLElement;
+    const subtotalEl = document.getElementById('cartSubtotal') as HTMLElement;
+    const emptyMsg  = document.getElementById('cartEmptyMsg') as HTMLElement;
+
+    if (!itemsEl) return;
+
+    if (cart.length === 0) {
+      if (emptyMsg) emptyMsg.style.display = 'block';
+      return;
+    }
+
+    if (emptyMsg) emptyMsg.style.display = 'none';
+
+    let total = 0;
+    const rows = cart.map((item, idx) => {
+      const price = getPrice(item);
+      const qty   = item.quantity ?? 1;
+      total += price * qty;
+      const name  = item.name ?? item.country ?? 'eSIM Plan';
+      const data  = item.quota ? `${item.quota}GB` : '';
+      const days  = item.valadity ? `${item.valadity} days` : '';
+      const meta  = [data, days].filter(Boolean).join(' · ');
+      const flagHtml = item.flag
+        ? `<img src="${item.flag}" alt="" style="width:28px;height:20px;border-radius:3px;object-fit:cover;" />`
+        : `<span style="font-size:1.1rem;">🌐</span>`;
+
+      return `
+        <div style="display:flex;align-items:center;gap:0.75rem;padding-bottom:0.875rem;border-bottom:1px solid #f9fafb;">
+          <div style="width:44px;height:44px;background:#f0fdff;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            ${flagHtml}
+          </div>
+          <div style="flex:1;min-width:0;">
+            <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${name}</p>
+            ${meta ? `<p style="font-size:0.75rem;color:#9ca3af;margin:0.1rem 0 0;">${meta}</p>` : ''}
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <p style="font-size:0.975rem;font-weight:800;color:#162544;margin:0;">$${price.toFixed(2)}</p>
+            ${qty > 1 ? `<p style="font-size:0.72rem;color:#9ca3af;margin:0;">×${qty}</p>` : ''}
+          </div>
+        </div>
+      `;
+    });
+
+    // Remove old rows but keep empty msg
+    const existingRows = itemsEl.querySelectorAll('.cart-row');
+    existingRows.forEach(r => r.remove());
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'cart-row';
+    wrapper.style.display = 'flex';
+    wrapper.style.flexDirection = 'column';
+    wrapper.style.gap = '0.875rem';
+    wrapper.innerHTML = rows.join('');
+    itemsEl.insertBefore(wrapper, emptyMsg);
+
+    if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+    if (subtotalEl) subtotalEl.textContent = `$${total.toFixed(2)}`;
+  }
+
+  renderCart();
+
+  // Pay with Card
   document.getElementById('payCardBtn')?.addEventListener('click', async () => {
     const btn = document.getElementById('payCardBtn') as HTMLButtonElement;
     const msg = document.getElementById('checkoutMsg') as HTMLElement;
-    btn.textContent = 'Processing...'; btn.disabled = true;
+    const origHtml = btn.innerHTML;
+
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 0.8s linear infinite;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Processing...`;
+    btn.disabled = true;
+    msg.style.display = 'none';
+
     try {
       const res = await fetch('/api/checkout', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ line_items: getCart() }),
       });
       const data = await res.json();
       if (data.redirect_url || data.url) {
         window.location.href = data.redirect_url ?? data.url;
       } else {
-        msg.style.display = 'block'; msg.style.background = '#fee2e2'; msg.style.color = '#dc2626';
-        msg.textContent = data.error ?? 'Payment failed. Please try again.';
+        msg.style.display = 'block';
+        msg.style.background = '#fee2e2';
+        msg.style.color = '#dc2626';
+        msg.textContent = data.error ?? 'Payment could not be initiated. Please try again.';
       }
     } catch {
-      msg.style.display = 'block'; msg.style.background = '#fee2e2'; msg.style.color = '#dc2626';
-      msg.textContent = 'Network error. Please try again.';
-    } finally { btn.textContent = '💳 Pay with Card'; btn.disabled = false; }
+      msg.style.display = 'block';
+      msg.style.background = '#fee2e2';
+      msg.style.color = '#dc2626';
+      msg.textContent = 'Network error. Please check your connection.';
+    } finally {
+      btn.innerHTML = origHtml;
+      btn.disabled = false;
+    }
+  });
+
+  // Pay with PayPal
+  document.getElementById('payPaypalBtn')?.addEventListener('click', () => {
+    const msg = document.getElementById('checkoutMsg') as HTMLElement;
+    msg.style.display = 'block';
+    msg.style.background = '#dbeafe';
+    msg.style.color = '#1d4ed8';
+    msg.textContent = 'PayPal integration coming soon. Please use card payment.';
+  });
+
+  // Coupon apply
+  document.getElementById('applyCoupon')?.addEventListener('click', () => {
+    const code = (document.getElementById('couponInput') as HTMLInputElement)?.value.trim();
+    const msg  = document.getElementById('couponMsg') as HTMLElement;
+    if (!code) {
+      msg.style.display = 'block';
+      msg.style.color = '#dc2626';
+      msg.textContent = 'Please enter a promo code.';
+      return;
+    }
+    msg.style.display = 'block';
+    msg.style.color = '#6b7280';
+    msg.textContent = 'Checking code...';
+    // Simulate coupon check (replace with real API call)
+    setTimeout(() => {
+      msg.style.color = '#dc2626';
+      msg.textContent = 'Promo code not found or expired.';
+    }, 800);
   });
 </script>
+
+<style>
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @media (max-width: 768px) {
+    section > div > div:last-child { grid-template-columns: 1fr !important; }
+    #cartSummary { position: static !important; }
+  }
+</style>

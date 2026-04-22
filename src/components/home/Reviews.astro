@@ -1,47 +1,128 @@
 ---
 const reviews = [
-  { name: 'Sarah M.', country: '🇺🇸', rating: 5, text: 'Worked perfectly in Japan. Setup took 2 minutes and I had data the entire trip. Will never use a physical SIM again!' },
-  { name: 'James K.', country: '🇬🇧', rating: 5, text: 'Travelled across 6 European countries with one eSIM. Seamless handovers between networks. Absolutely brilliant service.' },
-  { name: 'Ana L.', country: '🇧🇷', rating: 5, text: 'Amazing price for the coverage you get. Customer support was super helpful when I had a question. Highly recommend!' },
-  { name: 'Yuki T.', country: '🇯🇵', rating: 5, text: 'Used WoWo SIM for my US trip. Fast speeds, great coverage. QR code arrived instantly in my email. 10/10.' },
-  { name: 'Marco B.', country: '🇩🇪', rating: 5, text: 'Best eSIM service I have tried. The app makes it easy to monitor data usage. Perfect for business travelers.' },
-  { name: 'Emily R.', country: '🇦🇺', rating: 5, text: 'Saved so much money compared to my carrier roaming. Easy setup and reliable connection throughout Thailand.' },
+  {
+    name: 'Sarah M.',
+    country: '🇺🇸',
+    location: 'United States',
+    rating: 5,
+    text: 'Worked perfectly in Japan. Setup took 2 minutes and I had data the entire trip. Will never use a physical SIM again!',
+    plan: 'Japan 10GB',
+  },
+  {
+    name: 'James K.',
+    country: '🇬🇧',
+    location: 'United Kingdom',
+    rating: 5,
+    text: 'Travelled across 6 European countries with one eSIM. Seamless handovers between networks. Absolutely brilliant service.',
+    plan: 'Europe 20GB',
+  },
+  {
+    name: 'Ana L.',
+    country: '🇧🇷',
+    location: 'Brazil',
+    rating: 5,
+    text: 'Amazing price for the coverage you get. Customer support was super helpful when I had a question. Highly recommend!',
+    plan: 'Global 5GB',
+  },
+  {
+    name: 'Yuki T.',
+    country: '🇯🇵',
+    location: 'Japan',
+    rating: 5,
+    text: 'Used WoWo SIM for my US trip. Fast speeds, great coverage. QR code arrived instantly in my email. 10/10 experience.',
+    plan: 'USA 15GB',
+  },
+  {
+    name: 'Marco B.',
+    country: '🇩🇪',
+    location: 'Germany',
+    rating: 5,
+    text: 'Best eSIM service I have tried. The app makes it easy to monitor data usage. Perfect for business travelers.',
+    plan: 'Europe 15GB',
+  },
+  {
+    name: 'Emily R.',
+    country: '🇦🇺',
+    location: 'Australia',
+    rating: 5,
+    text: 'Saved so much money compared to my carrier roaming. Easy setup and reliable connection throughout Thailand.',
+    plan: 'Thailand 10GB',
+  },
 ];
 ---
 
-<section style="padding: 5rem 2rem; background: white;">
-  <div style="max-width: 80rem; margin: 0 auto;">
-    <div style="text-align: center; margin-bottom: 3.5rem;">
-      <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #fef9c3; color: #92400e; font-size: 0.85rem; font-weight: 600; padding: 0.4rem 1rem; border-radius: 9999px; margin-bottom: 1rem;">
-        ⭐⭐⭐⭐⭐ 4.6 / 5 on Trustpilot
+<section style="padding:5rem 1.5rem;background:white;overflow:hidden;">
+  <div style="max-width:80rem;margin:0 auto;">
+
+    <!-- Header -->
+    <div style="text-align:center;margin-bottom:3.5rem;">
+      <div style="display:inline-flex;align-items:center;gap:0.5rem;background:#fef9c3;color:#92400e;font-size:0.8rem;font-weight:700;padding:0.4rem 1rem;border-radius:9999px;margin-bottom:1rem;">
+        <span style="letter-spacing:0.05em;">★★★★★</span>
+        <span>4.6 / 5 on Trustpilot</span>
       </div>
-      <h2 style="font-size: 2.5rem; font-weight: 900; color: #162544; margin: 0 0 0.75rem; letter-spacing: -0.5px;">What Travelers Say</h2>
-      <p style="color: #6b7280; font-size: 0.95rem;">Trusted by 50,000+ travelers worldwide</p>
+      <h2 class="section-title">What Travelers Say</h2>
+      <p class="section-sub">Trusted by <strong style="color:#162544;">50,000+</strong> travelers worldwide</p>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;">
-      {reviews.map(r => (
-        <div class="review-card" style="background: #f9fafb; border-radius: 1.25rem; padding: 1.5rem; border: 1px solid #f3f4f6; transition: all 0.25s;">
-          <div style="display: flex; gap: 0.2rem; margin-bottom: 1rem;">
-            {'★★★★★'.split('').map(() => (
-              <span style="color: #f59e0b; font-size: 0.9rem;">★</span>
+    <!-- Reviews grid -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+      {reviews.map((r, i) => (
+        <div class="review-card" style={`background:${i % 3 === 1 ? 'linear-gradient(145deg,#162544,#1e3560)' : '#f9fafb'};border-radius:1.5rem;padding:1.75rem;border:1.5px solid ${i % 3 === 1 ? 'transparent' : '#f0f0f0'};transition:all 0.25s;position:relative;overflow:hidden;`}>
+          <!-- Decorative quote mark -->
+          <div style={`position:absolute;top:0.75rem;right:1rem;font-size:4rem;font-weight:900;line-height:1;color:${i % 3 === 1 ? 'rgba(3,222,243,0.12)' : 'rgba(3,222,243,0.08)'};font-family:Georgia,serif;pointer-events:none;`}>"</div>
+
+          <!-- Stars -->
+          <div style="display:flex;gap:0.15rem;margin-bottom:1rem;">
+            {[1,2,3,4,5].map(() => (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
             ))}
           </div>
-          <p style="color: #374151; font-size: 0.875rem; line-height: 1.6; margin: 0 0 1.25rem;">"{r.text}"</p>
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="font-size: 1.25rem;">{r.country}</span>
-            <span style="font-weight: 600; color: #162544; font-size: 0.85rem;">{r.name}</span>
+
+          <!-- Plan badge -->
+          <span style={`display:inline-flex;align-items:center;font-size:0.68rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:9999px;margin-bottom:0.875rem;background:${i % 3 === 1 ? 'rgba(3,222,243,0.15)' : '#e0f9ff'};color:${i % 3 === 1 ? '#03def3' : '#0e7490'};`}>
+            {r.plan}
+          </span>
+
+          <!-- Review text -->
+          <p style={`color:${i % 3 === 1 ? 'rgba(255,255,255,0.8)' : '#374151'};font-size:0.875rem;line-height:1.7;margin:0 0 1.25rem;`}>"{r.text}"</p>
+
+          <!-- Author -->
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div style={`width:38px;height:38px;border-radius:9999px;background:${i % 3 === 1 ? 'rgba(3,222,243,0.15)' : '#e0f9ff'};display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;`}>
+              {r.country}
+            </div>
+            <div>
+              <p style={`font-weight:700;color:${i % 3 === 1 ? 'white' : '#162544'};font-size:0.875rem;margin:0 0 0.1rem;`}>{r.name}</p>
+              <p style={`color:${i % 3 === 1 ? 'rgba(255,255,255,0.45)' : '#9ca3af'};font-size:0.72rem;margin:0;`}>{r.location}</p>
+            </div>
           </div>
         </div>
       ))}
+    </div>
+
+    <!-- Trustpilot link -->
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="https://www.trustpilot.com" target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;gap:0.5rem;font-size:0.875rem;font-weight:600;color:#6b7280;text-decoration:none;transition:color 0.15s;"
+         onmouseover="this.style.color='#162544'" onmouseout="this.style.color='#6b7280'">
+        See all reviews on Trustpilot
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+        </svg>
+      </a>
     </div>
   </div>
 </section>
 
 <style>
   .review-card:hover {
-    background: white;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+  }
+  @media (max-width: 768px) {
+    .review-card { }
+    section > div > div:nth-child(2) { grid-template-columns: 1fr !important; }
   }
 </style>

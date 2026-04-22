@@ -9,87 +9,164 @@ const regions = ['Europe','Asia Pacific','North America','Latin America','Middle
 const popular = [
   { name: 'United States', slug: 'united-states', code: 'us' },
   { name: 'United Kingdom', slug: 'united-kingdom', code: 'gb' },
-  { name: 'Japan', slug: 'japan', code: 'jp' },
-  { name: 'Australia', slug: 'australia', code: 'au' },
-  { name: 'France', slug: 'france', code: 'fr' },
-  { name: 'Germany', slug: 'germany', code: 'de' },
-  { name: 'Italy', slug: 'italy', code: 'it' },
-  { name: 'Canada', slug: 'canada', code: 'ca' },
+  { name: 'Japan',          slug: 'japan',          code: 'jp' },
+  { name: 'Australia',      slug: 'australia',      code: 'au' },
+  { name: 'France',         slug: 'france',         code: 'fr' },
+  { name: 'Germany',        slug: 'germany',        code: 'de' },
+  { name: 'Italy',          slug: 'italy',          code: 'it' },
+  { name: 'Canada',         slug: 'canada',         code: 'ca' },
+];
+
+const navLinks = [
+  { label: 'Help Center', href: '/help-center' },
+  { label: 'FAQs',        href: '/faqs' },
+  { label: 'Blog',        href: '/blog' },
+  { label: 'Contact',     href: '/contact' },
+  { label: 'Partners',    href: '/partners' },
 ];
 ---
 
-<header style="position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.97); backdrop-filter: blur(8px); border-bottom: 1px solid #f3f4f6; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">
-  <nav style="max-width: 80rem; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 4rem;">
+<!-- Cart Overlay -->
+<div id="cartOverlay" aria-hidden="true"></div>
+
+<!-- Cart Drawer -->
+<div id="cartDrawer" role="dialog" aria-label="Shopping Cart" aria-modal="true">
+  <div class="cart-header">
+    <div style="display:flex;align-items:center;gap:0.6rem;">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#162544" stroke-width="2.2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-9H5.4M7 13L5.4 5M7 13l-2.3 2.3c-.6.6-.2 1.7.7 1.7H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+      </svg>
+      <h2 style="font-size:1rem;font-weight:800;color:#162544;margin:0;">Your Cart</h2>
+      <span id="cartDrawerCount" style="display:none;background:#03def3;color:#162544;font-size:0.65rem;font-weight:800;padding:0.15rem 0.45rem;border-radius:9999px;"></span>
+    </div>
+    <button id="cartCloseBtn" aria-label="Close cart"
+      style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:0.25rem;border-radius:0.5rem;display:flex;align-items:center;transition:color 0.15s;"
+      onmouseover="this.style.color='#162544'" onmouseout="this.style.color='#9ca3af'">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="cart-body" id="cartBodyItems">
+    <!-- filled by JS -->
+    <div id="cartEmpty" style="text-align:center;padding:3rem 1rem;">
+      <div style="font-size:3rem;margin-bottom:1rem;">🛒</div>
+      <p style="font-weight:700;color:#162544;margin:0 0 0.4rem;font-size:1rem;">Your cart is empty</p>
+      <p style="color:#9ca3af;font-size:0.85rem;margin:0;">Add an eSIM plan to get started.</p>
+      <a href="/" id="cartBrowseLink" style="display:inline-block;margin-top:1.25rem;background:#03def3;color:#162544;font-weight:700;padding:0.65rem 1.5rem;border-radius:9999px;font-size:0.875rem;text-decoration:none;">Browse Plans</a>
+    </div>
+    <div id="cartItemsList" style="display:none;"></div>
+  </div>
+
+  <div class="cart-footer" id="cartFooter" style="display:none;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+      <span style="font-size:0.875rem;color:#6b7280;">Subtotal</span>
+      <span id="cartDrawerTotal" style="font-size:1.25rem;font-weight:900;color:#162544;">$0.00</span>
+    </div>
+    <a href="/checkout" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;width:100%;background:#162544;color:white;font-weight:700;padding:0.9rem 1.5rem;border-radius:9999px;font-size:0.95rem;text-decoration:none;transition:background 0.2s;"
+       onmouseover="this.style.background='#0f1c38'" onmouseout="this.style.background='#162544'">
+      Proceed to Checkout
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
+    <p style="text-align:center;font-size:0.75rem;color:#9ca3af;margin:0.75rem 0 0;">Secure checkout · Instant activation</p>
+  </div>
+</div>
+
+<!-- ── Header ── -->
+<header id="siteHeader" style="position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #f0f0f0;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+  <nav style="max-width:80rem;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:4rem;">
 
     <!-- Logo -->
-    <a href="/" style="font-size: 1.5rem; font-weight: 900; color: #162544; text-decoration: none; letter-spacing: -0.5px;">
-      WoWo<span style="color: #03def3;">SIM</span>
+    <a href="/" style="font-size:1.5rem;font-weight:900;color:#162544;text-decoration:none;letter-spacing:-1px;flex-shrink:0;">
+      WoWo<span style="color:#03def3;">SIM</span>
     </a>
 
     <!-- Desktop Nav -->
-    <ul style="display: flex; align-items: center; gap: 1.5rem; list-style: none; margin: 0; padding: 0; font-size: 0.875rem; font-weight: 500; color: #374151;">
+    <ul id="desktopNav" style="display:flex;align-items:center;gap:0.25rem;list-style:none;margin:0;padding:0;font-size:0.875rem;">
 
       <!-- Destinations Mega Menu -->
-      <li class="mega-parent" style="position: relative;">
-        <button class="nav-link" style="display: flex; align-items: center; gap: 0.25rem; background: none; border: none; cursor: pointer; font-size: 0.875rem; font-weight: 500; color: #374151; padding: 0.5rem 0;">
+      <li class="mega-parent" style="position:relative;">
+        <button class="btn-ghost" style="font-size:0.875rem;display:flex;align-items:center;gap:0.3rem;">
           Destinations
-          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="transition: transform 0.2s;">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" style="transition:transform 0.2s;" id="destArrow">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
           </svg>
         </button>
-        <!-- Mega dropdown -->
-        <div class="mega-menu" style="display: none; position: absolute; top: calc(100% + 0.5rem); left: 50%; transform: translateX(-50%); width: 640px; background: white; border-radius: 1rem; box-shadow: 0 10px 40px rgba(0,0,0,0.12); border: 1px solid #f3f4f6; padding: 1.5rem; z-index: 100;">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div class="mega-menu">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
             <div>
-              <p style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin: 0 0 0.75rem;">Popular</p>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem;">
+              <p style="font-size:0.68rem;font-weight:700;text-transform:uppercase;color:#9ca3af;margin:0 0 0.75rem;letter-spacing:0.08em;">Popular</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.2rem;">
                 {popular.map(c => (
-                  <a href={`/${c.slug}`} style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: 0.5rem; font-size: 0.8rem; color: #374151; text-decoration: none; transition: background 0.15s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
-                    <span class={`fi fi-${c.code}`} style="border-radius: 2px; width: 18px; height: 13px;"></span>
+                  <a href={`/${c.slug}`}
+                     style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border-radius:0.5rem;font-size:0.8rem;color:#374151;text-decoration:none;transition:background 0.12s;"
+                     onmouseover="this.style.background='#f0fdff';this.style.color='#162544'" onmouseout="this.style.background='transparent';this.style.color='#374151'">
+                    <span class={`fi fi-${c.code}`} style="border-radius:2px;width:18px;height:13px;flex-shrink:0;"></span>
                     {c.name}
                   </a>
                 ))}
               </div>
             </div>
             <div>
-              <p style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin: 0 0 0.75rem;">Regions</p>
+              <p style="font-size:0.68rem;font-weight:700;text-transform:uppercase;color:#9ca3af;margin:0 0 0.75rem;letter-spacing:0.08em;">Regions</p>
               {regions.map(r => (
-                <a href={`/${r.toLowerCase().replace(/ /g,'-')}`} style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: 0.5rem; font-size: 0.8rem; color: #374151; text-decoration: none; transition: background 0.15s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
-                  🌐 {r}
+                <a href={`/${r.toLowerCase().replace(/ /g,'-')}`}
+                   style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;border-radius:0.5rem;font-size:0.8rem;color:#374151;text-decoration:none;transition:background 0.12s;"
+                   onmouseover="this.style.background='#f0fdff';this.style.color='#162544'" onmouseout="this.style.background='transparent';this.style.color='#374151'">
+                  <span style="color:#03def3;">◈</span> {r}
                 </a>
               ))}
-              <a href="/destinations" style="display: inline-block; margin-top: 0.75rem; font-size: 0.8rem; font-weight: 600; color: #03def3; text-decoration: none;">View all 195+ countries →</a>
+              <a href="/destinations" style="display:inline-block;margin-top:0.75rem;font-size:0.8rem;font-weight:700;color:#03def3;text-decoration:none;">
+                View all 195+ countries →
+              </a>
             </div>
           </div>
         </div>
       </li>
 
-      <li><a href="/help-center" style={`color: ${path === '/help-center' ? '#03def3' : '#374151'}; text-decoration: none;`} onmouseover="this.style.color='#03def3'" onmouseout={`this.style.color='${path === '/help-center' ? '#03def3' : '#374151'}'`}>Help Center</a></li>
-      <li><a href="/faqs" style={`color: ${path === '/faqs' ? '#03def3' : '#374151'}; text-decoration: none;`} onmouseover="this.style.color='#03def3'" onmouseout={`this.style.color='${path === '/faqs' ? '#03def3' : '#374151'}'`}>FAQs</a></li>
-      <li><a href="/blog" style={`color: ${path.startsWith('/blog') ? '#03def3' : '#374151'}; text-decoration: none;`} onmouseover="this.style.color='#03def3'" onmouseout={`this.style.color='${path.startsWith('/blog') ? '#03def3' : '#374151'}'`}>Blog</a></li>
-      <li><a href="/contact" style={`color: ${path === '/contact' ? '#03def3' : '#374151'}; text-decoration: none;`} onmouseover="this.style.color='#03def3'" onmouseout={`this.style.color='${path === '/contact' ? '#03def3' : '#374151'}'`}>Contact</a></li>
-      <li><a href="/partners" style={`color: ${path === '/partners' ? '#03def3' : '#374151'}; text-decoration: none;`} onmouseover="this.style.color='#03def3'" onmouseout={`this.style.color='${path === '/partners' ? '#03def3' : '#374151'}'`}>Partners</a></li>
+      {navLinks.map(link => (
+        <li>
+          <a href={link.href} class="btn-ghost"
+             style={`font-size:0.875rem;color:${path === link.href || path.startsWith(link.href+'/') ? '#03def3' : '#374151'};font-weight:${path === link.href ? '600' : '500'};`}
+             onmouseover="this.style.color='#03def3'" onmouseout={`this.style.color='${path === link.href || path.startsWith(link.href+'/') ? '#03def3' : '#374151'}'`}>
+            {link.label}
+          </a>
+        </li>
+      ))}
     </ul>
 
     <!-- Right actions -->
-    <div style="display: flex; align-items: center; gap: 0.75rem;">
-      <!-- Cart -->
-      <button id="cartBtn" style="position: relative; padding: 0.4rem; background: none; border: none; cursor: pointer; border-radius: 9999px; transition: background 0.15s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#374151" stroke-width="2">
+    <div style="display:flex;align-items:center;gap:0.5rem;">
+
+      <!-- Cart Button -->
+      <button id="cartBtn"
+        style="position:relative;padding:0.5rem;background:none;border:none;cursor:pointer;border-radius:0.75rem;transition:background 0.15s;color:#374151;"
+        aria-label="Open cart"
+        onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-9H5.4M7 13L5.4 5M7 13l-2.3 2.3c-.6.6-.2 1.7.7 1.7H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
         </svg>
-        <span id="cartCount" style="display: none; position: absolute; top: -4px; right: -4px; background: #03def3; color: #162544; font-size: 0.65rem; font-weight: 700; width: 16px; height: 16px; border-radius: 9999px; align-items: center; justify-content: center;">0</span>
+        <span id="cartCount" style="display:none;position:absolute;top:-3px;right:-3px;background:#03def3;color:#162544;font-size:0.6rem;font-weight:800;min-width:16px;height:16px;border-radius:9999px;align-items:center;justify-content:center;padding:0 3px;">0</span>
       </button>
 
       {isLoggedIn ? (
-        <a href="/dashboard" class="btn-primary" style="font-size: 0.8rem; padding: 0.5rem 1rem;">Dashboard</a>
+        <a href="/dashboard" class="btn-primary" style="font-size:0.8rem;padding:0.5rem 1.1rem;">Dashboard</a>
       ) : (
-        <a href="/login" class="btn-primary" style="font-size: 0.8rem; padding: 0.5rem 1rem;">Login</a>
+        <>
+          <a href="/login" class="btn-ghost" style="font-size:0.875rem;font-weight:600;color:#374151;" id="loginNavBtn">Login</a>
+          <a href="/signup" class="btn-primary" style="font-size:0.8rem;padding:0.5rem 1.1rem;">Sign Up Free</a>
+        </>
       )}
 
       <!-- Mobile hamburger -->
-      <button id="mobileMenuBtn" style="display: none; padding: 0.4rem; background: none; border: none; cursor: pointer;">
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#374151" stroke-width="2">
+      <button id="mobileMenuBtn"
+        style="display:none;padding:0.45rem;background:none;border:none;cursor:pointer;border-radius:0.5rem;transition:background 0.15s;"
+        aria-label="Toggle menu"
+        onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#374151" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
@@ -97,50 +174,176 @@ const popular = [
   </nav>
 
   <!-- Mobile Menu -->
-  <div id="mobileMenu" style="display: none; border-top: 1px solid #f3f4f6; padding: 1rem 1.5rem; background: white;">
-    <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem; font-weight: 500;">
-      <a href="/help-center" style="color: #374151; text-decoration: none; padding: 0.4rem 0;">Help Center</a>
-      <a href="/faqs" style="color: #374151; text-decoration: none; padding: 0.4rem 0;">FAQs</a>
-      <a href="/blog" style="color: #374151; text-decoration: none; padding: 0.4rem 0;">Blog</a>
-      <a href="/contact" style="color: #374151; text-decoration: none; padding: 0.4rem 0;">Contact</a>
-      <a href="/partners" style="color: #374151; text-decoration: none; padding: 0.4rem 0;">Partners</a>
+  <div id="mobileMenu" style="display:none;border-top:1px solid #f0f0f0;padding:1rem 1.5rem 1.5rem;background:white;">
+    <div style="display:flex;flex-direction:column;gap:0.25rem;">
+      <a href="/destinations" style="padding:0.6rem 0.75rem;border-radius:0.65rem;font-size:0.875rem;font-weight:600;color:#162544;text-decoration:none;background:#f0fdff;margin-bottom:0.25rem;">🌍 All Destinations</a>
+      {navLinks.map(link => (
+        <a href={link.href} style="padding:0.6rem 0.75rem;border-radius:0.65rem;font-size:0.875rem;font-weight:500;color:#374151;text-decoration:none;transition:background 0.1s;"
+           onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">{link.label}</a>
+      ))}
+      <div style="border-top:1px solid #f0f0f0;margin-top:0.5rem;padding-top:0.75rem;display:flex;gap:0.5rem;">
+        {isLoggedIn ? (
+          <a href="/dashboard" class="btn-primary" style="flex:1;text-align:center;font-size:0.85rem;padding:0.65rem;">Dashboard</a>
+        ) : (
+          <>
+            <a href="/login" class="btn-outline" style="flex:1;text-align:center;font-size:0.85rem;padding:0.65rem;">Login</a>
+            <a href="/signup" class="btn-primary" style="flex:1;text-align:center;font-size:0.85rem;padding:0.65rem;">Sign Up</a>
+          </>
+        )}
+      </div>
     </div>
   </div>
 </header>
 
 <script>
-  // Mobile menu toggle
-  document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
-    const m = document.getElementById('mobileMenu');
-    if (m) m.style.display = m.style.display === 'none' ? 'block' : 'none';
-  });
+// ── Mobile menu ──
+const mobileBtn = document.getElementById('mobileMenuBtn') as HTMLElement;
+const mobileMenu = document.getElementById('mobileMenu') as HTMLElement;
+const desktopNav = document.getElementById('desktopNav') as HTMLElement;
 
-  // Show hamburger on mobile
-  function checkMobile() {
-    const btn = document.getElementById('mobileMenuBtn') as HTMLElement;
-    if (btn) btn.style.display = window.innerWidth < 1024 ? 'block' : 'none';
-  }
-  checkMobile();
-  window.addEventListener('resize', checkMobile);
+function checkMobile() {
+  const isMobile = window.innerWidth < 1024;
+  if (mobileBtn) mobileBtn.style.display = isMobile ? 'block' : 'none';
+  if (desktopNav) desktopNav.style.display = isMobile ? 'none' : 'flex';
+}
+checkMobile();
+window.addEventListener('resize', checkMobile, { passive: true });
 
-  // Mega menu hover
-  const parent = document.querySelector('.mega-parent') as HTMLElement;
-  const menu = document.querySelector('.mega-menu') as HTMLElement;
-  if (parent && menu) {
-    parent.addEventListener('mouseenter', () => menu.style.display = 'block');
-    parent.addEventListener('mouseleave', () => menu.style.display = 'none');
-  }
+mobileBtn?.addEventListener('click', () => {
+  if (!mobileMenu) return;
+  const open = mobileMenu.style.display !== 'none';
+  mobileMenu.style.display = open ? 'none' : 'block';
+});
 
-  // Cart count from cookie
+// ── Cart helpers ──
+interface CartItem {
+  name?: string;
+  flag?: string;
+  quota?: number | string;
+  valadity?: number | string;
+  price_usd?: number | string;
+  price?: number | string;
+  quantity?: number;
+  country?: string;
+  id?: string | number;
+}
+
+function getCartItems(): CartItem[] {
   try {
     const raw = document.cookie.match(/wordpress_cart=([^;]+)/)?.[1];
-    if (raw) {
-      const cart = JSON.parse(decodeURIComponent(raw));
-      const count = cart.reduce((s: number, i: any) => s + (i.quantity ?? 1), 0);
-      if (count > 0) {
-        const el = document.getElementById('cartCount') as HTMLElement;
-        if (el) { el.textContent = String(count); el.style.display = 'flex'; }
-      }
-    }
-  } catch {}
+    return raw ? JSON.parse(decodeURIComponent(raw)) : [];
+  } catch { return []; }
+}
+
+function saveCartItems(items: CartItem[]) {
+  const encoded = encodeURIComponent(JSON.stringify(items));
+  document.cookie = `wordpress_cart=${encoded};path=/;max-age=604800;samesite=lax`;
+}
+
+function getItemPrice(item: CartItem): number {
+  return parseFloat(String(item.price_usd ?? item.price ?? 0));
+}
+
+function getCartTotal(items: CartItem[]): number {
+  return items.reduce((sum, item) => sum + getItemPrice(item) * (item.quantity ?? 1), 0);
+}
+
+function updateCartBadge(count: number) {
+  const el = document.getElementById('cartCount') as HTMLElement | null;
+  const drawerEl = document.getElementById('cartDrawerCount') as HTMLElement | null;
+  if (el) { el.textContent = String(count); el.style.display = count > 0 ? 'flex' : 'none'; }
+  if (drawerEl) { drawerEl.textContent = String(count); drawerEl.style.display = count > 0 ? 'inline-flex' : 'none'; }
+}
+
+function renderCartDrawer() {
+  const items = getCartItems();
+  const emptyEl  = document.getElementById('cartEmpty') as HTMLElement | null;
+  const listEl   = document.getElementById('cartItemsList') as HTMLElement | null;
+  const footerEl = document.getElementById('cartFooter') as HTMLElement | null;
+  const totalEl  = document.getElementById('cartDrawerTotal') as HTMLElement | null;
+
+  updateCartBadge(items.reduce((s, i) => s + (i.quantity ?? 1), 0));
+
+  if (!listEl || !emptyEl || !footerEl) return;
+
+  if (items.length === 0) {
+    emptyEl.style.display  = 'block';
+    listEl.style.display   = 'none';
+    footerEl.style.display = 'none';
+    return;
+  }
+
+  emptyEl.style.display  = 'none';
+  listEl.style.display   = 'block';
+  footerEl.style.display = 'block';
+
+  listEl.innerHTML = items.map((item, idx) => {
+    const price = getItemPrice(item);
+    const name  = item.name ?? item.country ?? 'eSIM Plan';
+    const data  = item.quota ? `${item.quota}GB` : '';
+    const days  = item.valadity ? `${item.valadity} days` : '';
+    const meta  = [data, days].filter(Boolean).join(' · ');
+    const flagImg = item.flag
+      ? `<img src="${item.flag}" alt="" style="width:24px;height:16px;border-radius:2px;object-fit:cover;" />`
+      : `<span style="font-size:1.2rem;">🌐</span>`;
+
+    return `
+      <div class="cart-item">
+        <div class="cart-item-flag">${flagImg}</div>
+        <div class="cart-item-info">
+          <p style="font-size:0.875rem;font-weight:700;color:#162544;">${name}</p>
+          ${meta ? `<p style="font-size:0.75rem;color:#9ca3af;margin-top:0.15rem;">${meta}</p>` : ''}
+          <p style="font-size:0.875rem;font-weight:800;color:#162544;margin-top:0.2rem;">$${price.toFixed(2)}</p>
+        </div>
+        <button class="cart-remove-btn" data-idx="${idx}" aria-label="Remove item" title="Remove">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    `;
+  }).join('');
+
+  // Attach remove handlers
+  listEl.querySelectorAll('.cart-remove-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const idx = parseInt((e.currentTarget as HTMLElement).dataset.idx ?? '-1');
+      if (idx < 0) return;
+      const updated = getCartItems().filter((_, i) => i !== idx);
+      saveCartItems(updated);
+      renderCartDrawer();
+    });
+  });
+
+  if (totalEl) totalEl.textContent = `$${getCartTotal(items).toFixed(2)}`;
+}
+
+// ── Cart Drawer open/close ──
+const cartBtn     = document.getElementById('cartBtn') as HTMLElement | null;
+const cartOverlay = document.getElementById('cartOverlay') as HTMLElement | null;
+const cartDrawer  = document.getElementById('cartDrawer') as HTMLElement | null;
+const cartCloseBtn = document.getElementById('cartCloseBtn') as HTMLElement | null;
+
+function openCart() {
+  renderCartDrawer();
+  cartOverlay?.classList.add('active');
+  cartDrawer?.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+  cartOverlay?.classList.remove('active');
+  cartDrawer?.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+cartBtn?.addEventListener('click', openCart);
+cartCloseBtn?.addEventListener('click', closeCart);
+cartOverlay?.addEventListener('click', closeCart);
+
+// Close on Escape
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCart(); });
+
+// Initial badge update
+updateCartBadge(getCartItems().reduce((s, i) => s + (i.quantity ?? 1), 0));
 </script>

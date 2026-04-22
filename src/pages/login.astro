@@ -4,57 +4,139 @@ import { isLoggedIn } from '../lib/auth';
 if (isLoggedIn(Astro.cookies)) return Astro.redirect('/dashboard');
 ---
 
-<Base title="Login">
-  <section style="min-height: calc(100vh - 140px); display: flex; align-items: center; justify-content: center; padding: 3rem 1rem; background: linear-gradient(135deg, #f0fdff, white);">
-    <div style="width: 100%; max-width: 420px;">
-      <div class="card" style="padding: 2.5rem;">
-        <div style="text-align: center; margin-bottom: 2rem;">
-          <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">👋</div>
-          <h1 style="font-size: 1.5rem; font-weight: 800; color: #162544; margin: 0 0 0.4rem;">Welcome back</h1>
-          <p style="color: #9ca3af; font-size: 0.875rem; margin: 0;">Sign in to manage your eSIMs</p>
+<Base title="Sign In" description="Sign in to your WoWo SIM account to manage your eSIMs.">
+  <section style="min-height:calc(100vh - 140px);display:flex;align-items:center;justify-content:center;padding:3rem 1rem;background:linear-gradient(150deg,#ffffff 0%,#f0fdff 50%,#e0f9ff 100%);">
+    <div style="width:100%;max-width:420px;">
+
+      <!-- Logo top -->
+      <div style="text-align:center;margin-bottom:2rem;">
+        <a href="/" style="font-size:1.75rem;font-weight:900;color:#162544;text-decoration:none;letter-spacing:-1px;">
+          WoWo<span style="color:#03def3;">SIM</span>
+        </a>
+      </div>
+
+      <div class="card" style="padding:2.5rem;">
+        <div style="text-align:center;margin-bottom:2rem;">
+          <!-- Mini globe icon -->
+          <div style="width:64px;height:64px;background:linear-gradient(135deg,#162544,#1e3560);border-radius:1.25rem;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <circle cx="16" cy="16" r="13" fill="#162544"/>
+              <circle cx="16" cy="16" r="13" fill="none" stroke="#03def3" stroke-width="1.5"/>
+              <ellipse cx="16" cy="16" rx="13" ry="5" fill="none" stroke="rgba(3,222,243,0.4)" stroke-width="1"/>
+              <line x1="16" y1="3" x2="16" y2="29" stroke="rgba(3,222,243,0.4)" stroke-width="1"/>
+              <circle cx="11" cy="13" r="2.5" fill="white"/>
+              <circle cx="11" cy="13" r="1.5" fill="#162544"/>
+              <circle cx="21" cy="13" r="2.5" fill="white"/>
+              <circle cx="21" cy="13" r="1.5" fill="#162544"/>
+              <path d="M12 19 Q16 22 20 19" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <h1 style="font-size:1.5rem;font-weight:900;color:#162544;margin:0 0 0.35rem;letter-spacing:-0.5px;">Welcome back</h1>
+          <p style="color:#9ca3af;font-size:0.875rem;margin:0;">Sign in to manage your eSIMs</p>
         </div>
 
-        <form id="loginForm" style="display: flex; flex-direction: column; gap: 1rem;">
+        <form id="loginForm" style="display:flex;flex-direction:column;gap:1rem;" novalidate>
           <div>
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin-bottom: 0.4rem;">Email address</label>
-            <input type="email" id="email" required placeholder="you@example.com"
-              style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid #e5e7eb; border-radius: 0.75rem; font-size: 0.875rem; outline: none; transition: border 0.2s;"
-              onfocus="this.style.borderColor='#03def3'" onblur="this.style.borderColor='#e5e7eb'" />
+            <label class="form-label" for="email">Email address</label>
+            <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email"
+              class="form-input" />
           </div>
           <div>
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin-bottom: 0.4rem;">Password</label>
-            <input type="password" id="password" required placeholder="••••••••"
-              style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid #e5e7eb; border-radius: 0.75rem; font-size: 0.875rem; outline: none; transition: border 0.2s;"
-              onfocus="this.style.borderColor='#03def3'" onblur="this.style.borderColor='#e5e7eb'" />
+            <label class="form-label" for="password">Password</label>
+            <div style="position:relative;">
+              <input type="password" id="password" name="password" required placeholder="••••••••" autocomplete="current-password"
+                class="form-input" style="padding-right:2.75rem;" />
+              <button type="button" id="togglePw"
+                style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9ca3af;padding:0.2rem;display:flex;align-items:center;"
+                aria-label="Toggle password visibility">
+                <svg id="eyeOpen" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                <svg id="eyeClosed" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:none;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                </svg>
+              </button>
+            </div>
           </div>
-          <div style="display: flex; justify-content: flex-end;">
-            <a href="/forgot-password" style="font-size: 0.8rem; color: #03def3; text-decoration: none; font-weight: 500;">Forgot password?</a>
+
+          <div style="display:flex;justify-content:flex-end;margin-top:-0.25rem;">
+            <a href="/forgot-password" style="font-size:0.8rem;color:#03def3;text-decoration:none;font-weight:600;"
+               onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+              Forgot password?
+            </a>
           </div>
-          <button type="submit" id="loginBtn" class="btn-primary" style="width: 100%; justify-content: center; font-size: 0.95rem; padding: 0.9rem;">
+
+          <button type="submit" id="loginBtn" class="btn-primary"
+            style="width:100%;justify-content:center;font-size:0.95rem;padding:0.9rem;border-radius:0.875rem;margin-top:0.25rem;">
+            <svg id="loginSpinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none;animation:spin 0.8s linear infinite;">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
             Sign In
           </button>
-          <div id="loginError" style="display: none; background: #fee2e2; color: #dc2626; font-size: 0.8rem; padding: 0.75rem 1rem; border-radius: 0.75rem; text-align: center;"></div>
+
+          <div id="loginError" class="alert-error" style="display:none;text-align:center;"></div>
         </form>
 
-        <p style="text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: #9ca3af;">
+        <p style="text-align:center;margin-top:1.5rem;font-size:0.875rem;color:#9ca3af;">
           Don't have an account?
-          <a href="/signup" style="color: #162544; font-weight: 600; text-decoration: none; margin-left: 0.25rem;">Sign up free →</a>
+          <a href="/signup" style="color:#162544;font-weight:700;text-decoration:none;margin-left:0.3rem;"
+             onmouseover="this.style.color='#03def3'" onmouseout="this.style.color='#162544'">
+            Sign up free →
+          </a>
         </p>
+      </div>
+
+      <!-- Trust signals -->
+      <div style="display:flex;justify-content:center;gap:1.5rem;margin-top:1.5rem;font-size:0.75rem;color:#9ca3af;">
+        <span style="display:flex;align-items:center;gap:0.3rem;">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          Secure Login
+        </span>
+        <span style="display:flex;align-items:center;gap:0.3rem;">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Privacy Protected
+        </span>
       </div>
     </div>
   </section>
 </Base>
 
 <script>
+  // Toggle password visibility
+  const togglePw  = document.getElementById('togglePw') as HTMLButtonElement;
+  const pwInput   = document.getElementById('password') as HTMLInputElement;
+  const eyeOpen   = document.getElementById('eyeOpen') as HTMLElement;
+  const eyeClosed = document.getElementById('eyeClosed') as HTMLElement;
+
+  togglePw?.addEventListener('click', () => {
+    const isText = pwInput.type === 'text';
+    pwInput.type = isText ? 'password' : 'text';
+    eyeOpen.style.display   = isText ? 'block' : 'none';
+    eyeClosed.style.display = isText ? 'none' : 'block';
+  });
+
+  // Login form
   document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btn = document.getElementById('loginBtn') as HTMLButtonElement;
-    const err = document.getElementById('loginError') as HTMLElement;
-    const email = (document.getElementById('email') as HTMLInputElement).value;
+    const btn     = document.getElementById('loginBtn') as HTMLButtonElement;
+    const spinner = document.getElementById('loginSpinner') as HTMLElement;
+    const err     = document.getElementById('loginError') as HTMLElement;
+    const email   = (document.getElementById('email') as HTMLInputElement).value.trim();
     const password = (document.getElementById('password') as HTMLInputElement).value;
 
-    btn.textContent = 'Signing in...';
+    if (!email || !password) {
+      err.textContent = 'Please fill in all fields.';
+      err.style.display = 'block';
+      return;
+    }
+
     btn.disabled = true;
+    btn.querySelector('svg') === null;
+    spinner.style.display = 'inline-block';
+    const btnText = btn.childNodes[btn.childNodes.length - 1] as Text;
+    const origText = btnText.textContent ?? 'Sign In';
+    btnText.textContent = ' Signing in...';
     err.style.display = 'none';
 
     try {
@@ -65,17 +147,27 @@ if (isLoggedIn(Astro.cookies)) return Astro.redirect('/dashboard');
       });
       const data = await res.json();
       if (data.success) {
-        window.location.href = '/dashboard';
+        // Redirect to dashboard or ?next param
+        const params = new URLSearchParams(window.location.search);
+        window.location.href = params.get('next') ?? '/dashboard';
       } else {
-        err.textContent = data.message ?? 'Invalid email or password';
+        err.textContent = data.message ?? 'Invalid email or password. Please try again.';
         err.style.display = 'block';
       }
     } catch {
-      err.textContent = 'Network error. Please try again.';
+      err.textContent = 'Network error. Please check your connection and try again.';
       err.style.display = 'block';
     } finally {
-      btn.textContent = 'Sign In';
       btn.disabled = false;
+      spinner.style.display = 'none';
+      btnText.textContent = origText;
     }
   });
+
+  // Focus first input
+  (document.getElementById('email') as HTMLInputElement)?.focus();
 </script>
+
+<style>
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
