@@ -4,168 +4,316 @@ import { portalFetch } from '../lib/api';
 
 const { country } = Astro.params;
 
-// Slug → ISO3 mapping for API
 const slugToIso3: Record<string, string> = {
-  'united-states': 'USA', 'united-kingdom': 'GBR', 'japan': 'JPN',
-  'australia': 'AUS', 'france': 'FRA', 'germany': 'DEU', 'italy': 'ITA',
-  'canada': 'CAN', 'spain': 'ESP', 'thailand': 'THA', 'mexico': 'MEX',
-  'brazil': 'BRA', 'china': 'CHN', 'india': 'IND', 'south-korea': 'KOR',
-  'indonesia': 'IDN', 'turkey': 'TUR', 'morocco': 'MAR', 'egypt': 'EGY',
-  'uae': 'ARE', 'saudi-arabia': 'SAU', 'portugal': 'PRT', 'netherlands': 'NLD',
-  'switzerland': 'CHE', 'austria': 'AUT', 'belgium': 'BEL', 'greece': 'GRC',
-  'new-zealand': 'NZL', 'singapore': 'SGP', 'malaysia': 'MYS', 'vietnam': 'VNM',
-  'philippines': 'PHL', 'taiwan': 'TWN', 'hong-kong': 'HKG', 'israel': 'ISR',
-  'jordan': 'JOR', 'kenya': 'KEN', 'south-africa': 'ZAF', 'nigeria': 'NGA',
-  // Regions
-  'europe': 'EUR', 'asia-pacific': 'ASIA', 'north-america': 'NAM',
-  'latin-america': 'LAM', 'middle-east': 'MDE', 'caribbean': 'CAR',
-  'caucasus-region': 'CAU', 'global': 'GLOBAL',
+  'united-states':'USA','united-kingdom':'GBR','japan':'JPN','australia':'AUS',
+  'france':'FRA','germany':'DEU','italy':'ITA','canada':'CAN','spain':'ESP',
+  'thailand':'THA','mexico':'MEX','brazil':'BRA','china':'CHN','india':'IND',
+  'south-korea':'KOR','indonesia':'IDN','turkey':'TUR','morocco':'MAR',
+  'egypt':'EGY','uae':'ARE','saudi-arabia':'SAU','portugal':'PRT',
+  'netherlands':'NLD','switzerland':'CHE','austria':'AUT','belgium':'BEL',
+  'greece':'GRC','new-zealand':'NZL','singapore':'SGP','malaysia':'MYS',
+  'vietnam':'VNM','philippines':'PHL','taiwan':'TWN','hong-kong':'HKG',
+  'israel':'ISR','jordan':'JOR','kenya':'KEN','south-africa':'ZAF',
+  'nigeria':'NGA','argentina':'ARG','chile':'CHL','colombia':'COL',
+  'peru':'PER','czech-republic':'CZE','poland':'POL','sweden':'SWE',
+  'norway':'NOR','denmark':'DNK','finland':'FIN','hungary':'HUN',
+  'romania':'ROU','croatia':'HRV','serbia':'SRB','ukraine':'UKR',
+  'europe':'EUR','asia-pacific':'ASIA','north-america':'NAM',
+  'latin-america':'LAM','middle-east':'MDE','caribbean':'CAR',
+  'caucasus-region':'CAU','global':'GLOBAL',
 };
 
-// Slug → display name
 const slugToName: Record<string, string> = {
-  'united-states': 'United States', 'united-kingdom': 'United Kingdom',
-  'japan': 'Japan', 'australia': 'Australia', 'france': 'France',
-  'germany': 'Germany', 'italy': 'Italy', 'canada': 'Canada',
-  'spain': 'Spain', 'thailand': 'Thailand', 'mexico': 'Mexico',
-  'brazil': 'Brazil', 'china': 'China', 'india': 'India',
-  'south-korea': 'South Korea', 'indonesia': 'Indonesia', 'turkey': 'Turkey',
-  'morocco': 'Morocco', 'egypt': 'Egypt', 'uae': 'UAE',
-  'saudi-arabia': 'Saudi Arabia', 'portugal': 'Portugal', 'netherlands': 'Netherlands',
-  'switzerland': 'Switzerland', 'austria': 'Austria', 'belgium': 'Belgium',
-  'greece': 'Greece', 'new-zealand': 'New Zealand', 'singapore': 'Singapore',
-  'malaysia': 'Malaysia', 'vietnam': 'Vietnam', 'philippines': 'Philippines',
-  'taiwan': 'Taiwan', 'hong-kong': 'Hong Kong', 'israel': 'Israel',
-  'europe': 'Europe', 'asia-pacific': 'Asia Pacific', 'north-america': 'North America',
-  'latin-america': 'Latin America', 'middle-east': 'Middle East',
-  'caribbean': 'Caribbean', 'caucasus-region': 'Caucasus Region', 'global': 'Global',
+  'united-states':'United States','united-kingdom':'United Kingdom','japan':'Japan',
+  'australia':'Australia','france':'France','germany':'Germany','italy':'Italy',
+  'canada':'Canada','spain':'Spain','thailand':'Thailand','mexico':'Mexico',
+  'brazil':'Brazil','china':'China','india':'India','south-korea':'South Korea',
+  'indonesia':'Indonesia','turkey':'Turkey','morocco':'Morocco','egypt':'Egypt',
+  'uae':'UAE','saudi-arabia':'Saudi Arabia','portugal':'Portugal',
+  'netherlands':'Netherlands','switzerland':'Switzerland','austria':'Austria',
+  'belgium':'Belgium','greece':'Greece','new-zealand':'New Zealand',
+  'singapore':'Singapore','malaysia':'Malaysia','vietnam':'Vietnam',
+  'philippines':'Philippines','taiwan':'Taiwan','hong-kong':'Hong Kong',
+  'israel':'Israel','jordan':'Jordan','kenya':'Kenya','south-africa':'South Africa',
+  'nigeria':'Nigeria','europe':'Europe','asia-pacific':'Asia Pacific',
+  'north-america':'North America','latin-america':'Latin America',
+  'middle-east':'Middle East','caribbean':'Caribbean','caucasus-region':'Caucasus Region',
+  'global':'Global',
 };
 
 const iso3 = slugToIso3[country ?? ''];
-const countryName = slugToName[country ?? ''] ?? country?.replace(/-/g, ' ');
-
+const countryName = slugToName[country ?? ''] ?? country?.replace(/-/g,' ');
 if (!iso3) return Astro.redirect('/');
 
 let plans: any[] = [];
+let flagUrl = '';
+let networkName = '';
+
 try {
   const res = await portalFetch(`/plans?q[iso3_eq]=${iso3}`);
-  if (res.ok) { const d = await res.json(); plans = d.plans ?? []; }
+  if (res.ok) {
+    const d = await res.json();
+    plans = (d.plans ?? []).filter((p: any) => p.is_active !== false);
+    if (plans.length > 0) {
+      flagUrl = plans[0].flag ?? '';
+      networkName = plans[0].network ?? '';
+    }
+  }
 } catch {}
 
-function formatBytes(bytes: number) {
-  if (!bytes) return 'Unlimited';
-  const gb = bytes / 1e9;
-  return gb >= 1 ? `${gb % 1 === 0 ? gb : gb.toFixed(1)} GB` : `${Math.round(bytes / 1e6)} MB`;
+// Mark best value (highest quota for the price ratio)
+if (plans.length > 0) {
+  const bestIdx = plans.reduce((best, p, i) =>
+    (p.quota / p.price_usd) > (plans[best].quota / plans[best].price_usd) ? i : best, 0);
+  plans[bestIdx]._bestValue = true;
 }
+
+const minPrice = plans.length > 0 ? Math.min(...plans.map((p:any) => p.price_usd)) : 0;
+const isRegion = ['EUR','ASIA','NAM','LAM','MDE','CAR','CAU','GLOBAL'].includes(iso3);
+
+const faqs = [
+  { q: `How does ${countryName} eSIM work?`, a: `Purchase a plan, receive a QR code by email, scan it in your phone Settings → Mobile Data → Add eSIM. Data activates automatically when you arrive in ${countryName}.` },
+  { q: `Which networks does WoWo SIM use in ${countryName}?`, a: networkName ? `WoWo SIM connects to ${networkName} in ${countryName}, giving you excellent coverage across the country.` : `WoWo SIM connects to top local networks in ${countryName} for maximum coverage.` },
+  { q: 'Can I keep using my regular number?', a: 'Yes! Your physical SIM stays active for calls and SMS. The eSIM only handles data. Your regular number works as normal.' },
+  { q: 'What happens when my data runs out?', a: 'You\'ll get a notification before you run out. Simply purchase a new plan from your dashboard and it activates instantly.' },
+  { q: 'Can I share data as a hotspot?', a: 'Yes, WoWo SIM plans support hotspot/tethering on most compatible devices so you can share data with other devices.' },
+];
 ---
 
-<Base title={`${countryName} eSIM — Data Plans`} description={`Get instant eSIM data for ${countryName}. Plans from $3.50. No physical SIM needed.`}>
+<Base
+  title={`${countryName} eSIM — Data Plans from $${minPrice}`}
+  description={`Buy ${countryName} eSIM instantly. ${plans.length} plans from $${minPrice}. ${networkName ? networkName + ' network.' : ''} Instant QR code delivery. No contracts, no roaming fees.`}
+>
 
-  <!-- Hero -->
-  <section style="background: linear-gradient(135deg, #162544 0%, #0d1b36 100%); padding: 4rem 2rem; position: relative; overflow: hidden;">
-    <div style="position: absolute; top: -60px; right: -60px; width: 250px; height: 250px; background: rgba(3,222,243,0.07); border-radius: 9999px; filter: blur(40px);"></div>
-    <div style="max-width: 72rem; margin: 0 auto; position: relative; z-index: 1;">
-      <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(3,222,243,0.12); color: #03def3; font-size: 0.75rem; font-weight: 600; padding: 0.35rem 0.75rem; border-radius: 9999px; margin-bottom: 1rem;">
-        ⭐ Instant delivery · No contracts
+<!-- Hero -->
+<section style="background: linear-gradient(135deg,#0f1f3d 0%,#162544 60%,#1a2d50 100%); padding: 3.5rem 1.5rem 4rem; position:relative; overflow:hidden;">
+  <div style="position:absolute;top:-80px;right:-80px;width:320px;height:320px;background:rgba(3,222,243,0.06);border-radius:50%;filter:blur(50px);"></div>
+  <div style="position:absolute;bottom:-60px;left:-60px;width:240px;height:240px;background:rgba(59,130,246,0.05);border-radius:50%;filter:blur(40px);"></div>
+
+  <div style="max-width:72rem;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;position:relative;z-index:1;">
+    <div>
+      <nav style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem;font-size:0.75rem;color:#6b7280;">
+        <a href="/" style="color:#9ca3af;text-decoration:none;" onmouseover="this.style.color='#03def3'" onmouseout="this.style.color='#9ca3af'">Home</a>
+        <span>›</span>
+        <span style="color:#03def3;">{countryName}</span>
+      </nav>
+
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;">
+        {flagUrl && <img src={flagUrl} alt={countryName} style="width:52px;height:36px;object-fit:cover;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.3);" loading="eager" />}
+        <h1 style="font-size:2.5rem;font-weight:900;color:white;margin:0;letter-spacing:-0.5px;line-height:1.1;">
+          {countryName} eSIM
+        </h1>
       </div>
-      <h1 style="font-size: 2.75rem; font-weight: 900; color: white; margin: 0 0 0.75rem; letter-spacing: -0.5px;">
-        {countryName} eSIM
-      </h1>
-      <p style="color: #9ca3af; font-size: 1rem; max-width: 520px; margin: 0; line-height: 1.6;">
-        Stay connected in {countryName} with instant eSIM data. Scan QR code, activate on arrival — no physical SIM needed.
+
+      <p style="color:#9ca3af;font-size:1rem;max-width:520px;margin:0 0 1.5rem;line-height:1.6;">
+        {isRegion
+          ? `One eSIM covering all ${countryName} countries. No SIM swapping, no roaming fees.`
+          : `Stay connected in ${countryName} with instant data. ${networkName ? `Powered by ${networkName}.` : ''} No physical SIM needed.`
+        }
       </p>
-      <div style="display: flex; gap: 1.5rem; margin-top: 1.5rem;">
-        {plans.length > 0 && [
-          { icon: '📶', label: `${plans.length} plans available` },
-          { icon: '⚡', label: 'Instant activation' },
-          { icon: '💳', label: 'No contracts' },
-        ].map(b => (
-          <div style="display: flex; align-items: center; gap: 0.4rem; color: #9ca3af; font-size: 0.8rem;">
-            <span>{b.icon}</span> {b.label}
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
 
-  <!-- Plans Table -->
-  <section style="padding: 4rem 2rem; background: white;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <h2 style="font-size: 1.5rem; font-weight: 800; color: #162544; margin: 0 0 1.5rem;">Available Plans</h2>
-
-      {plans.length === 0 ? (
-        <div style="text-align: center; padding: 4rem; background: #f9fafb; border-radius: 1.25rem;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">📡</div>
-          <h3 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.5rem;">No plans available right now</h3>
-          <p style="color: #9ca3af; font-size: 0.875rem; margin: 0 0 1.5rem;">Check back soon or browse other destinations.</p>
-          <a href="/" class="btn-primary">Browse All Plans →</a>
-        </div>
-      ) : (
-        <div style="overflow-x: auto;">
-          <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border: 1px solid #f3f4f6;">
-            <thead>
-              <tr style="background: #f9fafb; border-bottom: 2px solid #f3f4f6;">
-                <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Data</th>
-                <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Duration</th>
-                <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Network</th>
-                <th style="padding: 1rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Price</th>
-                <th style="padding: 1rem 1.25rem; text-align: center; font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {plans.map((plan: any, i: number) => (
-                <tr style={`border-bottom: ${i < plans.length - 1 ? '1px solid #f3f4f6' : 'none'}; transition: background 0.15s;`}
-                    onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='white'">
-                  <td style="padding: 1rem 1.25rem;">
-                    <span style="font-size: 1rem; font-weight: 800; color: #162544;">{formatBytes(plan.data_bytes ?? plan.data_quota_bytes)}</span>
-                    {plan.best_value && <span style="margin-left: 0.5rem; background: #03def3; color: #162544; font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 9999px;">Best Value</span>}
-                  </td>
-                  <td style="padding: 1rem 1.25rem; font-size: 0.875rem; color: #374151; font-weight: 500;">{plan.duration_days ?? plan.validity_days ?? '—'} days</td>
-                  <td style="padding: 1rem 1.25rem; font-size: 0.8rem; color: #6b7280;">{plan.network ?? plan.carrier ?? '—'}</td>
-                  <td style="padding: 1rem 1.25rem;">
-                    <span style="font-size: 1.1rem; font-weight: 800; color: #162544;">${parseFloat(plan.price ?? plan.amount ?? 0).toFixed(2)}</span>
-                  </td>
-                  <td style="padding: 1rem 1.25rem; text-align: center;">
-                    <button class="add-to-cart btn-primary" style="font-size: 0.78rem; padding: 0.5rem 1rem;"
-                      data-plan={JSON.stringify({ id: plan.id, name: `${formatBytes(plan.data_bytes ?? plan.data_quota_bytes)} - ${plan.duration_days ?? plan.validity_days}d`, price: plan.price ?? plan.amount, data: formatBytes(plan.data_bytes ?? plan.data_quota_bytes), duration: `${plan.duration_days ?? plan.validity_days} days`, quantity: 1 })}>
-                      Buy Now
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  </section>
-
-  <!-- How It Works -->
-  <section style="padding: 4rem 2rem; background: #f9fafb;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <h2 style="font-size: 1.5rem; font-weight: 800; color: #162544; margin: 0 0 2rem; text-align: center;">How to Get Connected</h2>
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
+      <div style="display:flex;flex-wrap:wrap;gap:1.5rem;">
         {[
-          { icon: '🛒', step: '1', title: 'Choose Plan', desc: 'Select the data plan that fits your trip.' },
-          { icon: '💳', step: '2', title: 'Pay Securely', desc: 'Card, Apple Pay, PayPal — your choice.' },
-          { icon: '📧', step: '3', title: 'Get QR Code', desc: 'Receive your eSIM instantly by email.' },
-          { icon: '📶', step: '4', title: 'Stay Connected', desc: 'Scan, activate, and enjoy data abroad.' },
-        ].map(s => (
-          <div style="text-align: center;">
-            <div style="width: 56px; height: 56px; background: white; border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 0.75rem;">
-              {s.icon}
-            </div>
-            <p style="font-weight: 700; color: #162544; font-size: 0.875rem; margin: 0 0 0.4rem;">{s.title}</p>
-            <p style="color: #9ca3af; font-size: 0.78rem; margin: 0; line-height: 1.5;">{s.desc}</p>
+          { icon:'⚡', text:'Instant QR delivery' },
+          { icon:'📶', text: networkName || '4G LTE / 5G' },
+          { icon:'🔒', text:'No contracts' },
+          { icon:'🌍', text:'195+ countries' },
+        ].map(b => (
+          <div style="display:flex;align-items:center;gap:0.4rem;color:#9ca3af;font-size:0.82rem;">
+            <span>{b.icon}</span><span>{b.text}</span>
           </div>
         ))}
       </div>
     </div>
-  </section>
+
+    <!-- Price badge -->
+    {plans.length > 0 && (
+      <div style="background:rgba(3,222,243,0.1);border:1px solid rgba(3,222,243,0.2);border-radius:1.25rem;padding:1.5rem 2rem;text-align:center;flex-shrink:0;">
+        <p style="color:#9ca3af;font-size:0.75rem;margin:0 0 0.25rem;text-transform:uppercase;letter-spacing:0.05em;">Starting from</p>
+        <p style="color:white;font-size:2.75rem;font-weight:900;margin:0 0 0.25rem;line-height:1;">${minPrice}</p>
+        <p style="color:#03def3;font-size:0.78rem;font-weight:600;margin:0;">{plans.length} plans available</p>
+      </div>
+    )}
+  </div>
+</section>
+
+<!-- Plans -->
+<section style="padding:3rem 1.5rem;background:#f9fafb;" id="plans">
+  <div style="max-width:72rem;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+      <h2 style="font-size:1.4rem;font-weight:800;color:#162544;margin:0;">
+        {plans.length > 0 ? `${plans.length} Plans Available` : 'Available Plans'}
+      </h2>
+      <div style="display:flex;gap:0.5rem;" id="sortBtns">
+        {['Popular','Data','Price','Duration'].map((s,i) => (
+          <button class="sort-btn" data-sort={s.toLowerCase()} style={`padding:0.35rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1.5px solid ${i===0?'#03def3':'#e5e7eb'};background:${i===0?'#03def3':'white'};color:${i===0?'#162544':'#6b7280'};transition:all 0.2s;`}>
+            {s}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {plans.length === 0 ? (
+      <div style="text-align:center;padding:4rem;background:white;border-radius:1.25rem;border:1px solid #f3f4f6;">
+        <div style="font-size:3rem;margin-bottom:1rem;">📡</div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:#162544;margin:0 0 0.5rem;">Plans coming soon</h3>
+        <p style="color:#9ca3af;font-size:0.875rem;margin:0 0 1.5rem;">No plans available for this destination right now.</p>
+        <a href="/" class="btn-primary">Browse Other Destinations →</a>
+      </div>
+    ) : (
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;" id="plansGrid">
+        {plans.map((plan: any) => (
+          <div class="plan-card" style={`background:white;border-radius:1.25rem;border:${plan._bestValue?'2px solid #03def3':'1px solid #f3f4f6'};padding:1.5rem;position:relative;transition:all 0.25s;box-shadow:${plan._bestValue?'0 4px 20px rgba(3,222,243,0.15)':'0 1px 4px rgba(0,0,0,0.06)'};`}
+               data-quota={plan.quota} data-price={plan.price_usd} data-days={plan.valadity}>
+
+            {plan._bestValue && (
+              <div style="position:absolute;top:-1px;right:1rem;background:#03def3;color:#162544;font-size:0.65rem;font-weight:800;padding:0.25rem 0.6rem;border-radius:0 0 0.5rem 0.5rem;text-transform:uppercase;letter-spacing:0.05em;">
+                Best Value
+              </div>
+            )}
+
+            {plan.discount_percentage > 0 && (
+              <div style="position:absolute;top:1rem;left:1rem;background:#fef3c7;color:#d97706;font-size:0.65rem;font-weight:700;padding:0.2rem 0.5rem;border-radius:9999px;">
+                -{plan.discount_percentage}% OFF
+              </div>
+            )}
+
+            <!-- Data amount -->
+            <div style={`text-align:center;padding:1.5rem 0 1rem;margin-bottom:1rem;border-bottom:1px solid #f3f4f6;${plan.discount_percentage>0?'padding-top:2rem;':''}`}>
+              <p style="font-size:3rem;font-weight:900;color:#162544;margin:0;line-height:1;">{plan.quota}<span style="font-size:1.25rem;color:#6b7280;font-weight:600;">GB</span></p>
+              <p style="color:#9ca3af;font-size:0.8rem;margin:0.3rem 0 0;">{plan.valadity} days validity</p>
+            </div>
+
+            <!-- Details -->
+            <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.25rem;">
+              {[
+                { icon:'📶', label:'Network', val: plan.network ?? '—' },
+                { icon:'⚡', label:'Speed',   val: plan.speed ?? '4G LTE/5G' },
+                { icon:'🔄', label:'Type',    val: 'Data Only' },
+                { icon:'🌍', label:'Coverage',val: isRegion ? `${countryName} Region` : plan.country },
+              ].map(row => (
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:0.78rem;color:#9ca3af;display:flex;align-items:center;gap:0.3rem;">{row.icon} {row.label}</span>
+                  <span style="font-size:0.78rem;font-weight:600;color:#374151;text-align:right;max-width:55%;">{row.val}</span>
+                </div>
+              ))}
+            </div>
+
+            <!-- Price + CTA -->
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;">
+              <div>
+                <p style="font-size:1.6rem;font-weight:900;color:#162544;margin:0;line-height:1;">${plan.price_usd}</p>
+                {plan.price_regular > plan.price_usd && (
+                  <p style="font-size:0.75rem;color:#9ca3af;margin:0.1rem 0 0;text-decoration:line-through;">${plan.price_regular}</p>
+                )}
+              </div>
+              <button class="add-to-cart btn-primary" style="font-size:0.82rem;padding:0.6rem 1rem;flex-shrink:0;"
+                data-plan={JSON.stringify({ id: plan.id, system_id: plan.system_id, name: plan.name, price: plan.price_usd, data: plan.quota+'GB', duration: plan.valadity+' days', country: plan.country, quantity: 1 })}>
+                Buy Now
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+<!-- Features strip -->
+<section style="background:white;padding:2.5rem 1.5rem;border-top:1px solid #f3f4f6;border-bottom:1px solid #f3f4f6;">
+  <div style="max-width:72rem;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;">
+    {[
+      { icon:'📧', title:'Instant Delivery',  desc:'QR code sent to your email immediately after payment.' },
+      { icon:'📱', title:'Easy Setup',        desc:'Scan QR code in settings. Takes under 2 minutes.' },
+      { icon:'💰', title:'No Hidden Fees',    desc:'Price shown is the total. No roaming, no surprises.' },
+      { icon:'🎧', title:'24/7 Support',      desc:'Our team is available around the clock if you need help.' },
+    ].map(f => (
+      <div style="text-align:center;">
+        <div style="font-size:1.75rem;margin-bottom:0.6rem;">{f.icon}</div>
+        <p style="font-weight:700;color:#162544;font-size:0.875rem;margin:0 0 0.3rem;">{f.title}</p>
+        <p style="color:#9ca3af;font-size:0.78rem;line-height:1.5;margin:0;">{f.desc}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- How to activate -->
+<section style="padding:4rem 1.5rem;background:#f9fafb;">
+  <div style="max-width:72rem;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:2.5rem;">
+      <h2 style="font-size:1.6rem;font-weight:800;color:#162544;margin:0 0 0.5rem;">How to Activate Your {countryName} eSIM</h2>
+      <p style="color:#9ca3af;font-size:0.9rem;max-width:480px;margin:0 auto;">Get connected in 4 simple steps — done in under 5 minutes.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;position:relative;">
+      <div style="position:absolute;top:2rem;left:12.5%;right:12.5%;height:2px;background:linear-gradient(to right,#03def3,rgba(3,222,243,0.1));z-index:0;"></div>
+      {[
+        { icon:'🛒', step:'1', title:'Choose Plan',   desc:`Pick the ${countryName} plan that matches your data needs and trip length.` },
+        { icon:'💳', step:'2', title:'Secure Payment',desc:'Pay with card, Apple Pay, Google Pay or PayPal. Order confirmed instantly.' },
+        { icon:'📧', step:'3', title:'Get QR Code',   desc:'Your eSIM QR code arrives in your inbox within seconds.' },
+        { icon:'📶', step:'4', title:'Go Live',       desc:`Scan QR code before you travel. Data activates on arrival in ${countryName}.` },
+      ].map(s => (
+        <div style="position:relative;z-index:1;text-align:center;" class="step-item">
+          <div class="step-icon" style="width:4.5rem;height:4.5rem;background:white;border-radius:1rem;box-shadow:0 2px 12px rgba(0,0,0,0.08);border:1px solid #f3f4f6;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 0.75rem;transition:all 0.3s;">
+            {s.icon}
+          </div>
+          <div style="width:1.4rem;height:1.4rem;border-radius:50%;background:#03def3;color:#162544;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 0.6rem;">{s.step}</div>
+          <p style="font-weight:700;color:#162544;font-size:0.875rem;margin:0 0 0.3rem;">{s.title}</p>
+          <p style="color:#9ca3af;font-size:0.78rem;line-height:1.5;margin:0;">{s.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="padding:4rem 1.5rem;background:white;">
+  <div style="max-width:52rem;margin:0 auto;">
+    <h2 style="font-size:1.6rem;font-weight:800;color:#162544;margin:0 0 2rem;text-align:center;">{countryName} eSIM — Frequently Asked Questions</h2>
+    <div style="display:flex;flex-direction:column;gap:0.6rem;">
+      {faqs.map((faq, i) => (
+        <div class="faq-item" style="background:#f9fafb;border-radius:0.875rem;border:1px solid #f3f4f6;overflow:hidden;">
+          <button class="faq-trigger" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.25rem;background:none;border:none;cursor:pointer;text-align:left;gap:0.75rem;">
+            <span style="font-weight:600;color:#162544;font-size:0.875rem;">{faq.q}</span>
+            <span class="faq-arrow" style="color:#03def3;flex-shrink:0;font-size:1.1rem;transition:transform 0.2s;">+</span>
+          </button>
+          <div class="faq-body" style="display:none;padding:0 1.25rem 1rem;">
+            <p style="color:#6b7280;font-size:0.825rem;line-height:1.7;margin:0;">{faq.a}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding:3.5rem 1.5rem;background:linear-gradient(135deg,#162544,#0d1b36);text-align:center;">
+  <div style="max-width:500px;margin:0 auto;">
+    <h2 style="font-size:1.75rem;font-weight:900;color:white;margin:0 0 0.75rem;">Ready to travel connected?</h2>
+    <p style="color:#9ca3af;font-size:0.9rem;margin:0 0 1.75rem;">Get your {countryName} eSIM now. Instant delivery, no contracts.</p>
+    <a href="#plans" class="btn-primary" style="font-size:1rem;padding:0.9rem 2rem;">View Plans from ${minPrice} →</a>
+  </div>
+</section>
 
 </Base>
 
+<!-- JSON-LD Structured Data for SEO -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": `${countryName} eSIM`,
+  "description": `eSIM data plans for ${countryName}. Instant activation, no contracts.`,
+  "brand": { "@type": "Brand", "name": "WoWo SIM" },
+  "offers": plans.map((p:any) => ({
+    "@type": "Offer",
+    "name": p.name,
+    "price": p.price_usd,
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+  })),
+})} />
+
 <script>
+  // Add to cart
   document.querySelectorAll('.add-to-cart').forEach(btn => {
     btn.addEventListener('click', () => {
       const plan = JSON.parse((btn as HTMLElement).dataset.plan ?? '{}');
@@ -174,16 +322,68 @@ function formatBytes(bytes: number) {
         const raw = document.cookie.match(/wordpress_cart=([^;]+)/)?.[1];
         if (raw) cart = JSON.parse(decodeURIComponent(raw));
       } catch {}
-      cart.push(plan);
+      // Prevent duplicates
+      const exists = cart.findIndex((i:any) => i.id === plan.id);
+      if (exists >= 0) cart[exists].quantity = (cart[exists].quantity ?? 1) + 1;
+      else cart.push(plan);
       document.cookie = `wordpress_cart=${encodeURIComponent(JSON.stringify(cart))};path=/;max-age=86400`;
-      (btn as HTMLElement).textContent = '✓ Added!';
-      (btn as HTMLElement).style.background = '#dcfce7';
-      (btn as HTMLElement).style.color = '#15803d';
-      setTimeout(() => {
-        (btn as HTMLElement).textContent = 'Buy Now';
-        (btn as HTMLElement).style.background = '';
-        (btn as HTMLElement).style.color = '';
-      }, 1500);
+
+      const el = btn as HTMLElement;
+      const orig = el.textContent;
+      el.textContent = '✓ Added!';
+      el.style.background = '#dcfce7';
+      el.style.color = '#15803d';
+      setTimeout(() => { el.textContent = orig; el.style.background = ''; el.style.color = ''; }, 1500);
+
+      // Update cart count in header
+      const countEl = document.getElementById('cartCount');
+      if (countEl) {
+        const c = parseInt(countEl.textContent ?? '0') + 1;
+        countEl.textContent = String(c);
+        countEl.style.display = 'flex';
+      }
+    });
+  });
+
+  // Sort plans
+  document.querySelectorAll('.sort-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.sort-btn').forEach((b:any) => {
+        b.style.background = 'white'; b.style.color = '#6b7280'; b.style.borderColor = '#e5e7eb';
+      });
+      (btn as HTMLElement).style.background = '#03def3';
+      (btn as HTMLElement).style.color = '#162544';
+      (btn as HTMLElement).style.borderColor = '#03def3';
+
+      const sort = (btn as HTMLElement).dataset.sort;
+      const grid = document.getElementById('plansGrid');
+      if (!grid) return;
+      const cards = Array.from(grid.querySelectorAll('.plan-card'));
+      cards.sort((a:any, b:any) => {
+        if (sort === 'data')     return parseFloat(b.dataset.quota) - parseFloat(a.dataset.quota);
+        if (sort === 'price')    return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+        if (sort === 'duration') return parseFloat(b.dataset.days) - parseFloat(a.dataset.days);
+        return 0;
+      });
+      cards.forEach(c => grid.appendChild(c));
+    });
+  });
+
+  // FAQ
+  document.querySelectorAll('.faq-trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item') as HTMLElement;
+      const body = item.querySelector('.faq-body') as HTMLElement;
+      const arrow = item.querySelector('.faq-arrow') as HTMLElement;
+      const isOpen = body.style.display === 'block';
+      document.querySelectorAll('.faq-body').forEach((b:any) => b.style.display = 'none');
+      document.querySelectorAll('.faq-arrow').forEach((a:any) => { a.textContent = '+'; a.style.transform = ''; });
+      if (!isOpen) { body.style.display = 'block'; arrow.textContent = '×'; arrow.style.transform = 'rotate(45deg)'; }
     });
   });
 </script>
+
+<style>
+  .step-item:hover .step-icon { background:#03def3; transform:scale(1.1); }
+  .plan-card:hover { transform:translateY(-3px); box-shadow:0 12px 35px rgba(0,0,0,0.1) !important; }
+</style>

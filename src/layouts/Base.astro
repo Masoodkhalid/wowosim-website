@@ -7,14 +7,22 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
+  canonical?: string;
+  noIndex?: boolean;
 }
 
 const {
   title,
-  description = 'Stay connected anywhere with WoWo SIM eSIM plans. 195+ countries, instant activation, no roaming fees.',
+  description = 'Stay connected anywhere with WoWo SIM eSIM plans. 195+ countries from $3.50. Instant activation, no roaming fees, no contracts.',
+  ogImage = 'https://wowosim.com/wp-content/uploads/2024/05/og-default.jpg',
+  canonical,
+  noIndex = false,
 } = Astro.props;
 
 const isLoggedIn = !!Astro.cookies.get('wordpress_wowouser')?.value;
+const canonicalURL = canonical ?? new URL(Astro.url.pathname, 'https://wowosim.com').href;
+const fullTitle = title.includes('WoWo') ? title : `${title} | WoWo SIM`;
 ---
 
 <!doctype html>
@@ -22,17 +30,78 @@ const isLoggedIn = !!Astro.cookies.get('wordpress_wowouser')?.value;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Core SEO -->
+    <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="icon" href="/favicon.ico" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/7.5.0/css/flag-icons.min.css" />
-    <title>{title} | WoWo SIM</title>
+    <link rel="canonical" href={canonicalURL} />
+    {noIndex && <meta name="robots" content="noindex,nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="WoWo SIM" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Core Web Vitals: preconnect to external origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://portal.wowosim.com" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+
+    <!-- Fonts with font-display:swap for CLS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Flag icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/7.5.0/css/flag-icons.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/7.5.0/css/flag-icons.min.css" /></noscript>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    <!-- JSON-LD: Organisation -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "WoWo SIM",
+      "url": "https://wowosim.com",
+      "logo": "https://wowosim.com/wp-content/uploads/2024/logo.png",
+      "sameAs": [
+        "https://www.instagram.com/wowosim/",
+        "https://www.facebook.com/WowoSimm/",
+        "https://www.youtube.com/@WoWoSim"
+      ]
+    })} />
+
+    <slot name="head" />
   </head>
   <body>
     <PromoBar />
     <Header isLoggedIn={isLoggedIn} />
-    <main>
+    <main id="main-content">
       <slot />
     </main>
     <Footer />
+
+    <!-- Back to top -->
+    <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+      style="position:fixed;bottom:1.5rem;right:1.5rem;width:42px;height:42px;background:#162544;color:white;border:none;border-radius:50%;cursor:pointer;font-size:1.1rem;display:none;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,0.2);transition:all 0.2s;z-index:99;"
+      aria-label="Back to top">↑</button>
+
+    <script>
+      const btn = document.getElementById('backToTop') as HTMLElement;
+      window.addEventListener('scroll', () => {
+        btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+      }, { passive: true });
+    </script>
   </body>
 </html>

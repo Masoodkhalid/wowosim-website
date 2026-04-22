@@ -8,11 +8,54 @@ import HomeFAQ from '../components/home/HomeFAQ.astro';
 import AppDownload from '../components/home/AppDownload.astro';
 ---
 
-<Base title="Stay Connected Anywhere You Travel">
+<Base
+  title="WoWo SIM — eSIM Plans for 195+ Countries from $3.50"
+  description="Buy instant eSIM data for 195+ countries. No physical SIM, no roaming fees. Plans from $3.50. Trusted by 50,000+ travelers worldwide."
+>
   <Hero />
   <ProductTypes />
   <HowItWorks />
+
+  <!-- Live Plans Preview Section -->
+  <section style="padding:4rem 1.5rem;background:#f9fafb;">
+    <div style="max-width:72rem;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:2.5rem;">
+        <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;">Live Pricing</span>
+        <h2 style="font-size:2rem;font-weight:900;color:#162544;margin:0.5rem 0 0.5rem;letter-spacing:-0.5px;">USA Plans — Updated Daily</h2>
+        <p style="color:#9ca3af;font-size:0.9rem;margin:0;">Real prices pulled directly from our system right now.</p>
+      </div>
+      <div id="livePlans" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;"></div>
+      <div style="text-align:center;margin-top:2rem;">
+        <a href="/united-states" class="btn-outline" style="font-size:0.875rem;">View All USA Plans →</a>
+      </div>
+    </div>
+  </section>
+
   <Reviews />
   <AppDownload />
   <HomeFAQ />
 </Base>
+
+<script>
+  // Fetch live USA plans on homepage
+  fetch('/api/plans?iso3=USA')
+    .then(r => r.json())
+    .then((plans: any[]) => {
+      const grid = document.getElementById('livePlans');
+      if (!grid || !plans?.length) return;
+
+      grid.innerHTML = plans.slice(0,6).map(p => `
+        <a href="/united-states#plans" style="background:white;border-radius:1rem;padding:1.25rem;border:1px solid #f3f4f6;text-decoration:none;transition:all 0.2s;display:flex;flex-direction:column;gap:0.4rem;box-shadow:0 1px 4px rgba(0,0,0,0.05);"
+           onmouseover="this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)';this.style.transform=''">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:1.5rem;font-weight:900;color:#162544;">${p.quota}<span style="font-size:0.875rem;color:#9ca3af;font-weight:600;">GB</span></span>
+            ${p.discount_percentage > 0 ? `<span style="background:#fef3c7;color:#d97706;font-size:0.65rem;font-weight:700;padding:0.15rem 0.4rem;border-radius:9999px;">-${p.discount_percentage}%</span>` : ''}
+          </div>
+          <p style="color:#6b7280;font-size:0.78rem;margin:0;">${p.valadity} days · ${p.network}</p>
+          <p style="font-size:1.2rem;font-weight:800;color:#162544;margin:0.25rem 0 0;">$${p.price_usd}</p>
+          ${p.price_regular > p.price_usd ? `<p style="font-size:0.72rem;color:#9ca3af;text-decoration:line-through;margin:0;">$${p.price_regular}</p>` : ''}
+        </a>
+      `).join('');
+    })
+    .catch(() => {});
+</script>
