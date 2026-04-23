@@ -234,19 +234,26 @@ const loggedIn = isLoggedIn(Astro.cookies);
         body: JSON.stringify({ line_items: getCart() }),
       });
       const data = await res.json();
-      if (data.redirect_url || data.url) {
-        window.location.href = data.redirect_url ?? data.url;
+      console.log('[WoWo] Checkout API response:', JSON.stringify(data, null, 2));
+
+      const redirectUrl = data.redirect_url ?? data.url ?? data.checkout_url
+        ?? data.payment_url ?? data.stripe_url ?? data.session_url ?? data.link ?? null;
+
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
       } else {
         msg.style.display = 'block';
         msg.style.background = '#fee2e2';
         msg.style.color = '#dc2626';
         msg.textContent = data.error ?? 'Payment could not be initiated. Please try again.';
+        console.error('[WoWo] No redirect URL in checkout response. Full response:', data);
       }
-    } catch {
+    } catch (e) {
       msg.style.display = 'block';
       msg.style.background = '#fee2e2';
       msg.style.color = '#dc2626';
       msg.textContent = 'Network error. Please check your connection.';
+      console.error('[WoWo] Checkout network error:', e);
     } finally {
       btn.innerHTML = origHtml;
       btn.disabled = false;
