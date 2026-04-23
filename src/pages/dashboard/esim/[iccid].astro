@@ -1,447 +1,397 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import { getJwt, isLoggedIn } from '../../../lib/auth';
-import { portalFetch } from '../../../lib/api';
+import { isLoggedIn } from '../../../lib/auth';
 
 if (!isLoggedIn(Astro.cookies)) return Astro.redirect('/login');
 
 const { iccid } = Astro.params;
-const jwt = getJwt(Astro.cookies);
-let esim: any = null;
-let fetchError = false;
-
-// Try multiple endpoint patterns
-const endpointPatterns = [
-  `/esims/${iccid}`,
-  `/esim/${iccid}`,
-  `/esims?q[iccid_eq]=${iccid}`,
-  `/esims?iccid=${iccid}`,
-];
-for (const ep of endpointPatterns) {
-  try {
-    const res = await portalFetch(ep, {}, jwt);
-    if (res.ok) {
-      const d = await res.json();
-      const candidate = d.esim ?? d.data ?? (Array.isArray(d) ? d[0] : null) ?? d;
-      if (candidate && typeof candidate === 'object' && Object.keys(candidate).length > 1) {
-        esim = candidate;
-        break;
-      }
-    }
-  } catch {}
-}
-
-// If still no esim, create a minimal object from the ICCID so we show SOMETHING
-if (!esim || (typeof esim === 'object' && Object.keys(esim).length === 0)) {
-  fetchError = true;
-  esim = { iccid, state: 'UNKNOWN' };
-}
-
-const statusMap: Record<string, { label: string; color: string; bg: string; dot: string }> = {
-  ENABLED:  { label: 'Active',              color: '#166534', bg: '#dcfce7', dot: '#22c55e' },
-  RELEASED: { label: 'Awaiting Activation', color: '#92400e', bg: '#fef3c7', dot: '#f59e0b' },
-  DISABLED: { label: 'Inactive',            color: '#991b1b', bg: '#fee2e2', dot: '#ef4444' },
-  deleted:  { label: 'Expired',             color: '#991b1b', bg: '#fee2e2', dot: '#ef4444' },
-  UNKNOWN:  { label: 'Loading...',          color: '#374151', bg: '#f3f4f6', dot: '#9ca3af' },
-};
-
-const status = statusMap[esim.state ?? 'UNKNOWN'] ?? { label: esim.state ?? '—', color: '#374151', bg: '#f3f4f6', dot: '#9ca3af' };
-
-const qrUrl = esim.qr_code_url ?? esim.qr_code ?? esim.qrcode ?? esim.qr_url
-           ?? esim.lpa_code ?? esim.lpa_string ?? esim.qr_image ?? esim.qr
-           ?? esim.activation_qr ?? null;
-const manualCode = esim.manual_code ?? esim.activation_code ?? esim.lpa
-               ?? esim.sm_dp_address ?? esim.smdp ?? esim.smdp_address
-               ?? esim.lpa_string ?? null;
-const manualPin = esim.confirmation_code ?? esim.matching_id ?? esim.confirmation ?? null;
-
-const plans = esim.plans ?? esim.bundles ?? esim.packages ?? esim.subscriptions ?? [];
-const countryName = esim.country ?? esim.country_name ?? esim.name ?? esim.title ?? 'eSIM Plan';
-const network = esim.network ?? esim.carrier ?? esim.network_type ?? null;
-
-// Quota: try numeric (GB) or string
-const rawQuota = esim.quota ?? esim.data ?? esim.data_gb ?? esim.total_data ?? null;
-const quota = rawQuota !== null ? (typeof rawQuota === 'number' ? `${rawQuota} GB` : String(rawQuota)) : null;
-
-const validity = esim.valadity ?? esim.validity ?? esim.duration ?? esim.duration_days ?? esim.days ?? null;
-const speed = esim.speed ?? esim.network_speed ?? null;
-
-// Compute aggregate data usage from plans (byte-level)
-const totalBytes = plans.reduce((sum: number, p: any) => sum + (p.data_quota_bytes ?? p.data_bytes ?? p.total_bytes ?? 0), 0);
-const usedBytes  = plans.reduce((sum: number, p: any) => sum + (p.data_usage_bytes ?? p.used_bytes ?? p.usage_bytes ?? 0), 0);
-const usedPct    = totalBytes > 0 ? Math.min(100, Math.round((usedBytes / totalBytes) * 100)) : 0;
-
-// Fallback quota usage from quota string field
-const rawUsed = esim.used_data ?? esim.data_used ?? esim.usage ?? null;
-const hasUsageData = totalBytes > 0 || (rawQuota !== null && rawUsed !== null);
-
-function fmtBytes(b: number): string {
-  if (b >= 1_073_741_824) return (b / 1_073_741_824).toFixed(1) + ' GB';
-  if (b >= 1_048_576)     return (b / 1_048_576).toFixed(0) + ' MB';
-  return (b / 1024).toFixed(0) + ' KB';
-}
 ---
 
-<Base title={`eSIM — ${countryName}`} description={`Manage your WoWo SIM eSIM for ${countryName}. View data usage, QR code, and plan details.`}>
+<Base title={`eSIM Details`} description="Manage your WoWo SIM eSIM — view data usage, QR code, and plan details.">
   <div style="min-height:calc(100vh - 64px);background:#f8fafc;padding:0;">
-
     <div style="max-width:900px;margin:0 auto;padding:2rem 1.5rem;">
 
       <!-- Breadcrumb -->
       <nav style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:#9ca3af;margin-bottom:1.75rem;">
-        <a href="/dashboard" style="color:#9ca3af;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#162544'" onmouseout="this.style.color='#9ca3af'">Dashboard</a>
+        <a href="/dashboard" style="color:#9ca3af;text-decoration:none;" onmouseover="this.style.color='#162544'" onmouseout="this.style.color='#9ca3af'">Dashboard</a>
         <span>›</span>
-        <a href="/dashboard/esims" style="color:#9ca3af;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#162544'" onmouseout="this.style.color='#9ca3af'">My eSIMs</a>
+        <a href="/dashboard/esims" style="color:#9ca3af;text-decoration:none;" onmouseover="this.style.color='#162544'" onmouseout="this.style.color='#9ca3af'">My eSIMs</a>
         <span>›</span>
-        <span style="color:#162544;font-weight:600;">{countryName}</span>
+        <span id="breadcrumbName" style="color:#162544;font-weight:600;">Loading…</span>
       </nav>
 
-      <!-- Error notice -->
-      {fetchError && (
-        <div style="background:#fffbeb;border:1.5px solid #fcd34d;border-radius:0.875rem;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:0.75rem;">
-          <span style="font-size:1.1rem;flex-shrink:0;">⚠️</span>
-          <div>
-            <p style="font-weight:600;color:#92400e;font-size:0.85rem;margin:0 0 0.2rem;">Could not load full eSIM details</p>
-            <p style="color:#92400e;font-size:0.78rem;margin:0;opacity:0.8;">This may be a temporary connection issue. Your eSIM is still active — please refresh or contact support if this continues.</p>
+      <!-- Loading skeleton -->
+      <div id="loadingSkeleton">
+        <div style="background:linear-gradient(135deg,#162544,#0d1b36);border-radius:1.75rem;padding:2rem;margin-bottom:1.5rem;animation:pulse 1.5s ease-in-out infinite;">
+          <div style="height:20px;background:rgba(255,255,255,0.1);border-radius:0.5rem;width:40%;margin-bottom:1rem;"></div>
+          <div style="height:14px;background:rgba(255,255,255,0.07);border-radius:0.5rem;width:60%;margin-bottom:2rem;"></div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+            {[1,2,3].map(() => <div style="height:40px;background:rgba(255,255,255,0.07);border-radius:0.5rem;"></div>)}
           </div>
         </div>
-      )}
+      </div>
 
-      <div style="display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start;" id="mainGrid">
+      <!-- Main content (hidden until loaded) -->
+      <div id="esimContent" style="display:none;">
+        <div style="display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start;" id="mainGrid">
 
-        <!-- Left Column -->
-        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+          <!-- Left Column -->
+          <div style="display:flex;flex-direction:column;gap:1.5rem;">
 
-          <!-- eSIM Credit Card -->
-          <div style="background:linear-gradient(135deg,#162544 0%,#0d1b36 60%,#1a3560 100%);border-radius:1.75rem;padding:2rem;position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(22,37,68,0.35);">
-            <!-- Decorative circles -->
-            <div style="position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:rgba(3,222,243,0.07);border-radius:9999px;"></div>
-            <div style="position:absolute;bottom:-60px;left:-30px;width:180px;height:180px;background:rgba(255,95,0,0.05);border-radius:9999px;"></div>
-            <!-- Chip SVG -->
-            <div style="position:absolute;top:1.75rem;right:2rem;">
-              <svg width="44" height="34" viewBox="0 0 44 34" fill="none">
-                <rect width="44" height="34" rx="5" fill="#f59e0b" opacity="0.85"/>
-                <rect x="14" y="0" width="16" height="34" fill="#d97706" opacity="0.4"/>
-                <rect x="0" y="10" width="44" height="14" fill="#d97706" opacity="0.4"/>
-                <rect x="16" y="10" width="12" height="14" rx="2" fill="#fbbf24" opacity="0.7"/>
-              </svg>
-            </div>
-
-            <div style="position:relative;z-index:1;">
-              <!-- Header row -->
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
-                <div>
-                  <p style="color:rgba(255,255,255,0.5);font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 0.3rem;">WoWo SIM</p>
-                  <h1 style="color:white;font-size:1.25rem;font-weight:900;margin:0;letter-spacing:-0.3px;">{countryName}</h1>
-                </div>
-                <span style={`display:inline-flex;align-items:center;gap:0.35rem;padding:0.3rem 0.8rem;border-radius:9999px;font-size:0.7rem;font-weight:700;background:${status.bg};color:${status.color};`}>
-                  <span style={`width:5px;height:5px;border-radius:9999px;background:${status.dot};`}></span>
-                  {status.label}
-                </span>
+            <!-- eSIM Card -->
+            <div style="background:linear-gradient(135deg,#162544 0%,#0d1b36 60%,#1a3560 100%);border-radius:1.75rem;padding:2rem;position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(22,37,68,0.35);">
+              <div style="position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:rgba(3,222,243,0.07);border-radius:9999px;"></div>
+              <div style="position:absolute;bottom:-60px;left:-30px;width:180px;height:180px;background:rgba(255,95,0,0.05);border-radius:9999px;"></div>
+              <div style="position:absolute;top:1.75rem;right:2rem;">
+                <svg width="44" height="34" viewBox="0 0 44 34" fill="none">
+                  <rect width="44" height="34" rx="5" fill="#f59e0b" opacity="0.85"/>
+                  <rect x="14" y="0" width="16" height="34" fill="#d97706" opacity="0.4"/>
+                  <rect x="0" y="10" width="44" height="14" fill="#d97706" opacity="0.4"/>
+                  <rect x="16" y="10" width="12" height="14" rx="2" fill="#fbbf24" opacity="0.7"/>
+                </svg>
               </div>
-
-              <!-- ICCID -->
-              <div style="margin-bottom:1.5rem;">
-                <p style="color:rgba(255,255,255,0.45);font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;margin:0 0 0.35rem;">ICCID</p>
-                <div style="display:flex;align-items:center;gap:0.75rem;">
-                  <p style="color:white;font-family:monospace;font-size:0.875rem;font-weight:600;letter-spacing:0.08em;margin:0;word-break:break-all;">{iccid}</p>
-                  <button id="copyIccid" title="Copy ICCID"
-                    style="flex-shrink:0;background:rgba(255,255,255,0.1);border:none;cursor:pointer;border-radius:0.4rem;padding:0.3rem 0.5rem;display:flex;align-items:center;gap:0.3rem;transition:background 0.15s;"
-                    onmouseover="this.style.background='rgba(3,222,243,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-                    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.7)" stroke-width="2.5">
-                      <rect x="9" y="9" width="13" height="13" rx="2" stroke="rgba(255,255,255,0.7)" stroke-width="2"/>
-                      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="rgba(255,255,255,0.7)" stroke-width="2"/>
-                    </svg>
-                    <span id="copyLabel" style="font-size:0.65rem;color:rgba(255,255,255,0.6);font-weight:600;">COPY</span>
-                  </button>
+              <div style="position:relative;z-index:1;">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2rem;">
+                  <div>
+                    <p style="color:rgba(255,255,255,0.5);font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 0.3rem;">WoWo SIM</p>
+                    <h1 id="cardCountry" style="color:white;font-size:1.25rem;font-weight:900;margin:0;letter-spacing:-0.3px;">—</h1>
+                  </div>
+                  <span id="statusBadge" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.3rem 0.8rem;border-radius:9999px;font-size:0.7rem;font-weight:700;background:#f3f4f6;color:#374151;">
+                    <span id="statusDot" style="width:5px;height:5px;border-radius:9999px;background:#9ca3af;"></span>
+                    <span id="statusLabel">Loading…</span>
+                  </span>
                 </div>
-              </div>
-
-              <!-- Plan stats row -->
-              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,0.1);">
-                <div>
-                  <p style="color:rgba(255,255,255,0.45);font-size:0.62rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.25rem;">Data</p>
-                  <p style="color:white;font-size:0.9rem;font-weight:700;margin:0;">{quota ?? '—'}</p>
+                <div style="margin-bottom:1.5rem;">
+                  <p style="color:rgba(255,255,255,0.45);font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;margin:0 0 0.35rem;">ICCID</p>
+                  <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <p style="color:white;font-family:monospace;font-size:0.875rem;font-weight:600;letter-spacing:0.08em;margin:0;word-break:break-all;">{iccid}</p>
+                    <button id="copyIccid" title="Copy ICCID" style="flex-shrink:0;background:rgba(255,255,255,0.1);border:none;cursor:pointer;border-radius:0.4rem;padding:0.3rem 0.5rem;display:flex;align-items:center;gap:0.3rem;" onmouseover="this.style.background='rgba(3,222,243,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" stroke="rgba(255,255,255,0.7)" stroke-width="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="rgba(255,255,255,0.7)" stroke-width="2"/></svg>
+                      <span id="copyLabel" style="font-size:0.65rem;color:rgba(255,255,255,0.6);font-weight:600;">COPY</span>
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <p style="color:rgba(255,255,255,0.45);font-size:0.62rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.25rem;">Validity</p>
-                  <p style="color:white;font-size:0.9rem;font-weight:700;margin:0;">{validity ? `${validity} days` : '—'}</p>
-                </div>
-                <div>
-                  <p style="color:rgba(255,255,255,0.45);font-size:0.62rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.25rem;">Speed</p>
-                  <p style="color:white;font-size:0.9rem;font-weight:700;margin:0;">{speed ?? '4G LTE'}</p>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,0.1);">
+                  <div>
+                    <p style="color:rgba(255,255,255,0.45);font-size:0.62rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.25rem;">Data</p>
+                    <p id="cardQuota" style="color:white;font-size:0.9rem;font-weight:700;margin:0;">—</p>
+                  </div>
+                  <div>
+                    <p style="color:rgba(255,255,255,0.45);font-size:0.62rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.25rem;">Validity</p>
+                    <p id="cardValidity" style="color:white;font-size:0.9rem;font-weight:700;margin:0;">—</p>
+                  </div>
+                  <div>
+                    <p style="color:rgba(255,255,255,0.45);font-size:0.62rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.25rem;">Speed</p>
+                    <p id="cardSpeed" style="color:white;font-size:0.9rem;font-weight:700;margin:0;">4G LTE</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Data Usage Ring (only when we have bundle data) -->
-          {totalBytes > 0 && (
-            <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:2rem;">
+            <!-- Data Usage Ring -->
+            <div id="usageCard" style="display:none;background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:2rem;">
               <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1.5rem;">Data Usage</h3>
               <div style="display:flex;align-items:center;gap:2rem;">
-                <!-- Ring -->
                 <div style="position:relative;width:110px;height:110px;flex-shrink:0;">
                   <svg width="110" height="110" viewBox="0 0 110 110">
                     <circle cx="55" cy="55" r="45" fill="none" stroke="#f3f4f6" stroke-width="10"/>
-                    <circle cx="55" cy="55" r="45" fill="none"
-                      stroke={usedPct > 80 ? '#ef4444' : usedPct > 60 ? '#f59e0b' : '#03def3'}
-                      stroke-width="10"
-                      stroke-linecap="round"
-                      stroke-dasharray={`${2 * Math.PI * 45}`}
-                      stroke-dashoffset={`${2 * Math.PI * 45 * (1 - usedPct / 100)}`}
-                      transform="rotate(-90 55 55)"/>
+                    <circle id="usageRing" cx="55" cy="55" r="45" fill="none" stroke="#03def3" stroke-width="10" stroke-linecap="round"
+                      stroke-dasharray="282.7" stroke-dashoffset="282.7" transform="rotate(-90 55 55)" style="transition:stroke-dashoffset 1s ease,stroke 0.3s;"/>
                   </svg>
                   <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-                    <span style="font-size:1.4rem;font-weight:900;color:#162544;line-height:1;">{usedPct}%</span>
+                    <span id="usagePct" style="font-size:1.4rem;font-weight:900;color:#162544;line-height:1;">0%</span>
                     <span style="font-size:0.6rem;color:#9ca3af;font-weight:600;margin-top:0.1rem;">used</span>
                   </div>
                 </div>
                 <div style="flex:1;">
-                  <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
                     <span style="font-size:0.78rem;color:#6b7280;">Used</span>
-                    <span style="font-size:0.78rem;font-weight:700;color:#162544;">{fmtBytes(usedBytes)}</span>
+                    <span id="usedLabel" style="font-size:0.78rem;font-weight:700;color:#162544;">—</span>
                   </div>
-                  <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
                     <span style="font-size:0.78rem;color:#6b7280;">Remaining</span>
-                    <span style="font-size:0.78rem;font-weight:700;color:#22c55e;">{fmtBytes(totalBytes - usedBytes)}</span>
+                    <span id="remainLabel" style="font-size:0.78rem;font-weight:700;color:#22c55e;">—</span>
                   </div>
-                  <div style="display:flex;justify-content:space-between;">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
                     <span style="font-size:0.78rem;color:#6b7280;">Total</span>
-                    <span style="font-size:0.78rem;font-weight:700;color:#162544;">{fmtBytes(totalBytes)}</span>
+                    <span id="totalLabel" style="font-size:0.78rem;font-weight:700;color:#162544;">—</span>
                   </div>
-                  <div style="background:#f3f4f6;border-radius:9999px;height:6px;overflow:hidden;margin-top:1rem;">
-                    <div style={`background:${usedPct > 80 ? '#ef4444' : usedPct > 60 ? '#f59e0b' : '#03def3'};width:${usedPct}%;height:100%;border-radius:9999px;transition:width 0.6s ease;`}></div>
+                  <div style="background:#f3f4f6;border-radius:9999px;height:6px;overflow:hidden;">
+                    <div id="usageBar" style="background:#03def3;width:0%;height:100%;border-radius:9999px;transition:width 1s ease;"></div>
                   </div>
                 </div>
               </div>
             </div>
-          )}
 
-          <!-- Active Bundles -->
-          {plans.length > 0 && (
+            <!-- Plan Details -->
             <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:2rem;">
-              <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">Data Bundles</h3>
-              <div style="display:flex;flex-direction:column;gap:0.875rem;">
-                {plans.map((plan: any) => {
-                  const pStatus = plan.status === 'ACTIVE' ? { label:'Active', color:'#166534', bg:'#dcfce7', dot:'#22c55e' }
-                                : plan.status === 'NOT_ACTIVE' || plan.status === 'ENABLED' ? { label:'Pending', color:'#92400e', bg:'#fef3c7', dot:'#f59e0b' }
-                                : { label: plan.status ?? 'Unknown', color:'#374151', bg:'#f3f4f6', dot:'#9ca3af' };
-                  const pb = plan.data_quota_bytes ?? plan.data_bytes ?? 0;
-                  const ub = plan.data_usage_bytes ?? 0;
-                  const pp = pb > 0 ? Math.min(100, Math.round((ub/pb)*100)) : 0;
-                  return (
-                    <div style="background:#f8fafc;border:1.5px solid #f0f0f0;border-radius:1rem;padding:1.25rem;">
-                      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.875rem;">
-                        <div>
-                          <p style="font-weight:700;color:#162544;font-size:0.875rem;margin:0 0 0.2rem;">{plan.name ?? plan.plan_name ?? 'Data Plan'}</p>
-                          {(plan.duration_days ?? plan.validity) && (
-                            <p style="color:#9ca3af;font-size:0.72rem;margin:0;">{plan.duration_days ?? plan.validity} days validity</p>
-                          )}
-                        </div>
-                        <span style={`display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.65rem;border-radius:9999px;font-size:0.68rem;font-weight:700;background:${pStatus.bg};color:${pStatus.color};`}>
-                          <span style={`width:5px;height:5px;border-radius:9999px;background:${pStatus.dot};`}></span>
-                          {pStatus.label}
-                        </span>
-                      </div>
-                      {pb > 0 && (
-                        <>
-                          <div style="background:#e5e7eb;border-radius:9999px;height:5px;overflow:hidden;margin-bottom:0.4rem;">
-                            <div style={`background:${pp > 80 ? '#ef4444' : '#03def3'};width:${pp}%;height:100%;border-radius:9999px;`}></div>
-                          </div>
-                          <div style="display:flex;justify-content:space-between;">
-                            <span style="font-size:0.7rem;color:#9ca3af;">{fmtBytes(ub)} used</span>
-                            <span style="font-size:0.7rem;color:#9ca3af;">{pp}%</span>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          <!-- Plan Details -->
-          <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:2rem;">
-            <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">Plan Details</h3>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-              {[
-                { label: 'Plan Name', value: esim.plan_name ?? esim.name ?? countryName },
-                { label: 'Network', value: network ?? esim.network_type ?? '4G LTE / 5G' },
-                { label: 'Coverage', value: esim.coverage ?? countryName },
-                { label: 'Hotspot', value: esim.hotspot ?? 'Yes' },
-                { label: 'Plan Type', value: 'Data Only' },
-                { label: 'Auto Renew', value: 'No' },
-              ].map(row => (
-                <div style="background:#f8fafc;border-radius:0.75rem;padding:0.875rem;">
-                  <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 0.3rem;">{row.label}</p>
-                  <p style="font-size:0.85rem;font-weight:600;color:#162544;margin:0;">{row.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <!-- Installation Guide -->
-          <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:2rem;" id="installGuide">
-            <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">📲 How to Install This eSIM</h3>
-
-            <!-- OS Tabs -->
-            <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;">
-              <button class="os-tab active" data-os="ios" style="flex:1;padding:0.6rem;border-radius:0.625rem;font-size:0.8rem;font-weight:700;cursor:pointer;border:1.5px solid #162544;background:#162544;color:white;transition:all 0.2s;">🍎 iPhone (iOS)</button>
-              <button class="os-tab" data-os="android" style="flex:1;padding:0.6rem;border-radius:0.625rem;font-size:0.8rem;font-weight:700;cursor:pointer;border:1.5px solid #e5e7eb;background:white;color:#6b7280;transition:all 0.2s;">🤖 Android</button>
-            </div>
-
-            <!-- iOS steps -->
-            <div id="steps-ios" class="os-steps">
-              {['Open Settings → Cellular (or Mobile Data)', 'Tap "Add eSIM" or "Add Cellular Plan"', 'Tap "Use QR Code" and scan the QR code above', 'Name the plan (e.g. "WoWo SIM Travel")', 'Set as Secondary line, keep Primary for calls/SMS', 'Go to Cellular Data → select WoWo SIM line', 'Enable "Data Roaming" for this line', 'You\'re connected! ✅'].map((step, i) => (
-                <div style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.875rem;">
-                  <span style="width:24px;height:24px;background:linear-gradient(135deg,#162544,#1e3a6e);border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:900;color:white;flex-shrink:0;margin-top:0.05rem;">{i+1}</span>
-                  <p style="font-size:0.82rem;color:#374151;margin:0;line-height:1.5;">{step}</p>
-                </div>
-              ))}
-            </div>
-
-            <!-- Android steps -->
-            <div id="steps-android" class="os-steps" style="display:none;">
-              {['Open Settings → Connections (or Network & Internet)', 'Tap "SIM Manager" or "Mobile Networks"', 'Tap "Add eSIM" or "+" icon', 'Choose "Scan QR Code" and scan the code above', 'Accept the downloaded eSIM profile', 'Set WoWo SIM as your Mobile Data SIM', 'Enable "Data Roaming" in Mobile Network settings', 'You\'re connected! ✅'].map((step, i) => (
-                <div style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.875rem;">
-                  <span style="width:24px;height:24px;background:linear-gradient(135deg,#162544,#1e3a6e);border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:900;color:white;flex-shrink:0;margin-top:0.05rem;">{i+1}</span>
-                  <p style="font-size:0.82rem;color:#374151;margin:0;line-height:1.5;">{step}</p>
-                </div>
-              ))}
-            </div>
-
-            <!-- Manual install fallback (shown when manualCode exists) -->
-            {manualCode && (
-              <div style="margin-top:1.25rem;padding:1.25rem;background:#f0fdff;border:1.5px solid #c7f5fc;border-radius:1rem;">
-                <p style="font-size:0.75rem;font-weight:700;color:#162544;margin:0 0 0.75rem;">📋 Manual Installation (if QR scan fails)</p>
-                <div style="display:flex;flex-direction:column;gap:0.5rem;">
-                  <div>
-                    <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.2rem;">SM-DP+ Address / Activation Code</p>
-                    <code style="font-size:0.75rem;color:#162544;background:white;padding:0.4rem 0.75rem;border-radius:0.5rem;display:block;word-break:break-all;border:1px solid #e5e7eb;">{manualCode}</code>
+              <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">Plan Details</h3>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                {[
+                  ['Plan Name','planDetailName'],['Network','planDetailNetwork'],
+                  ['Coverage','planDetailCoverage'],['Hotspot','planDetailHotspot'],
+                  ['Plan Type','planDetailType'],['Auto Renew','planDetailRenew'],
+                ].map(([label, id]) => (
+                  <div style="background:#f8fafc;border-radius:0.75rem;padding:0.875rem;">
+                    <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 0.3rem;">{label}</p>
+                    <p id={id} style="font-size:0.85rem;font-weight:600;color:#162544;margin:0;">—</p>
                   </div>
-                  {manualPin && (
-                    <div>
-                      <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.2rem;">Confirmation Code</p>
-                      <code style="font-size:0.75rem;color:#162544;background:white;padding:0.4rem 0.75rem;border-radius:0.5rem;display:block;border:1px solid #e5e7eb;">{manualPin}</code>
-                    </div>
-                  )}
+                ))}
+              </div>
+            </div>
+
+            <!-- Installation Guide -->
+            <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:2rem;" id="installGuide">
+              <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">📲 How to Install This eSIM</h3>
+              <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;">
+                <button class="os-tab active" data-os="ios" style="flex:1;padding:0.6rem;border-radius:0.625rem;font-size:0.8rem;font-weight:700;cursor:pointer;border:1.5px solid #162544;background:#162544;color:white;">🍎 iPhone (iOS)</button>
+                <button class="os-tab" data-os="android" style="flex:1;padding:0.6rem;border-radius:0.625rem;font-size:0.8rem;font-weight:700;cursor:pointer;border:1.5px solid #e5e7eb;background:white;color:#6b7280;">🤖 Android</button>
+              </div>
+              <div id="steps-ios" class="os-steps">
+                {['Open Settings → Cellular (or Mobile Data)','Tap "Add eSIM" or "Add Cellular Plan"','Tap "Use QR Code" and scan the QR code above','Name the plan (e.g. "WoWo SIM Travel")','Set as Secondary line, keep Primary for calls/SMS','Go to Cellular Data → select WoWo SIM line','Enable "Data Roaming" for this line','You\'re connected! ✅'].map((step,i)=>(
+                  <div style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.875rem;">
+                    <span style="width:24px;height:24px;background:linear-gradient(135deg,#162544,#1e3a6e);border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:900;color:white;flex-shrink:0;">{i+1}</span>
+                    <p style="font-size:0.82rem;color:#374151;margin:0;line-height:1.5;">{step}</p>
+                  </div>
+                ))}
+              </div>
+              <div id="steps-android" class="os-steps" style="display:none;">
+                {['Open Settings → Connections (or Network & Internet)','Tap "SIM Manager" or "Mobile Networks"','Tap "Add eSIM" or "+" icon','Choose "Scan QR Code" and scan the code above','Accept the downloaded eSIM profile','Set WoWo SIM as your Mobile Data SIM','Enable "Data Roaming" in Mobile Network settings','You\'re connected! ✅'].map((step,i)=>(
+                  <div style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.875rem;">
+                    <span style="width:24px;height:24px;background:linear-gradient(135deg,#162544,#1e3a6e);border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:900;color:white;flex-shrink:0;">{i+1}</span>
+                    <p style="font-size:0.82rem;color:#374151;margin:0;line-height:1.5;">{step}</p>
+                  </div>
+                ))}
+              </div>
+              <!-- Manual code (shown client-side if available) -->
+              <div id="manualCodeBlock" style="display:none;margin-top:1.25rem;padding:1.25rem;background:#f0fdff;border:1.5px solid #c7f5fc;border-radius:1rem;">
+                <p style="font-size:0.75rem;font-weight:700;color:#162544;margin:0 0 0.75rem;">📋 Manual Installation (if QR scan fails)</p>
+                <div>
+                  <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.2rem;">SM-DP+ Address / Activation Code</p>
+                  <code id="manualCodeText" style="font-size:0.75rem;color:#162544;background:white;padding:0.4rem 0.75rem;border-radius:0.5rem;display:block;word-break:break-all;border:1px solid #e5e7eb;"></code>
+                </div>
+                <div id="matchingIdBlock" style="display:none;margin-top:0.5rem;">
+                  <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.2rem;">Confirmation Code</p>
+                  <code id="matchingIdText" style="font-size:0.75rem;color:#162544;background:white;padding:0.4rem 0.75rem;border-radius:0.5rem;display:block;border:1px solid #e5e7eb;"></code>
                 </div>
               </div>
-            )}
+            </div>
+
           </div>
 
-        </div>
+          <!-- Right Column -->
+          <div style="display:flex;flex-direction:column;gap:1.5rem;position:sticky;top:80px;">
 
-        <!-- Right Column -->
-        <div style="display:flex;flex-direction:column;gap:1.5rem;position:sticky;top:80px;">
+            <!-- QR Code Card -->
+            <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:1.75rem;text-align:center;">
+              <h3 style="font-size:0.95rem;font-weight:800;color:#162544;margin:0 0 0.4rem;">Installation QR Code</h3>
+              <p style="font-size:0.75rem;color:#9ca3af;margin:0 0 1.25rem;line-height:1.4;">Scan on your device to install or reinstall your eSIM</p>
 
-          <!-- QR Code Card -->
-          <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:1.75rem;text-align:center;">
-            <h3 style="font-size:0.95rem;font-weight:800;color:#162544;margin:0 0 0.4rem;">Installation QR Code</h3>
-            <p style="font-size:0.75rem;color:#9ca3af;margin:0 0 1.25rem;line-height:1.4;">Scan this code on your device to install or reinstall your eSIM</p>
-            {qrUrl ? (
-              <div style="background:#f8fafc;border:1.5px solid #f0f0f0;border-radius:1rem;padding:1rem;display:inline-block;margin-bottom:1rem;">
-                <img src={qrUrl} alt="eSIM QR Code" style="width:160px;height:160px;display:block;" />
+              <!-- QR image (shown when available) -->
+              <div id="qrImageWrap" style="display:none;background:#f8fafc;border:1.5px solid #f0f0f0;border-radius:1rem;padding:1rem;display:none;margin-bottom:1rem;">
+                <img id="qrImage" src="" alt="eSIM QR Code" style="width:160px;height:160px;display:block;margin:0 auto;" />
               </div>
-            ) : (
-              <div style="background:#f8fafc;border:1.5px dashed #e5e7eb;border-radius:1rem;padding:2rem;display:flex;flex-direction:column;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+
+              <!-- QR placeholder (shown when no URL) -->
+              <div id="qrPlaceholder" style="background:#f8fafc;border:1.5px dashed #e5e7eb;border-radius:1rem;padding:2rem;display:flex;flex-direction:column;align-items:center;gap:0.75rem;margin-bottom:1rem;">
                 <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#d1d5db" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
                 </svg>
-                <p style="font-size:0.775rem;color:#9ca3af;margin:0;line-height:1.4;">QR code will appear here.<br/>Check your purchase email.</p>
+                <p id="qrPlaceholderText" style="font-size:0.775rem;color:#9ca3af;margin:0;line-height:1.4;">Loading QR code…</p>
               </div>
-            )}
-            <p style="font-size:0.72rem;color:#9ca3af;margin:0 0 1rem;line-height:1.5;">📧 QR code also sent to your email. Cannot scan? Use manual install code below.</p>
-            {manualCode && (
-              <div style="background:#f0fdff;border:1px solid #c7f5fc;border-radius:0.75rem;padding:0.75rem;text-align:left;">
+
+              <p style="font-size:0.72rem;color:#9ca3af;margin:0 0 1rem;line-height:1.5;">📧 QR code also sent to your email. Cannot scan? Use manual install code below.</p>
+
+              <div id="qrManualBlock" style="display:none;background:#f0fdff;border:1px solid #c7f5fc;border-radius:0.75rem;padding:0.75rem;text-align:left;">
                 <p style="font-size:0.68rem;font-weight:600;color:#0369a1;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.3rem;">Manual Install Code</p>
-                <p style="font-family:monospace;font-size:0.78rem;color:#162544;margin:0;word-break:break-all;">{manualCode}</p>
+                <p id="qrManualText" style="font-family:monospace;font-size:0.78rem;color:#162544;margin:0;word-break:break-all;"></p>
               </div>
-            )}
-          </div>
-
-          <!-- Quick actions -->
-          <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:1.75rem;">
-            <h3 style="font-size:0.95rem;font-weight:800;color:#162544;margin:0 0 1rem;">Quick Actions</h3>
-            <div style="display:flex;flex-direction:column;gap:0.6rem;">
-              <a href="/" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:linear-gradient(135deg,#162544,#1e3a6e);color:white;border-radius:0.875rem;text-decoration:none;font-size:0.825rem;font-weight:700;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                Buy Top-Up Plan
-              </a>
-              <a href="/help-center#install-qr" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:#f8fafc;border:1.5px solid #f0f0f0;color:#162544;border-radius:0.875rem;text-decoration:none;font-size:0.825rem;font-weight:600;transition:border-color 0.15s;" onmouseover="this.style.borderColor='#03def3'" onmouseout="this.style.borderColor='#f0f0f0'">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                Installation Guide
-              </a>
-              <a href="/help-center#no-connect" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:#f8fafc;border:1.5px solid #f0f0f0;color:#162544;border-radius:0.875rem;text-decoration:none;font-size:0.825rem;font-weight:600;transition:border-color 0.15s;" onmouseover="this.style.borderColor='#03def3'" onmouseout="this.style.borderColor='#f0f0f0'">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                Troubleshooting
-              </a>
-              <a href="/contact" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:#f8fafc;border:1.5px solid #f0f0f0;color:#162544;border-radius:0.875rem;text-decoration:none;font-size:0.825rem;font-weight:600;transition:border-color 0.15s;" onmouseover="this.style.borderColor='#03def3'" onmouseout="this.style.borderColor='#f0f0f0'">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                Contact Support
-              </a>
             </div>
-          </div>
 
-          <!-- How to use tips -->
-          <div style="background:linear-gradient(135deg,#f0fdff,#e8faff);border:1.5px solid #c7f5fc;border-radius:1.5rem;padding:1.75rem;">
-            <h3 style="font-size:0.9rem;font-weight:800;color:#162544;margin:0 0 1rem;">💡 Pro Tips</h3>
-            <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.625rem;">
-              {[
-                'Enable Data Roaming in Settings for this SIM line',
-                'Keep your home SIM active for calls & texts',
-                'Set WoWo SIM as your default data SIM',
-                'Use hotspot to share data with your laptop',
-                'Check data balance in your account dashboard',
-              ].map(tip => (
-                <li style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.775rem;color:#374151;line-height:1.4;">
-                  <span style="color:#03def3;flex-shrink:0;font-weight:700;margin-top:0.05rem;">✓</span>{tip}
-                </li>
-              ))}
-            </ul>
-          </div>
+            <!-- Quick actions -->
+            <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:1.75rem;">
+              <h3 style="font-size:0.95rem;font-weight:800;color:#162544;margin:0 0 1rem;">Quick Actions</h3>
+              <div style="display:flex;flex-direction:column;gap:0.6rem;">
+                <a href="/" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:linear-gradient(135deg,#162544,#1e3a6e);color:white;border-radius:0.875rem;text-decoration:none;font-size:0.825rem;font-weight:700;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                  Buy Top-Up Plan
+                </a>
+                <a href="/help-center#install-qr" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:#f8fafc;border:1.5px solid #f0f0f0;color:#162544;border-radius:0.875rem;text-decoration:none;font-size:0.825rem;font-weight:600;" onmouseover="this.style.borderColor='#03def3'" onmouseout="this.style.borderColor='#f0f0f0'">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  Installation Guide
+                </a>
+                <a href="/help-center#no-connect" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:#f8fafc;border:1.5px solid #f0f0f0;color:#162544;border-radius:0.875rem;text-decoration:none;font-size:0.825rem;font-weight:600;" onmouseover="this.style.borderColor='#03def3'" onmouseout="this.style.borderColor='#f0f0f0'">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  Troubleshooting
+                </a>
+                <a href="/contact" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:#f8fafc;border:1.5px solid #f0f0f0;color:#162544;border-radius:0.875rem;text-decoration:none;font-size:0.825rem;font-weight:600;" onmouseover="this.style.borderColor='#03def3'" onmouseout="this.style.borderColor='#f0f0f0'">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                  Contact Support
+                </a>
+              </div>
+            </div>
 
+            <!-- Pro Tips -->
+            <div style="background:linear-gradient(135deg,#f0fdff,#e8faff);border:1.5px solid #c7f5fc;border-radius:1.5rem;padding:1.75rem;">
+              <h3 style="font-size:0.9rem;font-weight:800;color:#162544;margin:0 0 1rem;">💡 Pro Tips</h3>
+              <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.625rem;">
+                {['Enable Data Roaming in Settings for this SIM line','Keep your home SIM active for calls & texts','Set WoWo SIM as your default data SIM','Use hotspot to share data with your laptop','Check data balance in your account dashboard'].map(tip=>(
+                  <li style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.775rem;color:#374151;line-height:1.4;">
+                    <span style="color:#03def3;flex-shrink:0;font-weight:700;">✓</span>{tip}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
         </div>
       </div>
+
+      <!-- Error state -->
+      <div id="errorState" style="display:none;background:#fff5f5;border:1.5px solid #fecaca;border-radius:1.5rem;padding:2.5rem;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:1rem;">⚠️</div>
+        <h2 style="font-size:1.1rem;font-weight:800;color:#991b1b;margin:0 0 0.5rem;">Could not load eSIM details</h2>
+        <p id="errorMsg" style="color:#7f1d1d;font-size:0.85rem;margin:0 0 1.5rem;">There was a problem connecting to the server.</p>
+        <button onclick="location.reload()" style="background:#162544;color:white;border:none;padding:0.7rem 1.75rem;border-radius:9999px;font-size:0.875rem;font-weight:700;cursor:pointer;">Try Again</button>
+      </div>
+
     </div>
   </div>
 </Base>
 
-<script define:vars={{ iccid, fetchError }}>
-  // Debug: log raw eSIM data from API so we can see actual field names
-  if (fetchError) {
-    console.warn('[WoWo] eSIM detail fetch failed server-side for ICCID:', iccid);
-    console.warn('[WoWo] Will try client-side fetch...');
-    // Try fetching from client side
-    fetch(`/api/esim-raw?iccid=${iccid}`)
-      .then(r => r.json())
-      .then(d => console.log('[WoWo] Raw eSIM API response:', JSON.stringify(d, null, 2)))
-      .catch(() => {});
+<script define:vars={{ iccid }}>
+  const STATUS_MAP = {
+    ENABLED:  { label:'Active',              color:'#166534', bg:'#dcfce7', dot:'#22c55e' },
+    RELEASED: { label:'Awaiting Activation', color:'#92400e', bg:'#fef3c7', dot:'#f59e0b' },
+    DISABLED: { label:'Inactive',            color:'#991b1b', bg:'#fee2e2', dot:'#ef4444' },
+    deleted:  { label:'Expired',             color:'#991b1b', bg:'#fee2e2', dot:'#ef4444' },
+    ACTIVE:   { label:'Active',              color:'#166534', bg:'#dcfce7', dot:'#22c55e' },
+    INACTIVE: { label:'Inactive',            color:'#991b1b', bg:'#fee2e2', dot:'#ef4444' },
+    EXPIRED:  { label:'Expired',             color:'#991b1b', bg:'#fee2e2', dot:'#ef4444' },
+  };
+
+  function fmtBytes(b) {
+    if (b >= 1_073_741_824) return (b / 1_073_741_824).toFixed(1) + ' GB';
+    if (b >= 1_048_576)     return (b / 1_048_576).toFixed(0) + ' MB';
+    return (b / 1024).toFixed(0) + ' KB';
   }
 
+  function el(id) { return document.getElementById(id); }
+
+  async function loadEsim() {
+    try {
+      const res = await fetch(`/api/esim-detail?iccid=${encodeURIComponent(iccid)}`);
+      const data = await res.json();
+
+      console.log('[WoWo] eSIM detail response:', data);
+
+      if (!res.ok || data.error) {
+        el('loadingSkeleton').style.display = 'none';
+        el('errorState').style.display = 'block';
+        el('errorMsg').textContent = data.error ?? 'Failed to load eSIM data.';
+        return;
+      }
+
+      // Populate status badge
+      const state = data.state ?? 'UNKNOWN';
+      const s = STATUS_MAP[state] ?? { label: state, color:'#374151', bg:'#f3f4f6', dot:'#9ca3af' };
+      el('statusBadge').style.background = s.bg;
+      el('statusBadge').style.color = s.color;
+      el('statusDot').style.background = s.dot;
+      el('statusLabel').textContent = s.label;
+
+      // Country
+      const country = data.country ?? 'eSIM Plan';
+      el('cardCountry').textContent = country;
+      el('breadcrumbName').textContent = country;
+
+      // Card stats
+      el('cardQuota').textContent = data.quota ?? '—';
+      el('cardValidity').textContent = data.validity ? `${data.validity} days` : '—';
+      el('cardSpeed').textContent = data.speed ?? '4G LTE';
+
+      // Plan detail grid
+      el('planDetailName').textContent    = data.plan_name ?? country;
+      el('planDetailNetwork').textContent = data.network ?? '4G LTE / 5G';
+      el('planDetailCoverage').textContent= data.coverage ?? country;
+      el('planDetailHotspot').textContent = data.hotspot != null ? (data.hotspot ? 'Yes' : 'No') : 'Yes';
+      el('planDetailType').textContent    = 'Data Only';
+      el('planDetailRenew').textContent   = data.auto_renew ? 'Yes' : 'No';
+
+      // Data usage ring
+      const total = data.total_bytes ?? 0;
+      const used  = data.used_bytes  ?? 0;
+      if (total > 0) {
+        const pct = Math.min(100, Math.round((used / total) * 100));
+        const circumference = 2 * Math.PI * 45; // 282.7
+        const offset = circumference * (1 - pct / 100);
+        const ringColor = pct > 80 ? '#ef4444' : pct > 60 ? '#f59e0b' : '#03def3';
+
+        el('usageCard').style.display = 'block';
+        el('usageRing').style.strokeDashoffset = offset;
+        el('usageRing').style.stroke = ringColor;
+        el('usagePct').textContent = pct + '%';
+        el('usedLabel').textContent = fmtBytes(used);
+        el('remainLabel').textContent = fmtBytes(total - used);
+        el('totalLabel').textContent = fmtBytes(total);
+        el('usageBar').style.width = pct + '%';
+        el('usageBar').style.background = ringColor;
+      }
+
+      // QR Code
+      if (data.qr_url) {
+        el('qrImageWrap').style.display = 'block';
+        el('qrImage').src = data.qr_url;
+        el('qrPlaceholder').style.display = 'none';
+      } else {
+        el('qrPlaceholder').style.display = 'flex';
+        el('qrPlaceholderText').textContent = 'QR code will appear here.\nCheck your purchase email.';
+      }
+
+      // Manual code
+      if (data.manual_code) {
+        el('qrManualBlock').style.display = 'block';
+        el('qrManualText').textContent = data.manual_code;
+        el('manualCodeBlock').style.display = 'block';
+        el('manualCodeText').textContent = data.manual_code;
+        if (data.matching_id) {
+          el('matchingIdBlock').style.display = 'block';
+          el('matchingIdText').textContent = data.matching_id;
+        }
+      }
+
+      // Show content
+      el('loadingSkeleton').style.display = 'none';
+      el('esimContent').style.display = 'block';
+
+    } catch (e) {
+      console.error('[WoWo] eSIM fetch error:', e);
+      el('loadingSkeleton').style.display = 'none';
+      el('errorState').style.display = 'block';
+    }
+  }
+
+  loadEsim();
+
   // Copy ICCID
-  document.getElementById('copyIccid')?.addEventListener('click', async () => {
+  el('copyIccid')?.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(iccid);
-      const lbl = document.getElementById('copyLabel');
+      const lbl = el('copyLabel');
       if (lbl) { lbl.textContent = 'COPIED!'; lbl.style.color = '#03def3'; }
-      setTimeout(() => { if (lbl) { lbl.textContent = 'COPY'; lbl.style.color = 'rgba(255,255,255,0.6)'; }}, 2000);
+      setTimeout(() => { if (lbl) { lbl.textContent = 'COPY'; lbl.style.color = 'rgba(255,255,255,0.6)'; } }, 2000);
     } catch {}
   });
 
   // OS Tabs
   document.querySelectorAll('.os-tab').forEach(btn => {
     btn.addEventListener('click', () => {
-      const os = (btn as HTMLElement).dataset.os;
-      document.querySelectorAll('.os-tab').forEach((b: any) => {
+      const os = btn.dataset.os;
+      document.querySelectorAll('.os-tab').forEach(b => {
         b.style.background = 'white'; b.style.color = '#6b7280'; b.style.borderColor = '#e5e7eb';
       });
-      (btn as HTMLElement).style.background = '#162544';
-      (btn as HTMLElement).style.color = 'white';
-      (btn as HTMLElement).style.borderColor = '#162544';
-      document.querySelectorAll('.os-steps').forEach((s: any) => s.style.display = 'none');
+      btn.style.background = '#162544'; btn.style.color = 'white'; btn.style.borderColor = '#162544';
+      document.querySelectorAll('.os-steps').forEach(s => s.style.display = 'none');
       const panel = document.getElementById(`steps-${os}`);
       if (panel) panel.style.display = 'block';
     });
@@ -449,6 +399,7 @@ function fmtBytes(b: number): string {
 </script>
 
 <style>
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
   @media (max-width:768px) {
     #mainGrid { grid-template-columns: 1fr !important; }
     [style*="position:sticky"] { position:static !important; }
