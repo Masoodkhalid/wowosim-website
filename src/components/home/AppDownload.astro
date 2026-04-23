@@ -1,46 +1,246 @@
 ---
 ---
-<section style="padding: 5rem 2rem; background: linear-gradient(135deg, #162544 0%, #0a0f1e 100%); position: relative; overflow: hidden;">
-  <div style="position: absolute; top: -80px; right: -80px; width: 300px; height: 300px; background: rgba(3,222,243,0.08); border-radius: 9999px; filter: blur(60px);"></div>
+<section style="padding:5rem 2rem;background:linear-gradient(135deg,#0d1a33 0%,#162544 50%,#0f1e3a 100%);position:relative;overflow:hidden;">
+  <!-- Background elements -->
+  <div style="position:absolute;top:-100px;right:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(3,222,243,0.07) 0%,transparent 65%);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:-80px;left:-60px;width:400px;height:400px;background:radial-gradient(circle,rgba(255,95,0,0.05) 0%,transparent 65%);pointer-events:none;"></div>
+  <!-- Grid dots -->
+  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.03) 1.5px,transparent 1.5px);background-size:24px 24px;pointer-events:none;"></div>
 
-  <div style="max-width: 80rem; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1;">
+  <div style="max-width:80rem;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;position:relative;z-index:1;" id="appGrid">
+
+    <!-- Left: Content -->
     <div>
-      <span style="color: #03def3; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 1rem;">Mobile App</span>
-      <h2 style="font-size: 2.5rem; font-weight: 900; color: white; margin: 0 0 1rem; letter-spacing: -0.5px; line-height: 1.1;">
-        Manage Your eSIM<br/>From Your Pocket
+      <div style="display:inline-flex;align-items:center;gap:0.5rem;background:rgba(3,222,243,0.12);border:1px solid rgba(3,222,243,0.25);border-radius:9999px;padding:0.35rem 1rem;margin-bottom:1.5rem;">
+        <span style="width:6px;height:6px;background:#03def3;border-radius:9999px;animation:pulse-dot 2s ease-in-out infinite;"></span>
+        <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;">Mobile App</span>
+      </div>
+
+      <h2 style="font-size:2.75rem;font-weight:900;color:white;margin:0 0 1.25rem;letter-spacing:-1px;line-height:1.08;">
+        Manage Your eSIM<br/>
+        <span style="background:linear-gradient(90deg,#03def3,#42BFCA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">From Your Pocket</span>
       </h2>
-      <p style="color: #9ca3af; font-size: 0.95rem; line-height: 1.7; margin: 0 0 2rem;">
+
+      <p style="color:#9ca3af;font-size:0.95rem;line-height:1.75;margin:0 0 2.5rem;max-width:420px;">
         Monitor data usage, view active plans, top up instantly, and manage all your eSIMs in one place with the WoWo SIM app.
       </p>
-      <div style="display: flex; gap: 1rem;">
-        <a href="#" style="background: white; color: #162544; border-radius: 0.75rem; padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; transition: background 0.2s;"
-           onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='white'">
-          🍎 App Store
+
+      <!-- Feature list -->
+      <div style="display:flex;flex-direction:column;gap:0.875rem;margin-bottom:2.5rem;">
+        {[
+          { icon:'📊', title:'Live Data Usage', desc:'See exactly how much data you have left in real time' },
+          { icon:'⚡', title:'Instant Top-up', desc:'Buy and activate a new plan in under 60 seconds' },
+          { icon:'🔔', title:'Smart Alerts', desc:'Get notified before your data or plan expires' },
+          { icon:'🌍', title:'195+ Countries', desc:'Manage plans for all destinations in one app' },
+        ].map(f => (
+          <div style="display:flex;align-items:flex-start;gap:0.875rem;">
+            <div style="width:36px;height:36px;background:rgba(3,222,243,0.1);border:1px solid rgba(3,222,243,0.2);border-radius:0.65rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem;">{f.icon}</div>
+            <div>
+              <p style="color:white;font-size:0.875rem;font-weight:700;margin:0 0 0.1rem;">{f.title}</p>
+              <p style="color:#6b7280;font-size:0.78rem;margin:0;">{f.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Store badges -->
+      <div style="display:flex;gap:0.875rem;flex-wrap:wrap;">
+        <a href="#" class="store-badge" style="display:flex;align-items:center;gap:0.65rem;background:white;color:#162544;border-radius:0.875rem;padding:0.75rem 1.35rem;font-size:0.8rem;font-weight:700;text-decoration:none;transition:all 0.2s;box-shadow:0 4px 20px rgba(0,0,0,0.2);"
+           onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 30px rgba(3,222,243,0.2)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.2)'">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#162544"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          <div>
+            <p style="font-size:0.6rem;margin:0;font-weight:500;opacity:0.6;">Download on the</p>
+            <p style="font-size:0.85rem;margin:0;font-weight:800;">App Store</p>
+          </div>
         </a>
-        <a href="#" style="background: rgba(255,255,255,0.1); color: white; border-radius: 0.75rem; padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); transition: background 0.2s;"
-           onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-          🤖 Google Play
+        <a href="#" class="store-badge" style="display:flex;align-items:center;gap:0.65rem;background:rgba(255,255,255,0.08);color:white;border-radius:0.875rem;padding:0.75rem 1.35rem;font-size:0.8rem;font-weight:700;text-decoration:none;transition:all 0.2s;border:1.5px solid rgba(255,255,255,0.15);box-shadow:0 4px 20px rgba(0,0,0,0.2);"
+           onmouseover="this.style.transform='translateY(-2px)';this.style.background='rgba(255,255,255,0.14)'" onmouseout="this.style.transform='';this.style.background='rgba(255,255,255,0.08)'">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M3.18 23.76c.3.17.64.2.96.08l11.8-6.77-2.44-2.44-10.32 9.13zm-1.1-20.4C2.03 3.6 2 3.86 2 4.15v15.7c0 .29.03.55.08.8l11.31-11.31L2.08 3.36zm19.5 8.97l-2.82-1.62-2.74 2.74 2.74 2.74 2.84-1.63c.81-.46.81-1.77-.02-2.23zM4.14.24L15.94 7l-2.44 2.44L3.18.31A1.1 1.1 0 014.14.24z"/></svg>
+          <div>
+            <p style="font-size:0.6rem;margin:0;font-weight:500;opacity:0.6;">Get it on</p>
+            <p style="font-size:0.85rem;margin:0;font-weight:800;">Google Play</p>
+          </div>
         </a>
       </div>
     </div>
 
-    <div style="text-align: center;">
-      <div style="display: inline-block; background: rgba(255,255,255,0.05); border-radius: 2rem; padding: 2rem; border: 1px solid rgba(255,255,255,0.1);">
-        <div style="font-size: 5rem; margin-bottom: 1rem;">📱</div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-          {[
-            { icon: '📊', label: 'Data Usage' },
-            { icon: '🌍', label: 'Coverage Map' },
-            { icon: '⚡', label: 'Instant Top-up' },
-            { icon: '🔔', label: 'Smart Alerts' },
-          ].map(f => (
-            <div style="background: rgba(255,255,255,0.08); border-radius: 0.75rem; padding: 0.75rem; text-align: center;">
-              <div style="font-size: 1.25rem; margin-bottom: 0.25rem;">{f.icon}</div>
-              <p style="color: #d1d5db; font-size: 0.7rem; font-weight: 500; margin: 0;">{f.label}</p>
-            </div>
-          ))}
+    <!-- Right: Phone Mockup SVG -->
+    <div style="display:flex;justify-content:center;align-items:center;position:relative;">
+
+      <!-- Glow behind phone -->
+      <div style="position:absolute;width:280px;height:280px;background:radial-gradient(circle,rgba(3,222,243,0.15) 0%,transparent 65%);border-radius:50%;"></div>
+
+      <!-- Phone SVG -->
+      <div class="phone-float" style="position:relative;z-index:2;filter:drop-shadow(0 30px 60px rgba(0,0,0,0.5)) drop-shadow(0 0 40px rgba(3,222,243,0.1));">
+        <svg width="260" height="520" viewBox="0 0 260 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Phone shadow -->
+          <ellipse cx="130" cy="510" rx="70" ry="8" fill="rgba(0,0,0,0.3)"/>
+          <!-- Phone body -->
+          <rect x="15" y="0" width="230" height="500" rx="36" fill="#0a0f1e"/>
+          <rect x="15" y="0" width="230" height="500" rx="36" fill="url(#phoneBodyGrad)"/>
+          <!-- Highlight edge -->
+          <rect x="15" y="0" width="230" height="500" rx="36" fill="none" stroke="url(#phoneEdge)" stroke-width="1.5"/>
+          <!-- Screen -->
+          <rect x="22" y="7" width="216" height="486" rx="28" fill="#0f1829"/>
+          <!-- Camera notch -->
+          <rect x="95" y="14" width="70" height="16" rx="8" fill="#080d18"/>
+          <circle cx="145" cy="22" r="4" fill="#1a2540"/>
+          <!-- Status bar -->
+          <text x="30" y="42" fill="rgba(255,255,255,0.5)" font-size="8" font-family="system-ui" font-weight="600">9:41</text>
+          <!-- Signal icons -->
+          <rect x="200" y="34" width="4" height="6" rx="1" fill="rgba(255,255,255,0.4)"/>
+          <rect x="207" y="31" width="4" height="9" rx="1" fill="rgba(255,255,255,0.6)"/>
+          <rect x="214" y="28" width="4" height="12" rx="1" fill="rgba(255,255,255,0.9)"/>
+          <!-- Battery -->
+          <rect x="222" y="32" width="14" height="8" rx="2" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+          <rect x="236" y="35" width="2" height="3" rx="0.5" fill="rgba(255,255,255,0.5)"/>
+          <rect x="223" y="33" width="10" height="6" rx="1.5" fill="#22c55e"/>
+
+          <!-- ── App Header ── -->
+          <rect x="22" y="50" width="216" height="44" fill="rgba(3,222,243,0.06)"/>
+          <!-- WoWo logo in header -->
+          <text x="40" y="77" fill="#F6F5FF" font-size="11" font-weight="900" font-family="system-ui">WoWo</text>
+          <text x="83" y="77" fill="#FF5F00" font-size="11" font-weight="900" font-family="system-ui">SIM</text>
+          <!-- Profile icon -->
+          <circle cx="218" cy="72" r="12" fill="rgba(255,255,255,0.08)"/>
+          <circle cx="218" cy="69" r="4" fill="rgba(255,255,255,0.5)"/>
+          <path d="M211 80 Q218 76 225 80" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+
+          <!-- ── Active eSIM Card ── -->
+          <rect x="30" y="104" width="200" height="110" rx="16" fill="url(#cardGrad)"/>
+          <!-- Card shine -->
+          <rect x="30" y="104" width="200" height="110" rx="16" fill="none" stroke="rgba(3,222,243,0.3)" stroke-width="1"/>
+          <ellipse cx="200" cy="110" rx="60" ry="40" fill="rgba(3,222,243,0.08)"/>
+          <!-- Active badge -->
+          <rect x="155" y="112" width="62" height="18" rx="9" fill="rgba(34,197,94,0.2)"/>
+          <circle cx="165" cy="121" r="3" fill="#22c55e" style="animation:none;"/>
+          <text x="171" y="125" fill="#22c55e" font-size="8" font-weight="700" font-family="system-ui">ACTIVE</text>
+          <!-- Country name -->
+          <text x="42" y="130" fill="white" font-size="14" font-weight="900" font-family="system-ui">Japan eSIM</text>
+          <!-- Plan info row -->
+          <text x="42" y="148" fill="rgba(255,255,255,0.5)" font-size="8" font-family="system-ui">5GB · 30 days · 4G LTE</text>
+          <!-- Data bar -->
+          <rect x="42" y="158" width="176" height="5" rx="3" fill="rgba(255,255,255,0.1)"/>
+          <rect x="42" y="158" width="106" height="5" rx="3" fill="url(#barGrad)"/>
+          <!-- Bar labels -->
+          <text x="42" y="178" fill="rgba(255,255,255,0.5)" font-size="7.5" font-family="system-ui">2.9 GB used</text>
+          <text x="218" y="178" text-anchor="end" fill="rgba(255,255,255,0.7)" font-size="7.5" font-weight="700" font-family="system-ui">2.1 GB left</text>
+          <!-- Network chip -->
+          <rect x="42" y="185" width="80" height="18" rx="9" fill="rgba(255,255,255,0.08)"/>
+          <text x="56" y="198" fill="rgba(255,255,255,0.5)" font-size="7.5" font-family="system-ui">🗾 NTT Docomo</text>
+
+          <!-- ── Section label ── -->
+          <text x="30" y="237" fill="rgba(255,255,255,0.35)" font-size="9" font-weight="700" font-family="system-ui" letter-spacing="1">MY ESIMS</text>
+
+          <!-- ── eSIM list items ── -->
+          <!-- Item 1: Japan (active) -->
+          <rect x="30" y="246" width="200" height="48" rx="12" fill="rgba(3,222,243,0.08)" />
+          <rect x="30" y="246" width="200" height="48" rx="12" fill="none" stroke="rgba(3,222,243,0.2)" stroke-width="1"/>
+          <rect x="42" y="258" width="24" height="16" rx="4" fill="#e63946" opacity="0.9"/>
+          <text x="43" y="269" fill="white" font-size="6" font-weight="700" font-family="system-ui">JP</text>
+          <text x="74" y="263" fill="white" font-size="9" font-weight="700" font-family="system-ui">Japan</text>
+          <text x="74" y="275" fill="rgba(255,255,255,0.4)" font-size="7.5" font-family="system-ui">5GB · 30 days</text>
+          <text x="218" y="268" text-anchor="end" fill="#03def3" font-size="9" font-weight="800" font-family="system-ui">$6.50</text>
+          <circle cx="210" cy="276" r="3" fill="rgba(34,197,94,0.9)"/>
+
+          <!-- Item 2: UK (inactive) -->
+          <rect x="30" y="304" width="200" height="48" rx="12" fill="rgba(255,255,255,0.04)"/>
+          <rect x="42" y="316" width="24" height="16" rx="4" fill="#012169" opacity="0.9"/>
+          <text x="43" y="327" fill="white" font-size="6" font-weight="700" font-family="system-ui">GB</text>
+          <text x="74" y="321" fill="white" font-size="9" font-weight="700" font-family="system-ui">United Kingdom</text>
+          <text x="74" y="333" fill="rgba(255,255,255,0.4)" font-size="7.5" font-family="system-ui">3GB · 15 days</text>
+          <text x="218" y="326" text-anchor="end" fill="rgba(255,255,255,0.4)" font-size="9" font-weight="600" font-family="system-ui">$4.00</text>
+          <circle cx="210" cy="334" r="3" fill="rgba(255,255,255,0.2)"/>
+
+          <!-- ── Stats bar ── -->
+          <rect x="22" y="368" width="216" height="60" rx="0" fill="rgba(255,255,255,0.03)"/>
+          <line x1="22" y1="368" x2="238" y2="368" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <!-- Stat 1 -->
+          <text x="57" y="389" text-anchor="middle" fill="#03def3" font-size="13" font-weight="900" font-family="system-ui">195+</text>
+          <text x="57" y="403" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="7" font-family="system-ui">Countries</text>
+          <!-- Divider -->
+          <line x1="108" y1="378" x2="108" y2="418" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <!-- Stat 2 -->
+          <text x="130" y="389" text-anchor="middle" fill="#FF5F00" font-size="13" font-weight="900" font-family="system-ui">$3.50</text>
+          <text x="130" y="403" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="7" font-family="system-ui">From</text>
+          <!-- Divider -->
+          <line x1="152" y1="378" x2="152" y2="418" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <!-- Stat 3 -->
+          <text x="193" y="389" text-anchor="middle" fill="#42BFCA" font-size="13" font-weight="900" font-family="system-ui">24/7</text>
+          <text x="193" y="403" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="7" font-family="system-ui">Support</text>
+
+          <!-- ── Bottom nav ── -->
+          <rect x="22" y="436" width="216" height="57" rx="0" fill="transparent"/>
+          <line x1="22" y1="436" x2="238" y2="436" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <!-- Home tab (active) -->
+          <rect x="37" y="446" width="36" height="28" rx="8" fill="rgba(3,222,243,0.15)"/>
+          <path d="M55 448 L43 458 L43 474 L50 474 L50 466 L60 466 L60 474 L67 474 L67 458 Z" fill="#03def3" opacity="0.8" transform="scale(0.55) translate(40 18)"/>
+          <text x="55" y="481" text-anchor="middle" fill="#03def3" font-size="7" font-weight="700" font-family="system-ui">Home</text>
+          <!-- Plans tab -->
+          <text x="100" y="461" text-anchor="middle" fill="rgba(255,255,255,0.25)" font-size="14">◫</text>
+          <text x="100" y="481" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="7" font-family="system-ui">Plans</text>
+          <!-- Usage tab -->
+          <text x="145" y="461" text-anchor="middle" fill="rgba(255,255,255,0.25)" font-size="14">📊</text>
+          <text x="145" y="481" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="7" font-family="system-ui">Usage</text>
+          <!-- Profile tab -->
+          <text x="190" y="461" text-anchor="middle" fill="rgba(255,255,255,0.25)" font-size="14">👤</text>
+          <text x="190" y="481" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="7" font-family="system-ui">Profile</text>
+          <!-- Home indicator -->
+          <rect x="105" y="490" width="50" height="3" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+
+          <defs>
+            <linearGradient id="phoneBodyGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#1a2540"/>
+              <stop offset="100%" stop-color="#0a0f1e"/>
+            </linearGradient>
+            <linearGradient id="phoneEdge" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+            </linearGradient>
+            <linearGradient id="cardGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#1a3060"/>
+              <stop offset="100%" stop-color="#0d1b36"/>
+            </linearGradient>
+            <linearGradient id="barGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#03def3"/>
+              <stop offset="100%" stop-color="#42BFCA"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- Floating notification card -->
+      <div class="notif-float" style="position:absolute;top:50px;right:-10px;background:rgba(255,255,255,0.07);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.12);border-radius:1rem;padding:0.65rem 0.9rem;display:flex;align-items:center;gap:0.6rem;z-index:3;white-space:nowrap;">
+        <div style="width:30px;height:30px;background:rgba(34,197,94,0.15);border-radius:0.5rem;display:flex;align-items:center;justify-content:center;font-size:0.9rem;">✅</div>
+        <div>
+          <p style="font-size:0.68rem;font-weight:700;color:white;margin:0;">eSIM Activated!</p>
+          <p style="font-size:0.6rem;color:rgba(255,255,255,0.4);margin:0;">Japan · Just now</p>
+        </div>
+      </div>
+
+      <!-- Floating data card -->
+      <div class="data-float" style="position:absolute;bottom:90px;left:-15px;background:rgba(3,222,243,0.1);backdrop-filter:blur(20px);border:1px solid rgba(3,222,243,0.2);border-radius:1rem;padding:0.65rem 0.9rem;z-index:3;white-space:nowrap;">
+        <p style="font-size:0.62rem;color:rgba(255,255,255,0.5);margin:0 0 0.2rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Data Remaining</p>
+        <p style="font-size:1.1rem;font-weight:900;color:#03def3;margin:0;line-height:1;">2.1 GB</p>
+        <div style="background:rgba(255,255,255,0.1);border-radius:9999px;height:3px;width:80px;margin-top:0.35rem;overflow:hidden;">
+          <div style="background:#03def3;width:42%;height:100%;border-radius:9999px;"></div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+  @keyframes phone-float { 0%,100%{transform:translateY(0) rotate(1deg)} 50%{transform:translateY(-12px) rotate(-1deg)} }
+  @keyframes notif-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  @keyframes data-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .phone-float { animation: phone-float 5s ease-in-out infinite; }
+  .notif-float { animation: notif-float 3.5s ease-in-out infinite 0.5s; }
+  .data-float { animation: data-float 4s ease-in-out infinite 1s; }
+  @media (max-width: 900px) {
+    #appGrid { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+    .phone-float { display: none; }
+    .notif-float, .data-float { display: none; }
+  }
+</style>

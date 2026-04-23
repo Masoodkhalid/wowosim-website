@@ -1,29 +1,125 @@
 ---
-const localDestinations = [
-  { name:'United States', slug:'united-states', flag:'🇺🇸', iso3:'USA', from:'3.50' },
-  { name:'United Kingdom', slug:'united-kingdom', flag:'🇬🇧', iso3:'GBR', from:'4.00' },
-  { name:'Japan',          slug:'japan',          flag:'🇯🇵', iso3:'JPN', from:'4.50' },
-  { name:'Australia',      slug:'australia',      flag:'🇦🇺', iso3:'AUS', from:'5.00' },
-  { name:'France',         slug:'france',         flag:'🇫🇷', iso3:'FRA', from:'4.50' },
-  { name:'Germany',        slug:'germany',        flag:'🇩🇪', iso3:'DEU', from:'4.50' },
-  { name:'Italy',          slug:'italy',          flag:'🇮🇹', iso3:'ITA', from:'4.50' },
-  { name:'Canada',         slug:'canada',         flag:'🇨🇦', iso3:'CAN', from:'4.00' },
-  { name:'Spain',          slug:'spain',          flag:'🇪🇸', iso3:'ESP', from:'4.50' },
-  { name:'Thailand',       slug:'thailand',       flag:'🇹🇭', iso3:'THA', from:'3.50' },
-  { name:'South Korea',    slug:'south-korea',    flag:'🇰🇷', iso3:'KOR', from:'4.00' },
-  { name:'Singapore',      slug:'singapore',      flag:'🇸🇬', iso3:'SGP', from:'4.50' },
+import { portalFetch } from '../../lib/api';
+
+// Static fallback prices (used if API unavailable)
+const fallbackPrices: Record<string, string> = {
+  USA:'3.50',GBR:'4.00',JPN:'4.50',AUS:'5.00',FRA:'4.50',DEU:'4.50',
+  ITA:'4.50',CAN:'4.00',ESP:'4.50',THA:'3.50',KOR:'4.00',SGP:'4.50',
+};
+
+// ── Fetch country/region list from portal ──
+let apiCountries: { name: string; slug: string; flag: string; iso3: string }[] = [];
+let apiRegions: { name: string; slug: string; flag: string; iso3: string; cover: string }[] = [];
+
+try {
+  const res = await fetch('https://portal.wowosim.com/api/country-region-list');
+  if (res.ok) {
+    const d = await res.json();
+    // Countries
+    const rawCountries: any[] = d.countries ?? d.country ?? [];
+    apiCountries = rawCountries.map((c: any) => ({
+      name:  c.country ?? c.name,
+      slug:  (c.country ?? c.name ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+      flag:  c.flag ?? '',
+      iso3:  c.iso3 ?? '',
+    }));
+    // Regions
+    const rawRegions: any[] = d.regions ?? d.region ?? [];
+    apiRegions = rawRegions.map((r: any) => ({
+      name:  r.region ?? r.name,
+      slug:  (r.region ?? r.name ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+      flag:  r.flag ?? '',
+      iso3:  r.iso3 ?? '',
+      cover: '',
+    }));
+    // Popular countries
+    const rawPopular: any[] = d.popular_countries ?? d.popular ?? [];
+    if (rawPopular.length > 0) {
+      const popularSet = new Set(rawPopular.map((c: any) => c.iso3));
+      apiCountries = [
+        ...rawPopular.map((c: any) => ({
+          name:  c.country ?? c.name,
+          slug:  (c.country ?? c.name ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+          flag:  c.flag ?? '',
+          iso3:  c.iso3 ?? '',
+        })),
+        ...apiCountries.filter(c => !popularSet.has(c.iso3)),
+      ];
+    }
+  }
+} catch {}
+
+// ── Fetch min prices for popular countries ──
+const priceMap: Record<string, string> = { ...fallbackPrices };
+const topIso3s = apiCountries.slice(0, 10).map(c => c.iso3).filter(Boolean);
+const regionIso3s = apiRegions.slice(0, 6).map(r => r.iso3).filter(Boolean);
+
+async function fetchMinPrice(iso3: string): Promise<void> {
+  try {
+    const res = await portalFetch(`/plans?q[iso3_eq]=${iso3}`);
+    if (res.ok) {
+      const d = await res.json();
+      const plans: any[] = d.plans ?? d.data ?? d ?? [];
+      if (Array.isArray(plans) && plans.length > 0) {
+        const prices = plans.map((p: any) => parseFloat(p.price_usd)).filter(n => !isNaN(n) && n > 0);
+        if (prices.length > 0) priceMap[iso3] = Math.min(...prices).toFixed(2);
+      }
+    }
+  } catch {}
+}
+
+await Promise.all([...topIso3s, ...regionIso3s].map(fetchMinPrice));
+
+// ── Build display lists ──
+// Displayed countries: top 12
+const displayCountries = apiCountries.slice(0, 12).map(c => ({
+  ...c,
+  from: priceMap[c.iso3] ?? '—',
+}));
+
+// Displayed regions: all from API, enrich with cover text
+const regionCoverMap: Record<string, string> = {
+  'EUROPE':'30+ countries','ASIA_20':'20 countries','ASIA_18':'18 countries',
+  'ASIA_12':'12 countries','ASIA_7':'7 countries','LATAM':'15+ countries',
+  'NAM':'USA + Canada + Mexico','MENA':'10+ countries','GULF':'6 Gulf states',
+  'CAR':'20+ islands','CAU':'Georgia, Armenia, Azerbaijan','GLOBAL_120':'120+ countries',
+  'GLOBAL_140':'140+ countries',
+};
+
+const displayRegions = apiRegions.map(r => ({
+  ...r,
+  cover: regionCoverMap[r.iso3] ?? r.cover ?? 'Multiple countries',
+  from: priceMap[r.iso3] ?? '—',
+}));
+
+// Fallback if API returned nothing
+const fallbackCountries = [
+  { name:'United States',slug:'united-states',flag:'',iso3:'USA',from:priceMap.USA??'3.50' },
+  { name:'United Kingdom',slug:'united-kingdom',flag:'',iso3:'GBR',from:priceMap.GBR??'4.00' },
+  { name:'Japan',slug:'japan',flag:'',iso3:'JPN',from:priceMap.JPN??'4.50' },
+  { name:'Australia',slug:'australia',flag:'',iso3:'AUS',from:priceMap.AUS??'5.00' },
+  { name:'France',slug:'france',flag:'',iso3:'FRA',from:priceMap.FRA??'4.50' },
+  { name:'Germany',slug:'germany',flag:'',iso3:'DEU',from:priceMap.DEU??'4.50' },
+  { name:'Thailand',slug:'thailand',flag:'',iso3:'THA',from:priceMap.THA??'3.50' },
+  { name:'Spain',slug:'spain',flag:'',iso3:'ESP',from:priceMap.ESP??'4.50' },
+];
+const fallbackRegions = [
+  { name:'Europe',slug:'europe',flag:'',iso3:'EUROPE',cover:'30+ countries',from:'4.50' },
+  { name:'Asia Pacific',slug:'asia-pacific',flag:'',iso3:'ASIA_20',cover:'20 countries',from:'5.00' },
+  { name:'North America',slug:'north-america',flag:'',iso3:'NAM',cover:'USA + Canada + Mexico',from:'6.00' },
+  { name:'Latin America',slug:'latin-america',flag:'',iso3:'LATAM',cover:'15+ countries',from:'7.00' },
+  { name:'Middle East',slug:'middle-east',flag:'',iso3:'MENA',cover:'10+ countries',from:'6.50' },
+  { name:'Caribbean',slug:'caribbean',flag:'',iso3:'CAR',cover:'20+ islands',from:'7.00' },
 ];
 
-const regionalDestinations = [
-  { name:'Europe',        slug:'europe',        flag:'🌍', cover:'30+ countries', from:'4.50' },
-  { name:'Asia Pacific',  slug:'asia-pacific',  flag:'🌏', cover:'20+ countries', from:'5.00' },
-  { name:'North America', slug:'north-america', flag:'🌎', cover:'USA + Canada + Mexico', from:'6.00' },
-  { name:'Latin America', slug:'latin-america', flag:'🌎', cover:'15+ countries', from:'7.00' },
-  { name:'Middle East',   slug:'middle-east',   flag:'🌍', cover:'10+ countries', from:'6.50' },
-  { name:'Caribbean',     slug:'caribbean',     flag:'🏖️',  cover:'20+ islands', from:'7.00' },
-  { name:'Caucasus',      slug:'caucasus-region', flag:'🏔️', cover:'Georgia, Armenia, Azerbaijan', from:'5.00' },
-  { name:'Global',        slug:'global',        flag:'🌐', cover:'195+ countries', from:'14.00' },
-];
+const countriesToShow = displayCountries.length > 0 ? displayCountries : fallbackCountries;
+const regionsToShow = displayRegions.length > 0 ? displayRegions : fallbackRegions;
+
+// Country emoji flag fallbacks
+const emojiFlags: Record<string, string> = {
+  USA:'🇺🇸',GBR:'🇬🇧',JPN:'🇯🇵',AUS:'🇦🇺',FRA:'🇫🇷',DEU:'🇩🇪',ITA:'🇮🇹',
+  CAN:'🇨🇦',ESP:'🇪🇸',THA:'🇹🇭',KOR:'🇰🇷',SGP:'🇸🇬',MAR:'🇲🇦',TUR:'🇹🇷',
+};
 ---
 
 <section style="padding:4rem 2rem;background:white;">
@@ -37,8 +133,8 @@ const regionalDestinations = [
     <!-- Tab buttons -->
     <div style="display:flex;justify-content:center;gap:0.5rem;margin-bottom:2rem;">
       {[
-        { id:'local',    label:'🏳️ Local Plans',    desc:'Single country' },
-        { id:'regional', label:'🌍 Regional Plans',  desc:'Multi-country' },
+        { id:'local',    label:'🏳️ Local Plans',   desc:'Single country' },
+        { id:'regional', label:'🌍 Regional Plans', desc:'Multi-country' },
       ].map((tab, i) => (
         <button class="plan-tab-btn" data-tab={tab.id}
           style={`padding:0.6rem 1.75rem;border-radius:9999px;font-size:0.875rem;font-weight:700;cursor:pointer;border:2px solid ${i===0?'#03def3':'#e5e7eb'};background:${i===0?'#03def3':'white'};color:${i===0?'#162544':'#6b7280'};transition:all 0.2s;`}>
@@ -50,14 +146,22 @@ const regionalDestinations = [
     <!-- Local Plans Grid -->
     <div id="tab-local" class="plan-tab-content">
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:1rem;">
-        {localDestinations.map(d => (
+        {countriesToShow.map(d => (
           <a href={`/${d.slug}`}
              style="background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:1.25rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:0.6rem;transition:all 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.05);"
              onmouseover="this.style.borderColor='#03def3';this.style.boxShadow='0 8px 25px rgba(3,222,243,0.15)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#f0f0f0';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)';this.style.transform=''">
-            <span style="font-size:2rem;">{d.flag}</span>
+            {d.flag
+              ? <img src={d.flag} alt={d.name} style="width:44px;height:30px;object-fit:cover;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.1);" loading="lazy" />
+              : <span style="font-size:2rem;">{emojiFlags[d.iso3] ?? '🌐'}</span>
+            }
             <div style="text-align:center;">
               <p style="font-size:0.85rem;font-weight:700;color:#162544;margin:0;">{d.name}</p>
-              <p style="font-size:0.72rem;color:#9ca3af;margin:0.15rem 0 0;">from <strong style="color:#162544;">${d.from}</strong></p>
+              <p style="font-size:0.72rem;color:#9ca3af;margin:0.15rem 0 0;">
+                {d.from !== '—'
+                  ? <span>from <strong style="color:#162544;">${d.from}</strong></span>
+                  : <span style="color:#03def3;">View Plans</span>
+                }
+              </p>
             </div>
             <span style="font-size:0.7rem;background:#f0fdff;color:#0ea5e9;padding:0.2rem 0.6rem;border-radius:9999px;font-weight:600;">View Plans →</span>
           </a>
@@ -73,19 +177,27 @@ const regionalDestinations = [
     <!-- Regional Plans Grid -->
     <div id="tab-regional" class="plan-tab-content" style="display:none;">
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem;">
-        {regionalDestinations.map(d => (
+        {regionsToShow.map(d => (
           <a href={`/${d.slug}`}
              style="background:linear-gradient(135deg,#f0fdff,#e8f8ff);border:1.5px solid #e0f4ff;border-radius:1.25rem;padding:1.5rem;text-decoration:none;transition:all 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.05);"
              onmouseover="this.style.borderColor='#03def3';this.style.boxShadow='0 8px 25px rgba(3,222,243,0.15)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#e0f4ff';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)';this.style.transform=''">
             <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-              <span style="font-size:2rem;">{d.flag}</span>
+              {d.flag
+                ? <img src={d.flag} alt={d.name} style="width:36px;height:24px;object-fit:cover;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.1);" loading="lazy" />
+                : <span style="font-size:1.75rem;">🌍</span>
+              }
               <div>
                 <p style="font-size:0.95rem;font-weight:800;color:#162544;margin:0;">{d.name}</p>
                 <p style="font-size:0.72rem;color:#0ea5e9;margin:0;font-weight:600;">{d.cover}</p>
               </div>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;">
-              <span style="font-size:0.78rem;color:#6b7280;">from <strong style="color:#162544;font-size:1rem;">${d.from}</strong></span>
+              <span style="font-size:0.78rem;color:#6b7280;">
+                {d.from !== '—'
+                  ? <span>from <strong style="color:#162544;font-size:1rem;">${d.from}</strong></span>
+                  : <span style="color:#03def3;font-weight:700;">View Plans</span>
+                }
+              </span>
               <span style="font-size:0.72rem;background:#03def3;color:#162544;padding:0.25rem 0.65rem;border-radius:9999px;font-weight:700;">View Plans →</span>
             </div>
           </a>

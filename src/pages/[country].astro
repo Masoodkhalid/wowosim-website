@@ -60,9 +60,12 @@ const slugToIso3: Record<string, string> = {
   'venezuela':'VEN','vietnam':'VNM',
   // Z
   'zimbabwe':'ZWE',
-  // Regions
-  'europe':'EUR','asia-pacific':'ASIA','north-america':'NAM','latin-america':'LAM',
-  'middle-east':'MDE','caribbean':'CAR','caucasus-region':'CAU','global':'GLOBAL',
+  // Regions — ISO3 codes from portal API
+  'europe':'EUROPE','asia-pacific':'ASIA_20','asia-20':'ASIA_20','asia-18':'ASIA_18',
+  'asia-12':'ASIA_12','asia-7':'ASIA_7','north-america':'NAM','latin-america':'LATAM',
+  'middle-east':'MENA','middle-east-north-africa':'MENA','gulf':'GULF',
+  'caribbean':'CAR','caucasus':'CAU','caucasus-region':'CAU',
+  'global-120':'GLOBAL_120','global-140':'GLOBAL_140','global':'GLOBAL_140',
 };
 
 const slugToName: Record<string, string> = {

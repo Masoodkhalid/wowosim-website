@@ -15,25 +15,37 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const jwt = getJwt(cookies);
   const upperCode = (code ?? '').toUpperCase().trim();
 
-  // Try portal API first
-  try {
-    const res = await portalFetch('/coupons/validate', {
-      method: 'POST',
-      body: JSON.stringify({ code: upperCode }),
-    }, jwt ?? undefined);
-    if (res.ok) {
-      const data = await res.json();
-      if (data.valid || data.discount) {
-        return new Response(JSON.stringify({
-          valid: true,
-          code: upperCode,
-          discount: data.discount ?? data.amount ?? 0,
-          type: data.type ?? 'percent',
-          label: data.description ?? `${data.discount}% off`,
-        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  // Try multiple portal API endpoint patterns
+  const endpoints = [
+    '/coupon/validate',
+    '/coupons/validate',
+    '/coupon/check',
+    '/coupons/check',
+    '/discount/validate',
+  ];
+  for (const endpoint of endpoints) {
+    try {
+      const res = await portalFetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: upperCode, coupon_code: upperCode }),
+      }, jwt ?? undefined);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.valid || data.discount || data.amount || data.percentage) {
+          return new Response(JSON.stringify({
+            valid: true,
+            code: upperCode,
+            discount: data.discount ?? data.percentage ?? data.amount ?? 0,
+            type: data.type ?? data.discount_type ?? 'percent',
+            label: data.description ?? data.label ?? `${data.discount ?? data.percentage}% off`,
+          }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+        }
+        // Portal returned 200 but coupon invalid
+        if (data.valid === false || data.error || data.message) break;
       }
-    }
-  } catch {}
+    } catch {}
+  }
 
   // Fallback to local promo codes
   const promo = PROMO_CODES[upperCode];
