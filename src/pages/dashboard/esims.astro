@@ -22,18 +22,18 @@ try {
   }
 } catch {}
 
-const statusMap: Record<string, { label: string; badge: string; dotColor: string }> = {
-  ENABLED:  { label: 'Active',              badge: 'badge-success', dotColor: '#22c55e' },
-  RELEASED: { label: 'Awaiting Activation', badge: 'badge-warning', dotColor: '#f59e0b' },
-  DISABLED: { label: 'Inactive',            badge: 'badge-danger',  dotColor: '#ef4444' },
-  deleted:  { label: 'Expired',             badge: 'badge-danger',  dotColor: '#ef4444' },
+const statusMap: Record<string, { label: string; color: string; bg: string; dot: string }> = {
+  ENABLED:  { label: 'Active',              color: '#166534', bg: '#dcfce7', dot: '#22c55e' },
+  RELEASED: { label: 'Awaiting Activation', color: '#92400e', bg: '#fef3c7', dot: '#f59e0b' },
+  DISABLED: { label: 'Inactive',            color: '#991b1b', bg: '#fee2e2', dot: '#ef4444' },
+  deleted:  { label: 'Expired',             color: '#6b7280', bg: '#f3f4f6', dot: '#9ca3af' },
 };
 
 const initials = (user?.first_name?.[0] ?? user?.email?.[0] ?? 'U').toUpperCase();
-const path = Astro.url.pathname;
+const activeCount = esims.filter(e => e.state === 'ENABLED').length;
 ---
 
-<Base title="My eSIMs">
+<Base title="My eSIMs — Dashboard" description="Manage your WoWo SIM eSIM plans, view data usage, and access QR codes.">
   <div class="dash-layout">
     <!-- Sidebar -->
     <aside class="dash-sidebar">
@@ -54,6 +54,7 @@ const path = Astro.url.pathname;
         <a href="/dashboard/esims" class="dash-nav-item active">
           <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
           My eSIMs
+          {esims.length > 0 && <span style="margin-left:auto;background:#03def3;color:#162544;font-size:0.65rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:9999px;">{esims.length}</span>}
         </a>
         <a href="/dashboard/invoices" class="dash-nav-item">
           <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -77,71 +78,101 @@ const path = Astro.url.pathname;
 
     <!-- Main -->
     <main class="dash-main">
+
+      <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
         <div>
-          <a href="/dashboard" style="display:inline-flex;align-items:center;gap:0.3rem;color:#9ca3af;font-size:0.8rem;text-decoration:none;margin-bottom:0.35rem;transition:color 0.15s;" onmouseover="this.style.color='#162544'" onmouseout="this.style.color='#9ca3af'">
-            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-            Dashboard
-          </a>
-          <h1 style="font-size:1.75rem;font-weight:900;color:#162544;margin:0;letter-spacing:-0.5px;">My eSIMs</h1>
+          <h1 style="font-size:1.75rem;font-weight:900;color:#162544;margin:0 0 0.25rem;letter-spacing:-0.5px;">My eSIMs</h1>
+          <p style="color:#9ca3af;font-size:0.85rem;margin:0;">
+            {esims.length === 0 ? 'No eSIMs purchased yet' : `${esims.length} eSIM${esims.length > 1 ? 's' : ''} · ${activeCount} active`}
+          </p>
         </div>
-        <a href="/" class="btn-primary" style="font-size:0.85rem;padding:0.6rem 1.25rem;">
+        <a href="/" style="display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,#162544,#1e3a6e);color:white;font-weight:700;padding:0.65rem 1.35rem;border-radius:9999px;text-decoration:none;font-size:0.85rem;transition:opacity 0.2s;box-shadow:0 4px 12px rgba(22,37,68,0.25);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
           <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
           Buy New eSIM
         </a>
       </div>
 
       {esims.length === 0 ? (
-        <div class="card" style="text-align:center;padding:4rem 2rem;">
-          <div style="width:80px;height:80px;background:#f0fdff;border-radius:1.5rem;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
-            <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="1.8">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-            </svg>
+        <!-- Empty State -->
+        <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.75rem;padding:5rem 2rem;text-align:center;">
+          <!-- Character illustration -->
+          <div style="width:120px;height:120px;margin:0 auto 1.75rem;position:relative;">
+            <div style="width:120px;height:120px;background:linear-gradient(135deg,#f0fdff,#e0f9ff);border-radius:9999px;display:flex;align-items:center;justify-content:center;">
+              <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                <circle cx="30" cy="22" r="14" fill="#162544" opacity="0.1"/>
+                <path d="M18 22c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="#162544" stroke-width="2" stroke-linecap="round"/>
+                <rect x="20" y="30" width="20" height="26" rx="3" fill="#162544" opacity="0.08" stroke="#162544" stroke-width="1.5"/>
+                <line x1="30" y1="38" x2="30" y2="46" stroke="#03def3" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="30" cy="52" r="2" fill="#03def3"/>
+              </svg>
+            </div>
+            <div style="position:absolute;bottom:-4px;right:-4px;width:36px;height:36px;background:#03def3;border-radius:9999px;display:flex;align-items:center;justify-content:center;border:3px solid white;">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#162544" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            </div>
           </div>
-          <h2 style="font-size:1.25rem;font-weight:800;color:#162544;margin:0 0 0.5rem;">No eSIMs yet</h2>
-          <p style="color:#9ca3af;font-size:0.875rem;margin:0 0 1.75rem;max-width:320px;margin-left:auto;margin-right:auto;">Purchase your first eSIM and start travelling connected. Plans from $3.50.</p>
-          <a href="/" class="btn-primary" style="font-size:0.925rem;padding:0.8rem 2rem;">Browse Plans →</a>
+          <h2 style="font-size:1.35rem;font-weight:900;color:#162544;margin:0 0 0.6rem;">No eSIMs yet</h2>
+          <p style="color:#9ca3af;font-size:0.875rem;margin:0 0 2rem;max-width:340px;margin-left:auto;margin-right:auto;line-height:1.6;">
+            Purchase your first eSIM and stay connected in 195+ countries. Instant delivery, no physical SIM required.
+          </p>
+          <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+            <a href="/" style="display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,#162544,#1e3a6e);color:white;font-weight:700;padding:0.85rem 2rem;border-radius:9999px;text-decoration:none;font-size:0.9rem;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+              Browse eSIM Plans →
+            </a>
+            <a href="/destinations" style="display:inline-flex;align-items:center;gap:0.5rem;background:white;color:#162544;font-weight:700;padding:0.85rem 2rem;border-radius:9999px;text-decoration:none;font-size:0.9rem;border:1.5px solid #e5e7eb;transition:border-color 0.2s;" onmouseover="this.style.borderColor='#03def3'" onmouseout="this.style.borderColor='#e5e7eb'">
+              All Destinations
+            </a>
+          </div>
         </div>
       ) : (
-        <div style="display:flex;flex-direction:column;gap:0.875rem;">
+        <div style="display:flex;flex-direction:column;gap:1rem;">
           {esims.map((esim: any) => {
             const statusKey = esim.state ?? 'DISABLED';
-            const status = statusMap[statusKey] ?? { label: statusKey, badge: 'badge-info', dotColor: '#6b7280' };
+            const s = statusMap[statusKey] ?? { label: statusKey, color:'#374151', bg:'#f3f4f6', dot:'#9ca3af' };
             const countryName = esim.country ?? esim.name ?? 'eSIM';
-            const iccid = esim.iccid ?? esim.eid ?? 'Unknown';
-            const data = esim.quota ? `${esim.quota}GB` : '';
-            const days = esim.valadity ? `${esim.valadity} days` : '';
-            const metaParts = [data, days].filter(Boolean);
+            const iccid = esim.iccid ?? esim.eid ?? '';
+            const data = esim.quota ? `${esim.quota} GB` : null;
+            const days = esim.valadity ? `${esim.valadity} days` : null;
+            const network = esim.network ?? esim.speed ?? '4G LTE';
 
             return (
               <a href={`/dashboard/esim/${iccid}`}
-                 style="display:flex;align-items:center;justify-content:space-between;gap:1rem;text-decoration:none;background:white;border-radius:1.25rem;padding:1.25rem 1.5rem;border:1.5px solid #f0f0f0;box-shadow:0 1px 4px rgba(0,0,0,0.05);transition:all 0.2s;"
-                 onmouseover="this.style.boxShadow='0 8px 28px rgba(0,0,0,0.1)';this.style.transform='translateY(-1px)';this.style.borderColor='#e5e7eb'" onmouseout="this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)';this.style.transform='';this.style.borderColor='#f0f0f0'">
-                <div style="display:flex;align-items:center;gap:1rem;">
-                  <!-- Flag/icon -->
-                  <div style="width:52px;height:52px;background:linear-gradient(135deg,#f0fdff,#e0f9ff);border-radius:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    {esim.flag ? (
-                      <img src={esim.flag} alt="" style="width:32px;height:22px;border-radius:3px;object-fit:cover;" loading="lazy" />
-                    ) : (
-                      <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/>
-                      </svg>
-                    )}
+                 style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:1.5rem 1.75rem;text-decoration:none;display:flex;align-items:center;gap:1.25rem;transition:all 0.22s;box-shadow:0 1px 6px rgba(0,0,0,0.04);"
+                 onmouseover="this.style.boxShadow='0 8px 32px rgba(22,37,68,0.12)';this.style.transform='translateY(-2px)';this.style.borderColor='#d1d5db'" onmouseout="this.style.boxShadow='0 1px 6px rgba(0,0,0,0.04)';this.style.transform='';this.style.borderColor='#f0f0f0'">
+
+                <!-- Flag/Icon -->
+                <div style="width:56px;height:56px;background:linear-gradient(135deg,#f0fdff,#dff9ff);border-radius:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(3,222,243,0.15);">
+                  {esim.flag ? (
+                    <img src={esim.flag} alt={countryName} style="width:34px;height:24px;border-radius:3px;object-fit:cover;" loading="lazy" />
+                  ) : (
+                    <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="1.8">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/>
+                    </svg>
+                  )}
+                </div>
+
+                <!-- Info -->
+                <div style="flex:1;min-width:0;">
+                  <div style="display:flex;align-items:center;gap:0.625rem;margin-bottom:0.35rem;flex-wrap:wrap;">
+                    <h3 style="font-weight:800;color:#162544;font-size:0.975rem;margin:0;">{countryName}</h3>
+                    <span style={`display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.6rem;border-radius:9999px;font-size:0.65rem;font-weight:700;background:${s.bg};color:${s.color};`}>
+                      <span style={`width:5px;height:5px;border-radius:9999px;background:${s.dot};`}></span>
+                      {s.label}
+                    </span>
                   </div>
-                  <div>
-                    <p style="font-weight:700;color:#162544;margin:0 0 0.2rem;font-size:0.95rem;">{countryName}</p>
-                    <p style="color:#9ca3af;font-size:0.75rem;margin:0;font-family:monospace;">{iccid.length > 20 ? iccid.substring(0, 20) + '…' : iccid}</p>
-                    {metaParts.length > 0 && (
-                      <p style="color:#6b7280;font-size:0.75rem;margin:0.2rem 0 0;">{metaParts.join(' · ')}</p>
-                    )}
+                  <p style="color:#9ca3af;font-size:0.72rem;margin:0 0 0.4rem;font-family:monospace;letter-spacing:0.03em;">
+                    {iccid ? (iccid.length > 22 ? iccid.substring(0,22)+'…' : iccid) : '—'}
+                  </p>
+                  <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+                    {data && <span style="font-size:0.75rem;color:#374151;font-weight:600;display:flex;align-items:center;gap:0.3rem;"><span style="color:#03def3;">📶</span>{data}</span>}
+                    {days && <span style="font-size:0.75rem;color:#374151;font-weight:600;display:flex;align-items:center;gap:0.3rem;"><span style="color:#03def3;">📅</span>{days}</span>}
+                    <span style="font-size:0.75rem;color:#374151;font-weight:600;display:flex;align-items:center;gap:0.3rem;"><span style="color:#03def3;">🌐</span>{network}</span>
                   </div>
                 </div>
-                <div style="display:flex;align-items:center;gap:1rem;flex-shrink:0;">
-                  <span class={status.badge} style="display:flex;align-items:center;gap:0.3rem;">
-                    <span style={`width:6px;height:6px;border-radius:9999px;background:${status.dotColor};flex-shrink:0;`}></span>
-                    {status.label}
-                  </span>
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#d1d5db" stroke-width="2.5">
+
+                <!-- Arrow -->
+                <div style="flex-shrink:0;width:36px;height:36px;background:#f8fafc;border-radius:9999px;display:flex;align-items:center;justify-content:center;transition:background 0.15s;">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
                   </svg>
                 </div>
@@ -150,6 +181,7 @@ const path = Astro.url.pathname;
           })}
         </div>
       )}
+
     </main>
   </div>
 </Base>

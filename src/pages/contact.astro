@@ -1,32 +1,222 @@
 ---
 import Base from '../layouts/Base.astro';
 ---
-<Base title="Contact Us">
-  <section style="padding: 5rem 2rem; background: linear-gradient(135deg, #f0fdff, white); min-height: calc(100vh - 140px);">
-    <div style="max-width: 56rem; margin: 0 auto;">
-      <div style="text-align: center; margin-bottom: 3rem;">
-        <h1 style="font-size: 2.5rem; font-weight: 900; color: #162544; margin: 0 0 0.75rem;">Get in Touch</h1>
-        <p style="color: #6b7280; font-size: 1rem;">Have a question? Our support team is ready to help.</p>
+<Base title="Contact Us — WoWo SIM Support" description="Get in touch with the WoWo SIM support team via email or WhatsApp. We're here to help Monday–Friday, 9AM–6PM EST.">
+
+  <!-- Hero -->
+  <section style="background:linear-gradient(135deg,#162544,#0d1b36);padding:4rem 2rem;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-80px;right:-80px;width:300px;height:300px;background:rgba(3,222,243,0.05);border-radius:9999px;filter:blur(60px);"></div>
+    <div style="max-width:540px;margin:0 auto;position:relative;z-index:1;">
+      <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.75rem;">Support</span>
+      <h1 style="font-size:2.75rem;font-weight:900;color:white;margin:0 0 0.75rem;letter-spacing:-0.5px;">Get in Touch</h1>
+      <p style="color:#9ca3af;font-size:1rem;margin:0;">Have a question about your eSIM? Our team is ready to help.</p>
+    </div>
+  </section>
+
+  <!-- Contact Options -->
+  <section style="padding:4rem 2rem;background:#f9fafb;">
+    <div style="max-width:72rem;margin:0 auto;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:4rem;">
+
+        <!-- Email -->
+        <a href="mailto:support@wowosim.com"
+           style="background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:2rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.75rem;transition:all 0.25s;"
+           onmouseover="this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';this.style.transform='translateY(-3px)';this.style.borderColor='#03def3'" onmouseout="this.style.boxShadow='';this.style.transform='';this.style.borderColor='#f0f0f0'">
+          <div style="width:60px;height:60px;background:linear-gradient(135deg,#f0fdff,#c7f5fc);border-radius:1rem;display:flex;align-items:center;justify-content:center;font-size:1.75rem;">✉️</div>
+          <div>
+            <h3 style="font-size:1rem;font-weight:700;color:#162544;margin:0 0 0.3rem;">Email Support</h3>
+            <p style="color:#03def3;font-size:0.875rem;font-weight:600;margin:0 0 0.25rem;">support@wowosim.com</p>
+            <p style="color:#9ca3af;font-size:0.775rem;margin:0;">Response within 24 hours</p>
+          </div>
+        </a>
+
+        <!-- WhatsApp -->
+        <a href="https://wa.me/17135146210" target="_blank" rel="noopener"
+           style="background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:2rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.75rem;transition:all 0.25s;"
+           onmouseover="this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';this.style.transform='translateY(-3px)';this.style.borderColor='#25D366'" onmouseout="this.style.boxShadow='';this.style.transform='';this.style.borderColor='#f0f0f0'">
+          <div style="width:60px;height:60px;background:linear-gradient(135deg,#e8fdf0,#c6f6d5);border-radius:1rem;display:flex;align-items:center;justify-content:center;font-size:1.75rem;">💬</div>
+          <div>
+            <h3 style="font-size:1rem;font-weight:700;color:#162544;margin:0 0 0.3rem;">WhatsApp</h3>
+            <p style="color:#25D366;font-size:0.875rem;font-weight:600;margin:0 0 0.25rem;">+1 (713) 514-6210</p>
+            <p style="color:#9ca3af;font-size:0.775rem;margin:0;">Mon–Fri · 9AM–6PM EST</p>
+          </div>
+        </a>
+
+        <!-- Help Center -->
+        <a href="/help-center"
+           style="background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:2rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.75rem;transition:all 0.25s;"
+           onmouseover="this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';this.style.transform='translateY(-3px)';this.style.borderColor='#162544'" onmouseout="this.style.boxShadow='';this.style.transform='';this.style.borderColor='#f0f0f0'">
+          <div style="width:60px;height:60px;background:linear-gradient(135deg,#f0f4ff,#e0e7ff);border-radius:1rem;display:flex;align-items:center;justify-content:center;font-size:1.75rem;">📖</div>
+          <div>
+            <h3 style="font-size:1rem;font-weight:700;color:#162544;margin:0 0 0.3rem;">Help Center</h3>
+            <p style="color:#162544;font-size:0.875rem;font-weight:600;margin:0 0 0.25rem;">Browse Articles</p>
+            <p style="color:#9ca3af;font-size:0.775rem;margin:0;">Instant answers 24/7</p>
+          </div>
+        </a>
+
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-        {[
-          { icon: '✉️', title: 'Email Support', value: 'support@wowosim.com', sub: 'Reply within 24 hours', href: 'mailto:support@wowosim.com' },
-          { icon: '💬', title: 'WhatsApp', value: 'Chat with us', sub: 'Mon–Fri · 9AM–6PM', href: 'https://wa.me/wowosim' },
-        ].map(c => (
-          <a href={c.href} class="card" style="display: flex; align-items: center; gap: 1.25rem; text-decoration: none; transition: all 0.2s;"
-             onmouseover="this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
-            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f0fdff, #e0f9ff); border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; flex-shrink: 0;">
-              {c.icon}
+      <!-- Contact Form + Info -->
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:3rem;align-items:start;">
+
+        <!-- Form -->
+        <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:2.5rem;">
+          <h2 style="font-size:1.35rem;font-weight:800;color:#162544;margin:0 0 0.5rem;">Send us a message</h2>
+          <p style="color:#9ca3af;font-size:0.85rem;margin:0 0 2rem;">We'll get back to you as soon as possible.</p>
+
+          <form id="contactForm" style="display:flex;flex-direction:column;gap:1.25rem;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div>
+                <label style="display:block;font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">First Name *</label>
+                <input type="text" name="firstName" required placeholder="John"
+                  style="width:100%;padding:0.75rem 1rem;border:1.5px solid #e5e7eb;border-radius:0.625rem;font-size:0.875rem;outline:none;transition:border-color 0.15s;box-sizing:border-box;"
+                  onfocus="this.style.borderColor='#03def3'" onblur="this.style.borderColor='#e5e7eb'"/>
+              </div>
+              <div>
+                <label style="display:block;font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Last Name *</label>
+                <input type="text" name="lastName" required placeholder="Smith"
+                  style="width:100%;padding:0.75rem 1rem;border:1.5px solid #e5e7eb;border-radius:0.625rem;font-size:0.875rem;outline:none;transition:border-color 0.15s;box-sizing:border-box;"
+                  onfocus="this.style.borderColor='#03def3'" onblur="this.style.borderColor='#e5e7eb'"/>
+              </div>
             </div>
             <div>
-              <p style="font-weight: 700; color: #162544; margin: 0 0 0.2rem;">{c.title}</p>
-              <p style="color: #03def3; font-size: 0.875rem; margin: 0 0 0.15rem; font-weight: 600;">{c.value}</p>
-              <p style="color: #9ca3af; font-size: 0.78rem; margin: 0;">{c.sub}</p>
+              <label style="display:block;font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Email Address *</label>
+              <input type="email" name="email" required placeholder="john@example.com"
+                style="width:100%;padding:0.75rem 1rem;border:1.5px solid #e5e7eb;border-radius:0.625rem;font-size:0.875rem;outline:none;transition:border-color 0.15s;box-sizing:border-box;"
+                onfocus="this.style.borderColor='#03def3'" onblur="this.style.borderColor='#e5e7eb'"/>
             </div>
-          </a>
-        ))}
+            <div>
+              <label style="display:block;font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Order Number (if applicable)</label>
+              <input type="text" name="orderNumber" placeholder="e.g. WW-12345"
+                style="width:100%;padding:0.75rem 1rem;border:1.5px solid #e5e7eb;border-radius:0.625rem;font-size:0.875rem;outline:none;transition:border-color 0.15s;box-sizing:border-box;"
+                onfocus="this.style.borderColor='#03def3'" onblur="this.style.borderColor='#e5e7eb'"/>
+            </div>
+            <div>
+              <label style="display:block;font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Topic *</label>
+              <select name="topic" required
+                style="width:100%;padding:0.75rem 1rem;border:1.5px solid #e5e7eb;border-radius:0.625rem;font-size:0.875rem;outline:none;transition:border-color 0.15s;box-sizing:border-box;background:white;color:#374151;"
+                onfocus="this.style.borderColor='#03def3'" onblur="this.style.borderColor='#e5e7eb'">
+                <option value="">Select a topic...</option>
+                <option value="activation">eSIM Activation Help</option>
+                <option value="installation">Installation Issue</option>
+                <option value="connectivity">Connectivity / Not Connecting</option>
+                <option value="billing">Billing & Payment</option>
+                <option value="refund">Refund Request</option>
+                <option value="compatibility">Device Compatibility</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label style="display:block;font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Message *</label>
+              <textarea name="message" required rows="5" placeholder="Please describe your issue or question in detail..."
+                style="width:100%;padding:0.75rem 1rem;border:1.5px solid #e5e7eb;border-radius:0.625rem;font-size:0.875rem;outline:none;transition:border-color 0.15s;box-sizing:border-box;resize:vertical;font-family:inherit;"
+                onfocus="this.style.borderColor='#03def3'" onblur="this.style.borderColor='#e5e7eb'"></textarea>
+            </div>
+            <button type="submit" id="submitBtn"
+              style="background:#162544;color:white;font-weight:700;padding:0.9rem 2rem;border-radius:9999px;border:none;cursor:pointer;font-size:0.95rem;transition:all 0.2s;width:100%;"
+              onmouseover="this.style.background='#0f1c38'" onmouseout="this.style.background='#162544'">
+              Send Message →
+            </button>
+            <div id="formSuccess" style="display:none;background:#e8fdf0;border:1.5px solid #25D366;border-radius:0.75rem;padding:1rem;text-align:center;">
+              <p style="color:#166534;font-weight:600;font-size:0.875rem;margin:0;">✅ Message sent! We'll reply to your email within 24 hours.</p>
+            </div>
+          </form>
+        </div>
+
+        <!-- Info Panel -->
+        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+
+          <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:1.75rem;">
+            <h3 style="font-size:1rem;font-weight:700;color:#162544;margin:0 0 1rem;">📍 Contact Information</h3>
+            <div style="display:flex;flex-direction:column;gap:0.875rem;">
+              <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+                <span style="font-size:1.1rem;flex-shrink:0;margin-top:0.05rem;">✉️</span>
+                <div>
+                  <p style="font-size:0.78rem;font-weight:600;color:#9ca3af;margin:0 0 0.15rem;text-transform:uppercase;letter-spacing:0.05em;">Email</p>
+                  <a href="mailto:support@wowosim.com" style="font-size:0.875rem;color:#162544;font-weight:600;text-decoration:none;">support@wowosim.com</a>
+                </div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+                <span style="font-size:1.1rem;flex-shrink:0;margin-top:0.05rem;">💬</span>
+                <div>
+                  <p style="font-size:0.78rem;font-weight:600;color:#9ca3af;margin:0 0 0.15rem;text-transform:uppercase;letter-spacing:0.05em;">WhatsApp</p>
+                  <a href="https://wa.me/17135146210" target="_blank" style="font-size:0.875rem;color:#162544;font-weight:600;text-decoration:none;">+1 (713) 514-6210</a>
+                </div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+                <span style="font-size:1.1rem;flex-shrink:0;margin-top:0.05rem;">🕐</span>
+                <div>
+                  <p style="font-size:0.78rem;font-weight:600;color:#9ca3af;margin:0 0 0.15rem;text-transform:uppercase;letter-spacing:0.05em;">Support Hours</p>
+                  <p style="font-size:0.875rem;color:#162544;font-weight:600;margin:0;">Mon–Fri · 9AM–6PM EST</p>
+                </div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+                <span style="font-size:1.1rem;flex-shrink:0;margin-top:0.05rem;">🤝</span>
+                <div>
+                  <p style="font-size:0.78rem;font-weight:600;color:#9ca3af;margin:0 0 0.15rem;text-transform:uppercase;letter-spacing:0.05em;">Partnerships</p>
+                  <a href="mailto:partners@wowosim.com" style="font-size:0.875rem;color:#162544;font-weight:600;text-decoration:none;">partners@wowosim.com</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:1.75rem;">
+            <h3 style="font-size:1rem;font-weight:700;color:#162544;margin:0 0 1rem;">⚡ Quick Links</h3>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;">
+              {[
+                { label: 'How to install my eSIM', href: '/help-center#install-qr' },
+                { label: 'eSIM not connecting fix', href: '/help-center#no-connect' },
+                { label: 'Check compatible devices', href: '/compatible-devices' },
+                { label: 'Refund policy', href: '/faqs#billing--refunds' },
+                { label: 'Browse all FAQs', href: '/faqs' },
+              ].map(l => (
+                <a href={l.href} style="display:flex;align-items:center;gap:0.5rem;font-size:0.825rem;color:#374151;text-decoration:none;padding:0.4rem 0;border-bottom:1px solid #f9fafb;transition:color 0.15s;"
+                   onmouseover="this.style.color='#03def3'" onmouseout="this.style.color='#374151'">
+                  <span style="color:#03def3;font-size:0.65rem;">▶</span>{l.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div style="background:linear-gradient(135deg,#162544,#1e3a6e);border-radius:1.25rem;padding:1.75rem;text-align:center;">
+            <div style="font-size:2rem;margin-bottom:0.75rem;">💬</div>
+            <h3 style="font-size:0.95rem;font-weight:700;color:white;margin:0 0 0.5rem;">Prefer WhatsApp?</h3>
+            <p style="color:#9ca3af;font-size:0.78rem;margin:0 0 1rem;line-height:1.5;">Chat with us directly for faster responses during business hours.</p>
+            <a href="https://wa.me/17135146210" target="_blank" rel="noopener"
+               style="display:inline-flex;align-items:center;gap:0.5rem;background:#25D366;color:white;font-weight:700;padding:0.7rem 1.5rem;border-radius:9999px;text-decoration:none;font-size:0.85rem;transition:opacity 0.2s;"
+               onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+              Open WhatsApp →
+            </a>
+          </div>
+
+        </div>
       </div>
     </div>
   </section>
+
 </Base>
+
+<script>
+  const form = document.getElementById('contactForm') as HTMLFormElement;
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn') as HTMLButtonElement;
+    const success = document.getElementById('formSuccess') as HTMLElement;
+    btn.textContent = 'Sending...';
+    btn.style.opacity = '0.7';
+    btn.disabled = true;
+    setTimeout(() => {
+      success.style.display = 'block';
+      btn.style.display = 'none';
+      form.reset();
+    }, 1200);
+  });
+</script>
+
+<style>
+  @media (max-width:900px) {
+    [style*="grid-template-columns:repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
+    [style*="grid-template-columns:1.5fr 1fr"] { grid-template-columns: 1fr !important; }
+    [style*="grid-template-columns:1fr 1fr;gap:1rem"] { grid-template-columns: 1fr !important; }
+  }
+</style>

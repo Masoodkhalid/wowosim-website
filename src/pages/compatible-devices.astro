@@ -1,0 +1,584 @@
+---
+import Base from '../layouts/Base.astro';
+
+const brands = [
+  {
+    id: 'apple',
+    brand: 'Apple',
+    icon: '🍎',
+    color: '#000000',
+    bg: '#f5f5f7',
+    categories: [
+      {
+        name: 'iPhone',
+        models: [
+          'iPhone XR',
+          'iPhone XS',
+          'iPhone XS Max',
+          'iPhone 11',
+          'iPhone 11 Pro',
+          'iPhone 11 Pro Max',
+          'iPhone 12',
+          'iPhone 12 mini',
+          'iPhone 12 Pro',
+          'iPhone 12 Pro Max',
+          'iPhone 13',
+          'iPhone 13 mini',
+          'iPhone 13 Pro',
+          'iPhone 13 Pro Max',
+          'iPhone 14',
+          'iPhone 14 Plus',
+          'iPhone 14 Pro',
+          'iPhone 14 Pro Max',
+          'iPhone 15',
+          'iPhone 15 Plus',
+          'iPhone 15 Pro',
+          'iPhone 15 Pro Max',
+          'iPhone 16',
+          'iPhone 16 Plus',
+          'iPhone 16 Pro',
+          'iPhone 16 Pro Max',
+          'iPhone SE (2nd Generation)',
+          'iPhone SE (3rd Generation)',
+        ],
+      },
+      {
+        name: 'iPad (WiFi + Cellular)',
+        models: [
+          'iPad Pro 11" (1st, 2nd, 3rd, 4th gen)',
+          'iPad Pro 12.9" (3rd, 4th, 5th, 6th gen)',
+          'iPad Air (3rd, 4th, 5th gen)',
+          'iPad mini (5th, 6th gen)',
+          'iPad (7th, 8th, 9th, 10th gen)',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'samsung',
+    brand: 'Samsung',
+    icon: '🔷',
+    color: '#1428a0',
+    bg: '#eef0ff',
+    categories: [
+      {
+        name: 'Galaxy S Series',
+        models: [
+          'Galaxy S20, S20+, S20 Ultra (5G models)',
+          'Galaxy S21, S21+, S21 Ultra',
+          'Galaxy S21 FE 5G',
+          'Galaxy S22, S22+, S22 Ultra',
+          'Galaxy S22 FE',
+          'Galaxy S23, S23+, S23 Ultra',
+          'Galaxy S23 FE',
+          'Galaxy S24, S24+, S24 Ultra',
+          'Galaxy S24 FE',
+          'Galaxy S25, S25+, S25 Ultra',
+        ],
+      },
+      {
+        name: 'Galaxy Z (Foldable)',
+        models: [
+          'Galaxy Z Fold 2',
+          'Galaxy Z Fold 3',
+          'Galaxy Z Fold 4',
+          'Galaxy Z Fold 5',
+          'Galaxy Z Fold 6',
+          'Galaxy Z Flip 3',
+          'Galaxy Z Flip 4',
+          'Galaxy Z Flip 5',
+          'Galaxy Z Flip 6',
+        ],
+      },
+      {
+        name: 'Galaxy Note',
+        models: [
+          'Galaxy Note 20 (select markets)',
+          'Galaxy Note 20 Ultra (select markets)',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'google',
+    brand: 'Google',
+    icon: '🔵',
+    color: '#4285f4',
+    bg: '#f0f4ff',
+    categories: [
+      {
+        name: 'Pixel Phones',
+        models: [
+          'Pixel 3, 3 XL',
+          'Pixel 3a, 3a XL',
+          'Pixel 4, 4 XL',
+          'Pixel 4a',
+          'Pixel 4a 5G',
+          'Pixel 5, 5a',
+          'Pixel 6, 6 Pro',
+          'Pixel 6a',
+          'Pixel 7, 7 Pro',
+          'Pixel 7a',
+          'Pixel 7 Fold',
+          'Pixel 8, 8 Pro',
+          'Pixel 8a',
+          'Pixel 8 Fold',
+          'Pixel 9, 9 Pro',
+          'Pixel 9 Pro XL',
+          'Pixel 9 Pro Fold',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'motorola',
+    brand: 'Motorola',
+    icon: '📱',
+    color: '#5C2D91',
+    bg: '#f5f0ff',
+    categories: [
+      {
+        name: 'Razr Series',
+        models: [
+          'Motorola Razr 5G (2020)',
+          'Motorola Razr (2022)',
+          'Motorola Razr 40',
+          'Motorola Razr 40 Ultra',
+          'Motorola Razr+',
+          'Motorola Razr 50',
+          'Motorola Razr 50 Ultra',
+        ],
+      },
+      {
+        name: 'Edge Series',
+        models: [
+          'Motorola Edge+ 5G (select models)',
+          'Motorola Edge 30 Pro (select markets)',
+          'Motorola Edge 40 Neo (select markets)',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'huawei',
+    brand: 'Huawei',
+    icon: '🔴',
+    color: '#cf0a2c',
+    bg: '#fff0f2',
+    categories: [
+      {
+        name: 'P Series & Mate Series',
+        models: [
+          'Huawei P40 Pro',
+          'Huawei P40 Pro+',
+          'Huawei Mate 40 Pro',
+          'Huawei Mate 40 Pro+',
+          'Huawei Mate Xs 2',
+          'Huawei P50 Pro (select markets)',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'oppo',
+    brand: 'OPPO / OnePlus',
+    icon: '🟢',
+    color: '#1a7f37',
+    bg: '#f0fff4',
+    categories: [
+      {
+        name: 'OPPO Find & Reno',
+        models: [
+          'OPPO Find X3 Pro',
+          'OPPO Find X5 Pro',
+          'OPPO Find X6 Pro',
+          'OPPO Reno 5 A',
+          'OPPO Reno 6 Pro+',
+        ],
+      },
+      {
+        name: 'OnePlus',
+        models: [
+          'OnePlus 12 (select markets)',
+          'OnePlus 12R (select markets)',
+          'OnePlus Open',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'xiaomi',
+    brand: 'Xiaomi',
+    icon: '🟠',
+    color: '#ff6900',
+    bg: '#fff7f0',
+    categories: [
+      {
+        name: 'Xiaomi / Redmi',
+        models: [
+          'Xiaomi 12T Pro',
+          'Xiaomi 13',
+          'Xiaomi 13 Pro',
+          'Xiaomi 14',
+          'Xiaomi 14 Pro',
+          'Xiaomi 14 Ultra',
+          'Redmi Note 13 Pro+ (select markets)',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'windows',
+    brand: 'Windows / Laptop',
+    icon: '💻',
+    color: '#0078d4',
+    bg: '#f0f7ff',
+    categories: [
+      {
+        name: 'Microsoft Surface',
+        models: [
+          'Surface Pro X (SQ1 / SQ2)',
+          'Surface Pro 9 (5G model)',
+          'Surface Go 2 (LTE Advanced)',
+          'Surface Go 3 (LTE Advanced)',
+        ],
+      },
+      {
+        name: 'Other Laptops',
+        models: [
+          'HP Spectre Folio 13',
+          'HP Envy x2',
+          'Lenovo Yoga 520, 630 (eSIM edition)',
+          'Lenovo ThinkPad X1 Carbon (select models)',
+          'Dell Inspiron 7000 (eSIM model)',
+          'Acer Switch 7 Black Edition',
+          'ASUS NovaGo TP370QL',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'other',
+    brand: 'Other Devices',
+    icon: '🌐',
+    color: '#374151',
+    bg: '#f9fafb',
+    categories: [
+      {
+        name: 'Smartwatches',
+        models: [
+          'Apple Watch Series 3+ (GPS + Cellular)',
+          'Samsung Galaxy Watch 4, 5, 6 (select markets)',
+          'Samsung Galaxy Watch Ultra',
+        ],
+      },
+      {
+        name: 'Japanese Brands',
+        models: [
+          'Rakuten Big-S',
+          'Rakuten Mini',
+          'Sharp Aquos R Series (select models)',
+          'Sony Xperia 1 III / 5 III / 10 IV',
+        ],
+      },
+    ],
+  },
+];
+
+const checkSteps = [
+  {
+    step: '1',
+    title: 'Check device settings',
+    desc: 'On iPhone: Settings → Cellular → Add eSIM. If you see this option, your device supports eSIM.',
+    icon: '⚙️',
+  },
+  {
+    step: '2',
+    title: 'Verify it\'s unlocked',
+    desc: 'Your device must be carrier-unlocked. Contact your carrier if unsure — most carriers unlock devices after the contract period.',
+    icon: '🔓',
+  },
+  {
+    step: '3',
+    title: 'Check carrier restrictions',
+    desc: 'Some devices sold in mainland China, Hong Kong, or under certain carrier contracts may have eSIM disabled by the manufacturer.',
+    icon: '📋',
+  },
+  {
+    step: '4',
+    title: 'Still unsure?',
+    desc: 'Contact us with your device model number and we\'ll confirm compatibility for you instantly.',
+    icon: '💬',
+  },
+];
+---
+
+<Base title="Compatible Devices — eSIM Supported Phones & Tablets | WoWo SIM" description="Check if your phone, tablet, or laptop is compatible with WoWo SIM eSIM plans. Full compatibility list for Apple, Samsung, Google Pixel, and more.">
+
+  <!-- Hero -->
+  <section style="background:linear-gradient(135deg,#162544,#0d1b36);padding:4rem 2rem;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-80px;right:-80px;width:300px;height:300px;background:rgba(3,222,243,0.05);border-radius:9999px;filter:blur(60px);"></div>
+    <div style="position:absolute;bottom:-60px;left:-40px;width:220px;height:220px;background:rgba(255,95,0,0.04);border-radius:9999px;filter:blur(50px);"></div>
+    <div style="max-width:640px;margin:0 auto;position:relative;z-index:1;">
+      <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.75rem;">Compatibility</span>
+      <h1 style="font-size:2.75rem;font-weight:900;color:white;margin:0 0 0.75rem;letter-spacing:-0.5px;">Compatible Devices</h1>
+      <p style="color:#9ca3af;font-size:1rem;margin:0 0 2rem;line-height:1.6;">WoWo SIM eSIMs work with 500+ modern smartphones, tablets, and laptops. Check if your device is on the list.</p>
+      <!-- Search -->
+      <div style="position:relative;max-width:420px;margin:0 auto;">
+        <input type="text" id="deviceSearch" placeholder="Search device (e.g. iPhone 15, Pixel 8...)"
+          style="width:100%;padding:0.9rem 1.25rem 0.9rem 3rem;border-radius:9999px;border:none;font-size:0.9rem;outline:none;box-shadow:0 8px 30px rgba(0,0,0,0.2);box-sizing:border-box;" />
+        <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none;">🔍</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats bar -->
+  <section style="background:white;border-bottom:1px solid #f3f4f6;padding:1.25rem 2rem;">
+    <div style="max-width:72rem;margin:0 auto;display:flex;gap:2.5rem;flex-wrap:wrap;align-items:center;justify-content:center;">
+      {[
+        { value: '500+', label: 'Compatible Devices' },
+        { value: '9', label: 'Device Brands' },
+        { value: 'iOS & Android', label: 'Both Platforms' },
+        { value: 'Laptops Too', label: 'Windows eSIM' },
+      ].map(s => (
+        <div style="text-align:center;">
+          <div style="font-size:1.1rem;font-weight:900;color:#162544;">{s.value}</div>
+          <div style="font-size:0.72rem;color:#9ca3af;font-weight:500;">{s.label}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Brand Filter Tabs -->
+  <section style="padding:2rem 2rem 0;background:#f9fafb;">
+    <div style="max-width:72rem;margin:0 auto;">
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;margin-bottom:2rem;" id="brandFilters">
+        <button class="brand-btn active" data-brand="all"
+          style="padding:0.45rem 1.1rem;border-radius:9999px;font-size:0.8rem;font-weight:700;cursor:pointer;border:1.5px solid #162544;background:#162544;color:white;transition:all 0.2s;">
+          All Brands
+        </button>
+        {brands.map(b => (
+          <button class="brand-btn" data-brand={b.id}
+            style="padding:0.45rem 1.1rem;border-radius:9999px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1.5px solid #e5e7eb;background:white;color:#6b7280;transition:all 0.2s;">
+            {b.icon} {b.brand}
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Device Grid -->
+  <section style="padding:0 2rem 4rem;background:#f9fafb;">
+    <div style="max-width:72rem;margin:0 auto;">
+      <div id="deviceGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+        {brands.map(b => (
+          <div class="brand-card" data-brand={b.id}
+               style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;overflow:hidden;transition:all 0.25s;">
+            <!-- Brand header -->
+            <div style={`background:${b.bg};padding:1.25rem 1.5rem;display:flex;align-items:center;gap:0.75rem;border-bottom:1px solid rgba(0,0,0,0.06);`}>
+              <span style="font-size:1.75rem;">{b.icon}</span>
+              <div>
+                <h2 style={`font-size:1rem;font-weight:800;color:${b.color};margin:0;`}>{b.brand}</h2>
+                <p style="font-size:0.7rem;color:#9ca3af;margin:0;">
+                  {b.categories.reduce((sum, c) => sum + c.models.length, 0)} models
+                </p>
+              </div>
+            </div>
+            <!-- Models -->
+            <div style="padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:1.25rem;">
+              {b.categories.map(cat => (
+                <div>
+                  <p style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9ca3af;margin:0 0 0.6rem;">{cat.name}</p>
+                  <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.3rem;" class="model-list">
+                    {cat.models.slice(0,6).map(m => (
+                      <li style="display:flex;align-items:center;gap:0.45rem;font-size:0.775rem;color:#374151;" class="model-item">
+                        <span style="width:14px;height:14px;background:#f0fdff;border-radius:9999px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                          <span style="width:4px;height:4px;background:#03def3;border-radius:9999px;"></span>
+                        </span>
+                        {m}
+                      </li>
+                    ))}
+                    {cat.models.length > 6 && (
+                      <li>
+                        <button class="show-more-btn" data-total={cat.models.length} style="font-size:0.72rem;color:#03def3;font-weight:700;background:none;border:none;cursor:pointer;padding:0.2rem 0;display:flex;align-items:center;gap:0.3rem;">
+                          + {cat.models.length - 6} more models
+                        </button>
+                        <div class="extra-models" style="display:none;margin-top:0.3rem;display:flex;flex-direction:column;gap:0.3rem;">
+                          {cat.models.slice(6).map(m => (
+                            <div style="display:flex;align-items:center;gap:0.45rem;font-size:0.775rem;color:#374151;" class="model-item">
+                              <span style="width:14px;height:14px;background:#f0fdff;border-radius:9999px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span style="width:4px;height:4px;background:#03def3;border-radius:9999px;"></span>
+                              </span>
+                              {m}
+                            </div>
+                          ))}
+                        </div>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- No results -->
+      <div id="noResults" style="display:none;text-align:center;padding:4rem 2rem;background:white;border-radius:1.5rem;border:1.5px solid #f0f0f0;margin-top:1.5rem;">
+        <div style="font-size:3rem;margin-bottom:1rem;">🔍</div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:#162544;margin:0 0 0.5rem;">No devices found</h3>
+        <p style="color:#9ca3af;font-size:0.875rem;margin:0 0 1.5rem;">We couldn't find a match. Contact us and we'll check your specific device.</p>
+        <a href="/contact" style="display:inline-flex;align-items:center;gap:0.5rem;background:#162544;color:white;font-weight:700;padding:0.75rem 1.5rem;border-radius:9999px;text-decoration:none;font-size:0.85rem;">Ask Support →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to check compatibility -->
+  <section style="padding:4rem 2rem;background:white;">
+    <div style="max-width:72rem;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:2.5rem;">
+        <h2 style="font-size:1.75rem;font-weight:900;color:#162544;margin:0 0 0.5rem;">How to Check Your Device</h2>
+        <p style="color:#6b7280;font-size:0.9rem;margin:0;">Not sure if your specific model supports eSIM? Follow these steps</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;">
+        {checkSteps.map(s => (
+          <div style="background:#f9fafb;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:1.75rem;text-align:center;">
+            <div style="width:44px;height:44px;background:linear-gradient(135deg,#162544,#1e3a6e);border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;color:white;margin:0 auto 1rem;">{s.step}</div>
+            <div style="font-size:2rem;margin-bottom:0.75rem;">{s.icon}</div>
+            <h3 style="font-size:0.9rem;font-weight:700;color:#162544;margin:0 0 0.5rem;">{s.title}</h3>
+            <p style="font-size:0.775rem;color:#6b7280;line-height:1.5;margin:0;">{s.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Important Notes -->
+  <section style="padding:3rem 2rem;background:#f9fafb;">
+    <div style="max-width:72rem;margin:0 auto;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+        <div style="background:white;border:1.5px solid #fcd34d;border-radius:1.25rem;padding:1.75rem;">
+          <h3 style="font-size:1rem;font-weight:700;color:#92400e;margin:0 0 0.75rem;">⚠️ Compatibility Notes</h3>
+          <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.6rem;">
+            {[
+              'iPhones purchased from mainland China, Hong Kong, or Japan may not support eSIM',
+              'Some Samsung Galaxy models sold in certain regions have eSIM disabled',
+              'Your device must be carrier-unlocked (not locked to a specific operator)',
+              'US carrier-locked iPhones (from Verizon, AT&T, T-Mobile) ARE compatible if purchased after 2018',
+            ].map(n => (
+              <li style="font-size:0.8rem;color:#92400e;display:flex;align-items:flex-start;gap:0.5rem;line-height:1.5;">
+                <span style="flex-shrink:0;margin-top:0.1rem;">•</span>{n}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div style="background:white;border:1.5px solid #c7f5fc;border-radius:1.25rem;padding:1.75rem;">
+          <h3 style="font-size:1rem;font-weight:700;color:#162544;margin:0 0 0.75rem;">✅ Good News</h3>
+          <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.6rem;">
+            {[
+              'All iPhone XR/XS and newer models sold in the US, Europe, and Australia support eSIM',
+              'You can check in Settings → Cellular → Add eSIM option means eSIM is supported',
+              'eSIM does not affect your existing SIM — both work simultaneously (Dual SIM)',
+              'Not sure? Contact us before purchasing and we\'ll verify compatibility for you',
+            ].map(n => (
+              <li style="font-size:0.8rem;color:#374151;display:flex;align-items:flex-start;gap:0.5rem;line-height:1.5;">
+                <span style="color:#03def3;flex-shrink:0;font-weight:700;margin-top:0.05rem;">✓</span>{n}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="padding:4rem 2rem;background:linear-gradient(135deg,#162544,#0d1b36);text-align:center;">
+    <div style="max-width:480px;margin:0 auto;">
+      <div style="font-size:3rem;margin-bottom:1rem;">📱</div>
+      <h2 style="font-size:1.75rem;font-weight:900;color:white;margin:0 0 0.75rem;">Your device is compatible?</h2>
+      <p style="color:#9ca3af;font-size:0.9rem;margin:0 0 2rem;line-height:1.6;">Get connected in 195+ countries from just $3.50. Instant delivery, no physical SIM required.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="/" style="display:inline-flex;align-items:center;gap:0.5rem;background:#03def3;color:#162544;font-weight:700;padding:0.85rem 1.75rem;border-radius:9999px;text-decoration:none;font-size:0.9rem;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+          Browse eSIM Plans →
+        </a>
+        <a href="/contact" style="display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,255,255,0.1);color:white;font-weight:700;padding:0.85rem 1.75rem;border-radius:9999px;text-decoration:none;font-size:0.9rem;border:1px solid rgba(255,255,255,0.2);transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.18)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+          Check My Device
+        </a>
+      </div>
+    </div>
+  </section>
+
+</Base>
+
+<script>
+  // Brand filter
+  const filterBtns = document.querySelectorAll('.brand-btn');
+  const cards = document.querySelectorAll('.brand-card') as NodeListOf<HTMLElement>;
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => {
+        (b as HTMLElement).style.background = 'white';
+        (b as HTMLElement).style.color = '#6b7280';
+        (b as HTMLElement).style.borderColor = '#e5e7eb';
+      });
+      (btn as HTMLElement).style.background = '#162544';
+      (btn as HTMLElement).style.color = 'white';
+      (btn as HTMLElement).style.borderColor = '#162544';
+
+      const brand = (btn as HTMLElement).dataset.brand;
+      cards.forEach(card => {
+        card.style.display = (brand === 'all' || card.dataset.brand === brand) ? '' : 'none';
+      });
+    });
+  });
+
+  // Search
+  const searchInput = document.getElementById('deviceSearch') as HTMLInputElement;
+  const noResults = document.getElementById('noResults') as HTMLElement;
+  const modelItems = document.querySelectorAll('.model-item') as NodeListOf<HTMLElement>;
+
+  searchInput?.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim();
+    if (!q) {
+      cards.forEach(c => c.style.display = '');
+      noResults.style.display = 'none';
+      // Reset brand filters
+      filterBtns.forEach(b => {
+        (b as HTMLElement).style.background = 'white';
+        (b as HTMLElement).style.color = '#6b7280';
+        (b as HTMLElement).style.borderColor = '#e5e7eb';
+      });
+      const allBtn = document.querySelector('[data-brand="all"]') as HTMLElement;
+      if (allBtn) { allBtn.style.background = '#162544'; allBtn.style.color = 'white'; allBtn.style.borderColor = '#162544'; }
+      return;
+    }
+    let anyVisible = false;
+    cards.forEach(card => {
+      const text = card.textContent?.toLowerCase() ?? '';
+      const match = text.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) anyVisible = true;
+    });
+    noResults.style.display = anyVisible ? 'none' : 'block';
+  });
+
+  // Show more
+  document.querySelectorAll('.show-more-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const extra = btn.nextElementSibling as HTMLElement;
+      if (!extra) return;
+      const isHidden = extra.style.display === 'none' || !extra.style.display;
+      extra.style.display = isHidden ? 'flex' : 'none';
+      extra.style.flexDirection = 'column';
+      extra.style.gap = '0.3rem';
+      (btn as HTMLElement).style.display = isHidden ? 'none' : '';
+    });
+  });
+</script>
+
+<style>
+  @media (max-width:1024px) { #deviceGrid { grid-template-columns: repeat(2,1fr) !important; } }
+  @media (max-width:640px) { #deviceGrid { grid-template-columns: 1fr !important; } [style*="grid-template-columns:repeat(4"] { grid-template-columns: repeat(2,1fr) !important; } [style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; } }
+  .brand-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.09); transform: translateY(-2px); border-color: #e5e7eb !important; }
+</style>

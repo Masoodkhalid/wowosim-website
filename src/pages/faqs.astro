@@ -1,80 +1,251 @@
 ---
 import Base from '../layouts/Base.astro';
-const categories = [
+
+const allFaqs = [
   {
-    name: 'Activation', icon: '⚡',
-    faqs: [
-      { q: 'How do I activate my eSIM?', a: 'Go to device Settings → Mobile/Cellular → Add eSIM, then scan the QR code sent to your email.' },
-      { q: 'Can I activate before I travel?', a: 'Yes! You can install the eSIM on your device before you leave. Data activates when you arrive at your destination.' },
+    category: 'Getting Started',
+    icon: '🚀',
+    items: [
+      {
+        q: 'What is an eSIM and how is it different from a regular SIM?',
+        a: 'An eSIM (embedded SIM) is a digital SIM card built into your device. Unlike a physical SIM card, you don\'t need to swap cards — you simply scan a QR code or enter a code to activate a new plan. You can store multiple eSIM profiles and switch between them without ever touching a physical card.'
+      },
+      {
+        q: 'How do I purchase an eSIM plan from WoWo SIM?',
+        a: 'Browse plans by country or region on our website, select the data size and duration that suits you, add to cart, and complete checkout. Within minutes you\'ll receive an email with your eSIM QR code and installation instructions.'
+      },
+      {
+        q: 'When should I install my eSIM — before or after I travel?',
+        a: 'We recommend installing the eSIM before you travel while you have a stable Wi-Fi connection. Installation requires internet access. However, the data plan itself only activates when you arrive in the destination country — you won\'t be charged data before you land.'
+      },
+      {
+        q: 'How long does it take to receive my eSIM after purchase?',
+        a: 'Your QR code email typically arrives within 2–5 minutes of purchase. If you haven\'t received it after 10 minutes, check your spam folder or log in to your WoWo SIM dashboard to download it directly.'
+      },
+      {
+        q: 'Can I purchase an eSIM as a gift for someone else?',
+        a: 'Yes! During checkout you can enter the recipient\'s email address so the QR code is delivered directly to them. Make sure they have a compatible eSIM device before purchasing.'
+      },
     ],
   },
   {
-    name: 'Coverage & Network', icon: '🌐',
-    faqs: [
-      { q: 'Which networks does WoWo SIM use?', a: 'We partner with leading local carriers in each country to give you the best coverage available.' },
-      { q: 'Does my plan work in multiple countries?', a: 'Local plans work in one country. Regional and global plans cover multiple countries as listed on each plan page.' },
+    category: 'Activation & Installation',
+    icon: '⚡',
+    items: [
+      {
+        q: 'How do I install my eSIM on an iPhone?',
+        a: 'Go to Settings → Cellular (or Mobile Data) → Add eSIM → Use QR Code. Point your camera at the QR code in your email. Follow the on-screen prompts to label the new line. Once installed, set it as your "Cellular Data" line and enable Data Roaming.'
+      },
+      {
+        q: 'How do I install my eSIM on an Android device?',
+        a: 'Go to Settings → Connections (or Network & Internet) → SIM Manager → Add eSIM. Select "Scan a QR code" and scan the code from your email. Follow prompts to complete setup. The steps may vary slightly by manufacturer (Samsung, Google, etc.).'
+      },
+      {
+        q: 'What if my camera can\'t scan the QR code?',
+        a: 'You can install the eSIM manually using the SM-DP+ address and activation code provided in your email. On iPhone: Settings → Cellular → Add eSIM → Enter Details Manually. On Android: during QR scan, tap "Enter manually" or similar option.'
+      },
+      {
+        q: 'Can I activate my eSIM before I arrive at my destination?',
+        a: 'Yes — you can install the eSIM profile on your device at any time. The data plan activates automatically when your device connects to a supported network in your destination country. There is no manual activation step required.'
+      },
+      {
+        q: 'Why is data roaming important for my eSIM to work?',
+        a: 'WoWo SIM eSIMs use local carrier networks in your destination. For your device to recognize and connect to these foreign networks, "Data Roaming" must be enabled in your cellular settings. This is safe — WoWo SIM plans have fixed pricing and you won\'t get surprise roaming charges.'
+      },
     ],
   },
   {
-    name: 'Billing & Payment', icon: '💳',
-    faqs: [
-      { q: 'What payment methods do you accept?', a: 'We accept Visa, Mastercard, Apple Pay, Google Pay, Amazon Pay, and PayPal.' },
-      { q: 'Can I get a refund?', a: 'Full refund is available if the eSIM has not been activated within 15 days of purchase.' },
+    category: 'Coverage & Network',
+    icon: '🌐',
+    items: [
+      {
+        q: 'How many countries does WoWo SIM cover?',
+        a: 'WoWo SIM offers eSIM plans for 195+ countries and destinations worldwide, including local plans for individual countries and regional plans covering multiple countries (Europe, Asia Pacific, Americas, Middle East, and more).'
+      },
+      {
+        q: 'What networks and speeds can I expect?',
+        a: 'We partner with leading local carriers in each country to deliver the best available network coverage. Most plans support 4G LTE, with 5G available in select destinations. Speeds vary by location and network load, but are generally excellent for browsing, streaming, and video calls.'
+      },
+      {
+        q: 'Does my local eSIM plan work if I cross into a neighboring country?',
+        a: 'Local single-country plans are designed for use in one specific country. If you travel to neighboring countries, you\'d need a separate plan or a regional plan that covers all your destinations. Our regional plans are perfect if you\'re visiting multiple countries in one trip.'
+      },
+      {
+        q: 'What is a regional eSIM plan?',
+        a: 'Regional plans cover a group of countries within a geographic area. For example, our Europe plan covers 30+ European countries, and our Asia Pacific plan covers 15+ countries across Asia. You buy one plan and it works seamlessly as you move between covered countries — no swapping plans needed.'
+      },
+      {
+        q: 'Does WoWo SIM support 5G?',
+        a: '5G is available in select destinations where our partner carriers have deployed 5G networks. The plan page for each destination shows the maximum network speed available. Even on 5G destinations, speed depends on your device\'s 5G capability and local coverage.'
+      },
     ],
   },
   {
-    name: 'Device Compatibility', icon: '📱',
-    faqs: [
-      { q: 'Is my phone compatible?', a: 'Most iPhones from XR onwards, Samsung Galaxy S20+, Google Pixel 3+, and many more support eSIM.' },
-      { q: 'Can I use eSIM on multiple devices?', a: 'Each eSIM plan is tied to one device. You cannot transfer it to another device after installation.' },
+    category: 'Device Compatibility',
+    icon: '📱',
+    items: [
+      {
+        q: 'How do I know if my phone supports eSIM?',
+        a: 'Most flagship smartphones from 2018 onward support eSIM. Key compatible devices include iPhone XR/XS and newer, Samsung Galaxy S20 and newer, Google Pixel 3 and newer, and many others. Check our full compatibility list at /compatible-devices or contact us with your model number.'
+      },
+      {
+        q: 'Does my iPhone support eSIM?',
+        a: 'All iPhones from the iPhone XR (2018) onward support eSIM. This includes: iPhone XR, XS, XS Max, all iPhone 11/12/13/14/15/16 models, and iPhone SE 2nd & 3rd generation. iPhones purchased in mainland China may not support eSIM — check your settings to confirm.'
+      },
+      {
+        q: 'Can I use my eSIM on a tablet or laptop?',
+        a: 'Yes! Many devices support eSIM beyond smartphones. Compatible tablets include iPad Pro (Wi-Fi + Cellular), iPad Air (3rd gen+), and iPad mini (5th gen+). Laptops with eSIM support include Microsoft Surface Pro X, Surface Go, and select HP/Lenovo models.'
+      },
+      {
+        q: 'Can I transfer my eSIM to a new device?',
+        a: 'eSIM profiles cannot be transferred between devices after installation. Each plan is linked to the device it was installed on. If you get a new phone, you\'ll need to purchase a new plan. Contact our support team if you have extenuating circumstances such as a device replacement under warranty.'
+      },
+      {
+        q: 'Can I have my WoWo SIM eSIM and my regular SIM active at the same time?',
+        a: 'Yes — this is one of the greatest advantages of eSIM. Your device uses Dual SIM functionality to keep your home SIM (for calls/texts) active while WoWo SIM handles your data abroad. Just set WoWo SIM as the "Cellular Data" SIM in your settings.'
+      },
+    ],
+  },
+  {
+    category: 'Data & Usage',
+    icon: '📊',
+    items: [
+      {
+        q: 'How do I check how much data I have remaining?',
+        a: 'You can check remaining data in your WoWo SIM account dashboard after logging in. On iPhone, you can also go to Settings → Cellular → Cellular Data Usage to see bytes used by the eSIM line. Note: your device counter resets monthly, so log in to your account for the most accurate remaining balance.'
+      },
+      {
+        q: 'What happens when I use all my data?',
+        a: 'When your data is exhausted, service is either stopped or throttled to a very low speed (64–128 kbps), depending on the plan. You can purchase an additional plan at any time to continue using fast data. Simply buy the same plan again and install the new QR code.'
+      },
+      {
+        q: 'Does my WoWo SIM plan support mobile hotspot (tethering)?',
+        a: 'Most WoWo SIM plans support mobile hotspot/tethering, allowing you to share your data connection with other devices like laptops or tablets. Hotspot support is indicated on each plan\'s detail page. Note: hotspot usage draws from your main data allowance.'
+      },
+      {
+        q: 'Do WoWo SIM plans include calls or SMS?',
+        a: 'No — WoWo SIM eSIMs are data-only plans. They do not include voice calls or SMS/text messaging. Your existing home SIM card (kept active via Dual SIM) handles calls and texts. For calls over data, apps like WhatsApp, FaceTime, and Skype work great using your WoWo SIM data.'
+      },
+    ],
+  },
+  {
+    category: 'Billing & Refunds',
+    icon: '💳',
+    items: [
+      {
+        q: 'What payment methods does WoWo SIM accept?',
+        a: 'We accept all major credit and debit cards (Visa, Mastercard, American Express), Apple Pay, Google Pay, Amazon Pay, and PayPal. All transactions are processed securely with SSL encryption.'
+      },
+      {
+        q: 'What is your refund policy?',
+        a: 'We offer a full refund if your eSIM has not been installed or activated, and the refund request is made within 15 days of purchase. Once an eSIM has been installed on a device or data has been consumed, we cannot issue a refund. To request a refund, contact support@wowosim.com with your order number.'
+      },
+      {
+        q: 'My payment was declined. What should I do?',
+        a: 'First, double-check your card details and billing address. Some banks block international transactions — contact your bank to allow the payment. Try a different card or payment method (PayPal or Apple Pay often work if cards are declined). If you continue having issues, contact our support team.'
+      },
+      {
+        q: 'Do my plans renew automatically?',
+        a: 'No — WoWo SIM plans are one-time purchases with no automatic renewal or subscription. When your plan expires or data runs out, nothing is charged automatically. You choose to buy a new plan whenever you need one.'
+      },
+      {
+        q: 'Can I use a promo code or discount?',
+        a: 'Yes! Enter your promo code at checkout in the "Promo Code" field. Current active codes: APRIL10 (10% off), WELCOME10 (10% off for new customers), FIRST15 (15% off your first order), TRAVEL5 ($5 off). Codes are case-insensitive and can be used once per account.'
+      },
     ],
   },
 ];
----
-<Base title="FAQs">
-  <section style="padding: 5rem 2rem; background: white; min-height: calc(100vh - 140px);">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <div style="text-align: center; margin-bottom: 3.5rem;">
-        <h1 style="font-size: 2.5rem; font-weight: 900; color: #162544; margin: 0 0 0.75rem;">Frequently Asked Questions</h1>
-        <p style="color: #6b7280; font-size: 1rem; max-width: 500px; margin: 0 auto;">Everything you need to know about WoWo SIM eSIMs.</p>
-      </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-        {categories.map(cat => (
-          <div>
-            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem;">
-              <span style="font-size: 1.25rem;">{cat.icon}</span>
-              <h2 style="font-size: 1rem; font-weight: 700; color: #162544; margin: 0;">{cat.name}</h2>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 0.6rem;">
-              {cat.faqs.map(faq => (
-                <div class="faq-item" style="background: #f9fafb; border-radius: 0.75rem; border: 1px solid #f3f4f6; overflow: hidden;">
-                  <button class="faq-trigger" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: none; border: none; cursor: pointer; text-align: left; gap: 0.75rem;">
-                    <span style="font-weight: 600; color: #162544; font-size: 0.875rem;">{faq.q}</span>
-                    <span class="faq-arrow" style="color: #03def3; flex-shrink: 0; font-size: 1.1rem; transition: transform 0.25s;">+</span>
-                  </button>
-                  <div class="faq-body" style="display: none; padding: 0 1.25rem 1rem;">
-                    <p style="color: #6b7280; font-size: 0.825rem; line-height: 1.6; margin: 0;">{faq.a}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+const totalFaqs = allFaqs.reduce((sum, cat) => sum + cat.items.length, 0);
+---
+
+<Base title="FAQs — Frequently Asked Questions | WoWo SIM" description="Get answers to the most common questions about WoWo SIM eSIM plans, activation, coverage, devices, billing, and more.">
+
+  <!-- Hero -->
+  <section style="background:linear-gradient(135deg,#162544,#0d1b36);padding:4rem 2rem;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-80px;right:-80px;width:300px;height:300px;background:rgba(3,222,243,0.05);border-radius:9999px;filter:blur(60px);"></div>
+    <div style="max-width:600px;margin:0 auto;position:relative;z-index:1;">
+      <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.75rem;">Support</span>
+      <h1 style="font-size:2.75rem;font-weight:900;color:white;margin:0 0 0.75rem;letter-spacing:-0.5px;">Frequently Asked Questions</h1>
+      <p style="color:#9ca3af;font-size:1rem;margin:0 0 2rem;">Everything you need to know about WoWo SIM eSIMs. {totalFaqs} answers across {allFaqs.length} categories.</p>
+      <!-- Category Jump Links -->
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center;">
+        {allFaqs.map(cat => (
+          <a href={`#${cat.category.toLowerCase().replace(/ &? ?/g,'-').replace(/-+/g,'-')}`}
+             style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);padding:0.35rem 0.9rem;border-radius:9999px;font-size:0.78rem;color:rgba(255,255,255,0.75);text-decoration:none;transition:all 0.2s;"
+             onmouseover="this.style.background='rgba(3,222,243,0.2)';this.style.borderColor='#03def3';this.style.color='#03def3'" onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.75)'">
+            {cat.icon} {cat.category}
+          </a>
         ))}
       </div>
     </div>
   </section>
+
+  <!-- FAQ Sections -->
+  <section style="padding:4rem 2rem;background:#f9fafb;">
+    <div style="max-width:56rem;margin:0 auto;display:flex;flex-direction:column;gap:3rem;">
+
+      {allFaqs.map(cat => (
+        <div id={cat.category.toLowerCase().replace(/ &? ?/g,'-').replace(/-+/g,'-')}>
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;padding-bottom:0.75rem;border-bottom:2px solid #e5e7eb;">
+            <span style="font-size:1.5rem;">{cat.icon}</span>
+            <h2 style="font-size:1.25rem;font-weight:800;color:#162544;margin:0;">{cat.category}</h2>
+            <span style="margin-left:auto;font-size:0.75rem;font-weight:600;color:#9ca3af;background:#f0f0f0;padding:0.2rem 0.6rem;border-radius:9999px;">{cat.items.length} questions</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.625rem;">
+            {cat.items.map(faq => (
+              <div class="faq-item" style="background:white;border:1.5px solid #f0f0f0;border-radius:0.875rem;overflow:hidden;transition:border-color 0.15s;">
+                <button class="faq-trigger" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.5rem;background:none;border:none;cursor:pointer;text-align:left;gap:1rem;">
+                  <span style="font-weight:600;color:#162544;font-size:0.875rem;line-height:1.4;">{faq.q}</span>
+                  <span class="faq-icon" style="color:#03def3;flex-shrink:0;font-size:1.3rem;font-weight:300;transition:transform 0.25s;line-height:1;">+</span>
+                </button>
+                <div class="faq-body" style="display:none;padding:0 1.5rem 1.25rem;">
+                  <p style="color:#6b7280;font-size:0.85rem;line-height:1.7;margin:0;padding-top:0.875rem;border-top:1px solid #f3f4f6;">{faq.a}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+    </div>
+  </section>
+
+  <!-- Still have questions CTA -->
+  <section style="padding:4rem 2rem;background:white;text-align:center;">
+    <div style="max-width:480px;margin:0 auto;">
+      <div style="font-size:3rem;margin-bottom:1rem;">💬</div>
+      <h2 style="font-size:1.75rem;font-weight:900;color:#162544;margin:0 0 0.75rem;">Still have questions?</h2>
+      <p style="color:#6b7280;font-size:0.9rem;margin:0 0 2rem;line-height:1.6;">Our support team is available Monday–Friday, 9AM–6PM EST. We usually respond within 2 hours.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="/contact" style="background:#162544;color:white;font-weight:700;padding:0.85rem 1.75rem;border-radius:9999px;text-decoration:none;font-size:0.9rem;transition:background 0.2s;" onmouseover="this.style.background='#0f1c38'" onmouseout="this.style.background='#162544'">
+          Contact Support
+        </a>
+        <a href="/help-center" style="background:#f0fdff;color:#162544;font-weight:700;padding:0.85rem 1.75rem;border-radius:9999px;text-decoration:none;font-size:0.9rem;border:1.5px solid #e0f9ff;transition:all 0.2s;" onmouseover="this.style.borderColor='#03def3'" onmouseout="this.style.borderColor='#e0f9ff'">
+          Browse Help Center
+        </a>
+      </div>
+    </div>
+  </section>
+
 </Base>
+
 <script>
   document.querySelectorAll('.faq-trigger').forEach(btn => {
     btn.addEventListener('click', () => {
       const item = btn.closest('.faq-item') as HTMLElement;
       const body = item.querySelector('.faq-body') as HTMLElement;
-      const arrow = item.querySelector('.faq-arrow') as HTMLElement;
+      const icon = item.querySelector('.faq-icon') as HTMLElement;
       const isOpen = body.style.display === 'block';
       document.querySelectorAll('.faq-body').forEach((b: any) => b.style.display = 'none');
-      document.querySelectorAll('.faq-arrow').forEach((a: any) => { a.textContent = '+'; a.style.transform = ''; });
-      if (!isOpen) { body.style.display = 'block'; arrow.textContent = '×'; arrow.style.transform = 'rotate(45deg)'; }
+      document.querySelectorAll('.faq-icon').forEach((ic: any) => { ic.textContent = '+'; ic.style.transform = ''; });
+      document.querySelectorAll('.faq-item').forEach((it: any) => it.style.borderColor = '#f0f0f0');
+      if (!isOpen) {
+        body.style.display = 'block';
+        icon.textContent = '×';
+        icon.style.transform = 'rotate(45deg)';
+        item.style.borderColor = '#03def3';
+      }
     });
   });
 </script>

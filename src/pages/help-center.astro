@@ -3,97 +3,302 @@ import Base from '../layouts/Base.astro';
 
 const categories = [
   {
+    icon: '⚡',
+    title: 'Getting Started',
+    desc: 'Everything you need to set up your WoWo SIM eSIM from purchase to activation',
+    articles: [
+      { title: 'How to purchase an eSIM plan', anchor: '#purchase' },
+      { title: 'How to install your eSIM via QR code', anchor: '#install-qr' },
+      { title: 'How to install your eSIM manually', anchor: '#install-manual' },
+      { title: 'How to activate your data plan', anchor: '#activate' },
+      { title: 'Understanding your QR code email', anchor: '#qr-email' },
+      { title: 'Checking your eSIM status', anchor: '#check-status' },
+    ],
+  },
+  {
     icon: '📱',
     title: 'eSIM Management',
     desc: 'Guidance on managing and using your WoWo eSIM effectively',
     articles: [
-      'How to find your ICCID number',
-      'How to remove an eSIM from iOS',
-      'How to connect to the internet with your eSIM',
-      'How to scan your QR code',
-      'How to check remaining data',
+      { title: 'How to find your ICCID number', anchor: '#iccid' },
+      { title: 'How to remove an eSIM from iOS', anchor: '#remove-ios' },
+      { title: 'How to remove an eSIM from Android', anchor: '#remove-android' },
+      { title: 'How to connect to the internet with your eSIM', anchor: '#connect' },
+      { title: 'How to check remaining data', anchor: '#check-data' },
+      { title: 'How to use two SIMs at once (Dual SIM)', anchor: '#dual-sim' },
     ],
   },
   {
     icon: '🔧',
     title: 'Troubleshooting',
-    desc: 'Step-by-step solutions for common eSIM issues',
+    desc: 'Step-by-step solutions for the most common eSIM issues',
     articles: [
-      'My eSIM is not connecting',
-      'Slow network speeds — how to fix',
-      'QR code not scanning — solutions',
-      'eSIM not showing in device settings',
-      'Data not working after activation',
+      { title: 'My eSIM is not connecting to the network', anchor: '#no-connect' },
+      { title: 'Slow network speeds — how to fix', anchor: '#slow' },
+      { title: 'QR code not scanning — solutions', anchor: '#qr-scan' },
+      { title: 'eSIM not showing in device settings', anchor: '#not-showing' },
+      { title: 'Data not working after activation', anchor: '#data-issue' },
+      { title: 'Roaming settings not enabled', anchor: '#roaming' },
+    ],
+  },
+  {
+    icon: '💳',
+    title: 'Billing & Payments',
+    desc: 'Help with orders, refunds, and payment methods',
+    articles: [
+      { title: 'What payment methods are accepted?', anchor: '#payments' },
+      { title: 'How to request a refund', anchor: '#refund' },
+      { title: 'Where is my order confirmation email?', anchor: '#order-email' },
+      { title: 'Can I transfer my eSIM to another device?', anchor: '#transfer' },
+      { title: 'How to apply a promo code at checkout', anchor: '#promo' },
+      { title: 'My payment was declined — what to do', anchor: '#declined' },
+    ],
+  },
+  {
+    icon: '🌐',
+    title: 'Coverage & Network',
+    desc: 'Understanding coverage, roaming, and network quality',
+    articles: [
+      { title: 'Which countries does WoWo SIM cover?', anchor: '#coverage' },
+      { title: 'Will my plan work in multiple countries?', anchor: '#multi-country' },
+      { title: 'What network speeds can I expect?', anchor: '#speeds' },
+      { title: 'Does my plan support mobile hotspot?', anchor: '#hotspot' },
+      { title: 'How do regional eSIM plans work?', anchor: '#regional' },
+      { title: 'Will my plan renew automatically?', anchor: '#renewal' },
     ],
   },
   {
     icon: '🎥',
     title: 'Video Tutorials',
-    desc: 'Visual guides to help you navigate eSIM features and setup',
+    desc: 'Visual step-by-step guides for setup and troubleshooting',
     articles: [
-      'How to install eSIM on iPhone',
-      'How to install eSIM on Android',
-      'How to top up your plan',
-      'How to use the WoWo SIM app',
-      'How to set up data roaming',
+      { title: 'How to install eSIM on iPhone (video)', anchor: '#vid-iphone' },
+      { title: 'How to install eSIM on Samsung Galaxy (video)', anchor: '#vid-samsung' },
+      { title: 'How to install eSIM on Google Pixel (video)', anchor: '#vid-pixel' },
+      { title: 'How to check data usage on iOS', anchor: '#vid-ios-data' },
+      { title: 'How to set up data roaming correctly', anchor: '#vid-roaming' },
+      { title: 'Full setup walkthrough from purchase to use', anchor: '#vid-full' },
     ],
   },
 ];
 
-const popular = [
-  'How to find your ICCID number',
-  'How to remove an eSIM from iOS',
-  'How to connect to the internet',
-  'How to scan your QR code',
-  'Fix slow network speeds',
+const popularArticles = [
+  'How to install your eSIM via QR code',
+  'My eSIM is not connecting',
+  'How to check remaining data',
+  'QR code not scanning',
+  'How to request a refund',
+  'What devices are compatible?',
+];
+
+const planSpecs = [
+  { feature: 'Plan Type', value: 'Data Only (no calls/SMS)' },
+  { feature: 'Installation', value: 'QR code scan or manual entry' },
+  { feature: 'Mobile Hotspot / Tethering', value: 'Yes (supported on most plans)' },
+  { feature: 'Activation Method', value: 'Automatic on arrival' },
+  { feature: 'eSIM Validity', value: 'Up to 160 days after purchase' },
+  { feature: 'Data Rollover', value: 'No — unused data expires' },
+  { feature: 'Network Type', value: '4G LTE / 5G (where available)' },
+  { feature: 'Top-Up', value: 'Buy a new plan and add to device' },
+  { feature: 'Countries Covered', value: '195+ destinations' },
+  { feature: 'Customer Support', value: 'Email & WhatsApp Mon–Fri 9AM–6PM' },
+];
+
+const devices = [
+  {
+    brand: 'Apple iPhone',
+    icon: '🍎',
+    models: [
+      'iPhone XR, XS, XS Max',
+      'iPhone 11, 11 Pro, 11 Pro Max',
+      'iPhone 12, 12 mini, 12 Pro, 12 Pro Max',
+      'iPhone 13, 13 mini, 13 Pro, 13 Pro Max',
+      'iPhone 14, 14 Plus, 14 Pro, 14 Pro Max',
+      'iPhone 15, 15 Plus, 15 Pro, 15 Pro Max',
+      'iPhone 16, 16 Plus, 16 Pro, 16 Pro Max',
+      'iPhone SE (2nd Generation)',
+      'iPhone SE (3rd Generation)',
+    ],
+  },
+  {
+    brand: 'Apple iPad',
+    icon: '📱',
+    models: [
+      'iPad Pro 11" (all generations, WiFi+Cellular)',
+      'iPad Pro 12.9" (3rd gen+, WiFi+Cellular)',
+      'iPad Air (3rd, 4th, 5th gen, WiFi+Cellular)',
+      'iPad mini (5th, 6th gen, WiFi+Cellular)',
+      'iPad (7th, 8th, 9th, 10th gen, WiFi+Cellular)',
+    ],
+  },
+  {
+    brand: 'Samsung Galaxy',
+    icon: '🤖',
+    models: [
+      'Samsung Galaxy S20, S20+, S20 Ultra',
+      'Samsung Galaxy S21, S21+, S21 Ultra',
+      'Samsung Galaxy S22, S22+, S22 Ultra',
+      'Samsung Galaxy S23, S23+, S23 Ultra',
+      'Samsung Galaxy S24, S24+, S24 Ultra',
+      'Samsung Galaxy S25, S25+, S25 Ultra',
+      'Samsung Galaxy Z Fold 2, 3, 4, 5, 6',
+      'Samsung Galaxy Z Flip 3, 4, 5, 6',
+      'Samsung Galaxy Note 20, Note 20 Ultra',
+    ],
+  },
+  {
+    brand: 'Google Pixel',
+    icon: '🔵',
+    models: [
+      'Google Pixel 3, 3 XL, 3a, 3a XL',
+      'Google Pixel 4, 4 XL, 4a (5G)',
+      'Google Pixel 5, 5a',
+      'Google Pixel 6, 6 Pro, 6a',
+      'Google Pixel 7, 7 Pro, 7a',
+      'Google Pixel 8, 8 Pro, 8a',
+      'Google Pixel 9, 9 Pro, 9 Pro XL, 9 Pro Fold',
+    ],
+  },
+  {
+    brand: 'Other Android',
+    icon: '📲',
+    models: [
+      'Huawei P40 Pro, P40 Pro+',
+      'Huawei Mate 40 Pro',
+      'Oppo Find X3 Pro, X5 Pro',
+      'Oppo Reno 5 A, 6 Pro+',
+      'Xiaomi 12T Pro, Mi 13 series',
+      'Motorola Razr 5G, Razr 2022, Razr+',
+      'OnePlus 12, 12R (select markets)',
+      'Rakuten Big-S, Mini',
+    ],
+  },
+  {
+    brand: 'Windows / Laptop',
+    icon: '💻',
+    models: [
+      'Microsoft Surface Pro X',
+      'Microsoft Surface Pro 9 (5G)',
+      'Microsoft Surface Go 2 (LTE)',
+      'Microsoft Surface Go 3 (LTE)',
+      'HP Spectre Folio 13',
+      'Lenovo Yoga 520, 630 (eSIM)',
+      'Dell Inspiron 7000 (eSIM model)',
+      'ASUS NovaGo (Always Connected)',
+    ],
+  },
+];
+
+const guideSteps = [
+  {
+    step: '1',
+    title: 'Purchase your plan',
+    desc: 'Choose your destination, select a data plan, and complete checkout. You\'ll receive an email with your QR code within minutes.',
+    icon: '🛒',
+  },
+  {
+    step: '2',
+    title: 'Install the eSIM',
+    desc: 'On iPhone: Settings → Cellular → Add eSIM → Use QR Code. On Android: Settings → Connections → SIM Manager → Add eSIM.',
+    icon: '📲',
+  },
+  {
+    step: '3',
+    title: 'Configure data settings',
+    desc: 'Set your WoWo SIM as the "data SIM" and enable data roaming. Keep your home SIM for calls/SMS.',
+    icon: '⚙️',
+  },
+  {
+    step: '4',
+    title: 'Arrive and connect',
+    desc: 'Your eSIM activates automatically when you land. Open a browser to confirm your internet is working — no action needed!',
+    icon: '✈️',
+  },
 ];
 ---
 
-<Base title="Help Center">
+<Base title="Help Center — WoWo SIM Support" description="Find answers, installation guides, troubleshooting tips, and compatible device lists for your WoWo SIM eSIM.">
+
   <!-- Hero -->
-  <section style="background: linear-gradient(135deg, #162544 0%, #0d1b36 100%); padding: 4rem 2rem; text-align: center; position: relative; overflow: hidden;">
-    <div style="position: absolute; top: -60px; right: -60px; width: 250px; height: 250px; background: rgba(3,222,243,0.06); border-radius: 9999px; filter: blur(40px);"></div>
-    <div style="max-width: 600px; margin: 0 auto; position: relative; z-index: 1;">
-      <h1 style="font-size: 2.5rem; font-weight: 900; color: white; margin: 0 0 0.75rem;">How can we help?</h1>
-      <p style="color: #9ca3af; margin: 0 0 2rem; font-size: 1rem;">Search our knowledge base or browse categories below</p>
-      <div style="position: relative; max-width: 480px; margin: 0 auto;">
+  <section style="background:linear-gradient(135deg,#162544,#0d1b36);padding:4rem 2rem;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-80px;right:-80px;width:300px;height:300px;background:rgba(3,222,243,0.05);border-radius:9999px;filter:blur(60px);"></div>
+    <div style="position:absolute;bottom:-60px;left:-60px;width:200px;height:200px;background:rgba(255,95,0,0.04);border-radius:9999px;filter:blur(40px);"></div>
+    <div style="max-width:640px;margin:0 auto;position:relative;z-index:1;">
+      <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.75rem;">Help Center</span>
+      <h1 style="font-size:2.75rem;font-weight:900;color:white;margin:0 0 0.75rem;letter-spacing:-0.5px;">How can we help you?</h1>
+      <p style="color:#9ca3af;margin:0 0 2rem;font-size:1rem;">Search our knowledge base or browse categories below</p>
+      <div style="position:relative;max-width:500px;margin:0 auto;">
         <input type="text" placeholder="Search help articles..." id="helpSearch"
-          style="width: 100%; padding: 1rem 1.25rem 1rem 3rem; border-radius: 9999px; border: none; font-size: 0.95rem; outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.2);" />
-        <span style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1.1rem;">🔍</span>
+          style="width:100%;padding:1rem 1.25rem 1rem 3.25rem;border-radius:9999px;border:none;font-size:0.95rem;outline:none;box-shadow:0 8px 30px rgba(0,0,0,0.25);" />
+        <span style="position:absolute;left:1.1rem;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none;">🔍</span>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem;">
+        {popularArticles.map(a => (
+          <a href="#" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:0.35rem 0.9rem;border-radius:9999px;font-size:0.75rem;color:rgba(255,255,255,0.7);text-decoration:none;transition:all 0.2s;"
+             onmouseover="this.style.background='rgba(3,222,243,0.15)';this.style.borderColor='#03def3';this.style.color='#03def3'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.7)'">{a}</a>
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- Popular Questions -->
-  <section style="padding: 3rem 2rem; background: #f9fafb; border-bottom: 1px solid #f3f4f6;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <h2 style="font-size: 1rem; font-weight: 700; color: #162544; margin: 0 0 1rem;">⭐ Popular Articles</h2>
-      <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
-        {popular.map(a => (
-          <a href="#" style="background: white; border: 1px solid #e5e7eb; padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.8rem; color: #374151; text-decoration: none; transition: all 0.2s;"
-             onmouseover="this.style.borderColor='#03def3'; this.style.color='#03def3'" onmouseout="this.style.borderColor='#e5e7eb'; this.style.color='#374151'">{a}</a>
+  <!-- Stats Bar -->
+  <section style="background:white;border-bottom:1px solid #f3f4f6;padding:1.5rem 2rem;">
+    <div style="max-width:72rem;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;text-align:center;">
+      {[
+        { value: '195+', label: 'Countries Covered' },
+        { value: '<2 min', label: 'Average Setup Time' },
+        { value: '24/7', label: 'Knowledge Base' },
+        { value: '15-day', label: 'Refund Guarantee' },
+      ].map(s => (
+        <div>
+          <div style="font-size:1.5rem;font-weight:900;color:#162544;">{s.value}</div>
+          <div style="font-size:0.75rem;color:#9ca3af;font-weight:500;">{s.label}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Quick Setup Guide -->
+  <section style="padding:4rem 2rem;background:#f9fafb;">
+    <div style="max-width:72rem;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:2.5rem;">
+        <h2 style="font-size:1.75rem;font-weight:900;color:#162544;margin:0 0 0.5rem;">Quick Setup Guide</h2>
+        <p style="color:#6b7280;font-size:0.9rem;margin:0;">Get connected in 4 simple steps</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;position:relative;">
+        {guideSteps.map((s, i) => (
+          <div style="background:white;border-radius:1.25rem;padding:1.75rem 1.5rem;border:1.5px solid #f0f0f0;position:relative;text-align:center;">
+            <div style="width:44px;height:44px;background:linear-gradient(135deg,#162544,#1e3a6e);border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:900;color:white;margin:0 auto 1rem;">{s.step}</div>
+            <div style="font-size:2rem;margin-bottom:0.75rem;">{s.icon}</div>
+            <h3 style="font-size:0.9rem;font-weight:700;color:#162544;margin:0 0 0.5rem;">{s.title}</h3>
+            <p style="font-size:0.78rem;color:#6b7280;line-height:1.5;margin:0;">{s.desc}</p>
+          </div>
         ))}
       </div>
     </div>
   </section>
 
   <!-- Categories -->
-  <section style="padding: 4rem 2rem; background: white;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+  <section style="padding:4rem 2rem;background:white;">
+    <div style="max-width:72rem;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:2.5rem;">
+        <h2 style="font-size:1.75rem;font-weight:900;color:#162544;margin:0 0 0.5rem;">Browse Help Topics</h2>
+        <p style="color:#6b7280;font-size:0.9rem;margin:0;">Find answers organized by category</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;" id="categoriesGrid">
         {categories.map(cat => (
-          <div class="card" style="transition: all 0.25s;">
-            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f0fdff, #e0f9ff); border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin-bottom: 1rem;">
+          <div class="help-card" style="background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:2rem;transition:all 0.25s;cursor:default;">
+            <div style="width:52px;height:52px;background:linear-gradient(135deg,#f0fdff,#e0f9ff);border-radius:0.875rem;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:1rem;">
               {cat.icon}
             </div>
-            <h3 style="font-size: 1.05rem; font-weight: 700; color: #162544; margin: 0 0 0.4rem;">{cat.title}</h3>
-            <p style="color: #9ca3af; font-size: 0.8rem; margin: 0 0 1.25rem; line-height: 1.5;">{cat.desc}</p>
-            <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+            <h3 style="font-size:1rem;font-weight:700;color:#162544;margin:0 0 0.4rem;">{cat.title}</h3>
+            <p style="color:#9ca3af;font-size:0.78rem;margin:0 0 1.25rem;line-height:1.5;">{cat.desc}</p>
+            <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.45rem;">
               {cat.articles.map(a => (
                 <li>
-                  <a href="#" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.825rem; color: #374151; text-decoration: none; transition: color 0.15s;"
+                  <a href={a.anchor} style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:#374151;text-decoration:none;transition:color 0.15s;"
                      onmouseover="this.style.color='#03def3'" onmouseout="this.style.color='#374151'">
-                    <span style="color: #03def3; font-size: 0.7rem;">→</span> {a}
+                    <span style="color:#03def3;font-size:0.65rem;flex-shrink:0;">▶</span> {a.title}
                   </a>
                 </li>
               ))}
@@ -104,40 +309,149 @@ const popular = [
     </div>
   </section>
 
-  <!-- Device Compatibility -->
-  <section style="padding: 4rem 2rem; background: #f9fafb;">
-    <div style="max-width: 72rem; margin: 0 auto;">
-      <h2 style="font-size: 1.75rem; font-weight: 800; color: #162544; text-align: center; margin: 0 0 2.5rem;">Compatible Devices</h2>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
-        {[
-          { icon: '🍎', brand: 'Apple iOS', models: ['iPhone XR / XS / XS Max','iPhone 11, 11 Pro, 11 Pro Max','iPhone 12, 13, 14, 15, 16 series','iPhone SE (2nd & 3rd gen)','iPad Pro, iPad Air (with cellular)'] },
-          { icon: '🤖', brand: 'Android', models: ['Samsung Galaxy S20, S21, S22, S23, S24','Google Pixel 3, 4, 5, 6, 7, 8, 9','Huawei P40 Pro, Mate 40 Pro','Oppo Find X3, X5 Pro','Xiaomi 12T Pro, 13 series'] },
-          { icon: '💻', brand: 'Windows', models: ['Microsoft Surface Pro X','Microsoft Surface Go 2 (LTE)','HP Spectre Folio','Lenovo Yoga 520, 630','Dell Inspiron 7000 (eSIM models)'] },
-        ].map(d => (
-          <div class="card">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
-              <span style="font-size: 1.75rem;">{d.icon}</span>
-              <h3 style="font-size: 0.95rem; font-weight: 700; color: #162544; margin: 0;">{d.brand}</h3>
-            </div>
-            <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem;">
-              {d.models.map(m => (
-                <li style="font-size: 0.8rem; color: #6b7280; display: flex; align-items: center; gap: 0.4rem;">
-                  <span style="color: #03def3;">✓</span> {m}
-                </li>
-              ))}
-            </ul>
+  <!-- Plan Specifications Table -->
+  <section style="padding:4rem 2rem;background:#f9fafb;" id="plan-specs">
+    <div style="max-width:72rem;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:2.5rem;">
+        <h2 style="font-size:1.75rem;font-weight:900;color:#162544;margin:0 0 0.5rem;">Plan Specifications</h2>
+        <p style="color:#6b7280;font-size:0.9rem;margin:0;">Everything you need to know about how WoWo SIM plans work</p>
+      </div>
+      <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;overflow:hidden;max-width:700px;margin:0 auto;">
+        {planSpecs.map((row, i) => (
+          <div style={`display:grid;grid-template-columns:1fr 1.5fr;gap:1rem;padding:1rem 1.5rem;border-bottom:1px solid #f9fafb;background:${i % 2 === 0 ? 'white' : '#fafafa'};`}>
+            <span style="font-size:0.85rem;font-weight:600;color:#374151;">{row.feature}</span>
+            <span style="font-size:0.85rem;color:#6b7280;">{row.value}</span>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- Still need help -->
-  <section style="padding: 3rem 2rem; background: white; text-align: center;">
-    <div style="max-width: 480px; margin: 0 auto;">
-      <h2 style="font-size: 1.5rem; font-weight: 800; color: #162544; margin: 0 0 0.5rem;">Still need help?</h2>
-      <p style="color: #9ca3af; font-size: 0.875rem; margin: 0 0 1.5rem;">Our support team is available Mon–Fri, 9AM–6PM</p>
-      <a href="/contact" class="btn-primary">Contact Support →</a>
+  <!-- Compatible Devices -->
+  <section style="padding:4rem 2rem;background:white;" id="compatible-devices">
+    <div style="max-width:72rem;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:2.5rem;">
+        <h2 style="font-size:1.75rem;font-weight:900;color:#162544;margin:0 0 0.5rem;">Compatible Devices</h2>
+        <p style="color:#6b7280;font-size:0.9rem;margin:0 0 1rem;">eSIM technology works with hundreds of modern smartphones, tablets, and laptops</p>
+        <a href="/compatible-devices" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;font-weight:700;color:#03def3;text-decoration:none;">
+          View full compatibility list →
+        </a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;" id="devicesGrid">
+        {devices.map(d => (
+          <div style="background:#f9fafb;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:1.5rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;">
+              <span style="font-size:1.75rem;">{d.icon}</span>
+              <h3 style="font-size:0.9rem;font-weight:700;color:#162544;margin:0;">{d.brand}</h3>
+            </div>
+            <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.4rem;">
+              {d.models.map(m => (
+                <li style="font-size:0.775rem;color:#6b7280;display:flex;align-items:flex-start;gap:0.45rem;">
+                  <span style="color:#03def3;flex-shrink:0;margin-top:0.1rem;">✓</span>{m}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <p style="text-align:center;margin:2rem 0 0;font-size:0.8rem;color:#9ca3af;">
+        Don't see your device? <a href="/contact" style="color:#03def3;font-weight:600;text-decoration:none;">Contact us</a> and we'll check compatibility for you.
+      </p>
     </div>
   </section>
+
+  <!-- Common Issues Accordion -->
+  <section style="padding:4rem 2rem;background:#f9fafb;" id="troubleshooting">
+    <div style="max-width:56rem;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:2.5rem;">
+        <h2 style="font-size:1.75rem;font-weight:900;color:#162544;margin:0 0 0.5rem;">Common Issues & Solutions</h2>
+        <p style="color:#6b7280;font-size:0.9rem;margin:0;">Step-by-step fixes for the most frequent problems</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.75rem;" id="troubleshootAccordion">
+        {[
+          {
+            q: 'My eSIM is installed but not connecting to the network',
+            a: 'First, make sure data roaming is enabled: Settings → Cellular → [WoWo SIM line] → turn on Data Roaming. If still not working, toggle Airplane mode on for 10 seconds then off. Try restarting your device. If the issue persists, contact our support team.'
+          },
+          {
+            q: 'The QR code in my email is not scanning',
+            a: 'Ensure you are on a different device or print the QR code — you cannot scan a QR code displayed on the same device you\'re installing to. Make sure camera permissions are granted. Try increasing screen brightness on the device showing the QR code. If it still won\'t scan, use the manual installation option (APN + SM-DP+ address provided in your email).'
+          },
+          {
+            q: 'Data is not working after activation',
+            a: 'Go to Settings → Cellular → [WoWo SIM line] and confirm: (1) Line is enabled, (2) Data Roaming is ON, (3) "Use Cellular Data" is enabled. On Android, check Settings → Connections → Mobile Networks → confirm the WoWo SIM profile is active and APN settings are correct.'
+          },
+          {
+            q: 'My eSIM disappeared from my device settings',
+            a: 'This can happen after an iOS/Android update. Go to Settings → Cellular → Add eSIM and check if it shows as "inactive". If the eSIM is gone entirely, contact support with your order ID — we can check your ICCID and guide you through re-adding the profile.'
+          },
+          {
+            q: 'Internet speeds are very slow',
+            a: 'Check if you\'ve exceeded your data quota — slow speeds (throttled to 64kbps or 128kbps) after reaching the plan limit are normal. You can purchase an additional plan if needed. If you haven\'t hit the limit, try toggling airplane mode or switching network selection to automatic in your settings.'
+          },
+          {
+            q: 'I didn\'t receive my QR code email',
+            a: 'Check your spam/junk folder first. Allow up to 10 minutes for delivery after purchase. If you still haven\'t received it, log into your WoWo SIM account dashboard — your QR code is also available there. Contact support@wowosim.com with your order number if the issue persists.'
+          },
+        ].map((item, i) => (
+          <div class="ts-item" style="background:white;border:1.5px solid #f0f0f0;border-radius:0.875rem;overflow:hidden;">
+            <button class="ts-trigger" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.5rem;background:none;border:none;cursor:pointer;text-align:left;gap:1rem;">
+              <span style="font-weight:600;color:#162544;font-size:0.875rem;">{item.q}</span>
+              <span class="ts-icon" style="color:#03def3;flex-shrink:0;font-size:1.2rem;transition:transform 0.25s;font-weight:300;">+</span>
+            </button>
+            <div class="ts-body" style="display:none;padding:0 1.5rem 1.25rem;">
+              <p style="color:#6b7280;font-size:0.825rem;line-height:1.7;margin:0;border-top:1px solid #f3f4f6;padding-top:1rem;">{item.a}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Support CTA -->
+  <section style="padding:4rem 2rem;background:linear-gradient(135deg,#162544,#0d1b36);text-align:center;">
+    <div style="max-width:540px;margin:0 auto;">
+      <div style="font-size:3rem;margin-bottom:1rem;">🤝</div>
+      <h2 style="font-size:1.75rem;font-weight:900;color:white;margin:0 0 0.75rem;">Still need help?</h2>
+      <p style="color:#9ca3af;font-size:0.9rem;margin:0 0 2rem;line-height:1.6;">Our support team is available Monday to Friday, 9AM–6PM. We typically respond within 2 hours during business hours.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="mailto:support@wowosim.com" style="display:inline-flex;align-items:center;gap:0.5rem;background:#03def3;color:#162544;font-weight:700;padding:0.85rem 1.75rem;border-radius:9999px;text-decoration:none;font-size:0.9rem;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+          ✉️ Email Support
+        </a>
+        <a href="https://wa.me/17135146210" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,255,255,0.12);color:white;font-weight:700;padding:0.85rem 1.75rem;border-radius:9999px;text-decoration:none;font-size:0.9rem;border:1px solid rgba(255,255,255,0.2);transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.18)'" onmouseout="this.style.background='rgba(255,255,255,0.12)'">
+          💬 WhatsApp: +1 (713) 514-6210
+        </a>
+      </div>
+    </div>
+  </section>
+
 </Base>
+
+<script>
+  document.querySelectorAll('.ts-trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.ts-item') as HTMLElement;
+      const body = item.querySelector('.ts-body') as HTMLElement;
+      const icon = item.querySelector('.ts-icon') as HTMLElement;
+      const isOpen = body.style.display === 'block';
+      document.querySelectorAll('.ts-body').forEach((b: any) => b.style.display = 'none');
+      document.querySelectorAll('.ts-icon').forEach((ic: any) => { ic.textContent = '+'; ic.style.transform = ''; });
+      if (!isOpen) { body.style.display = 'block'; icon.textContent = '×'; icon.style.transform = 'rotate(45deg)'; }
+    });
+  });
+
+  const search = document.getElementById('helpSearch') as HTMLInputElement;
+  search?.addEventListener('input', () => {
+    const q = search.value.toLowerCase();
+    document.querySelectorAll('.help-card').forEach((card: any) => {
+      card.style.display = card.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  });
+</script>
+
+<style>
+  .help-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.08); transform: translateY(-2px); border-color: #e5e7eb !important; }
+  @media (max-width:900px) { #categoriesGrid { grid-template-columns: repeat(2,1fr) !important; } #devicesGrid { grid-template-columns: repeat(2,1fr) !important; } }
+  @media (max-width:600px) { #categoriesGrid { grid-template-columns: 1fr !important; } #devicesGrid { grid-template-columns: 1fr !important; } }
+  @media (max-width:768px) { [style*="grid-template-columns:repeat(4"] { grid-template-columns: repeat(2,1fr) !important; } }
+</style>

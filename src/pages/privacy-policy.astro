@@ -1,33 +1,248 @@
 ---
 import Base from '../layouts/Base.astro';
+
+const sections = [
+  {
+    id: '1',
+    title: 'Information We Collect',
+    content: [
+      {
+        subtitle: 'Personal Information You Provide',
+        text: 'When you create an account or make a purchase, we collect information you provide directly, including: your name, email address, billing address, and payment information. We do not store full payment card numbers — payments are processed securely through our payment processors (Stripe, PayPal, Apple Pay).'
+      },
+      {
+        subtitle: 'Automatically Collected Information',
+        text: 'When you visit our website, we automatically collect certain technical information including your IP address, browser type and version, operating system, referring URLs, pages viewed, time spent on pages, and device identifiers. This data helps us understand how visitors use our site and improve our services.'
+      },
+      {
+        subtitle: 'eSIM Usage Data',
+        text: 'To provide and support your eSIM service, we collect usage data including data consumed, connection timestamps, and the countries where your eSIM is activated. This data is used solely to manage your plan and provide support.'
+      },
+    ]
+  },
+  {
+    id: '2',
+    title: 'How We Use Your Information',
+    content: [
+      {
+        subtitle: 'Service Delivery',
+        text: 'We use your information to process your orders, generate and deliver eSIM QR codes, activate your plan, and provide customer support. Your email address is used to send order confirmations, QR codes, and important service notifications.'
+      },
+      {
+        subtitle: 'Communications',
+        text: 'With your consent, we may send you marketing communications about promotions, new destinations, and product updates. You can opt out of marketing emails at any time using the unsubscribe link in any email we send.'
+      },
+      {
+        subtitle: 'Service Improvement',
+        text: 'We analyze aggregated, anonymized usage data to improve our website, plans, coverage, and customer experience. We also use this data to detect fraud, abuse, or security incidents.'
+      },
+    ]
+  },
+  {
+    id: '3',
+    title: 'Cookies & Tracking',
+    content: [
+      {
+        subtitle: 'Essential Cookies',
+        text: 'We use strictly necessary cookies to keep you logged in, maintain your shopping cart, and ensure the website functions correctly. These cookies cannot be disabled as they are required for the site to work.'
+      },
+      {
+        subtitle: 'Analytics Cookies',
+        text: 'With your consent, we use analytics cookies (such as Google Analytics) to understand how visitors interact with our site — which pages are visited most, where visitors come from, and how they navigate. This data is aggregated and does not identify individuals.'
+      },
+      {
+        subtitle: 'Managing Cookies',
+        text: 'You can manage or delete cookies through your browser settings at any time. Note that disabling certain cookies may affect website functionality. You can also opt out of Google Analytics tracking by installing the Google Analytics Opt-out Browser Add-on.'
+      },
+    ]
+  },
+  {
+    id: '4',
+    title: 'Data Sharing & Third Parties',
+    content: [
+      {
+        subtitle: 'We Never Sell Your Data',
+        text: 'We do not sell, rent, or trade your personal information to third parties for their marketing purposes. Your data belongs to you.'
+      },
+      {
+        subtitle: 'Service Providers',
+        text: 'We share data with trusted service providers who help us operate our business, including: payment processors (Stripe, PayPal), cloud hosting providers, email delivery services, and customer support tools. These providers are contractually obligated to protect your data and may only use it as directed by us.'
+      },
+      {
+        subtitle: 'Telecom Partners',
+        text: 'To activate your eSIM, we share your ICCID and necessary technical identifiers with our network carrier partners. No personal information beyond what is technically necessary is shared.'
+      },
+      {
+        subtitle: 'Legal Requirements',
+        text: 'We may disclose your information if required by law, court order, or government regulation, or if we believe disclosure is necessary to protect our rights, prevent fraud, or protect the safety of our users.'
+      },
+    ]
+  },
+  {
+    id: '5',
+    title: 'Data Security',
+    content: [
+      {
+        subtitle: 'Technical Safeguards',
+        text: 'We employ industry-standard security measures including TLS/SSL encryption for all data in transit, encrypted storage for sensitive data, secure token-based authentication, and regular security audits of our systems and infrastructure.'
+      },
+      {
+        subtitle: 'Payment Security',
+        text: 'We are PCI DSS compliant. Payment card data is never stored on our servers — it is tokenized by our payment processors before reaching us. We store only the last 4 digits of your card for display purposes.'
+      },
+      {
+        subtitle: 'Data Breach Response',
+        text: 'In the unlikely event of a data breach that affects your personal information, we will notify you and relevant authorities as required by applicable law, typically within 72 hours of becoming aware of the breach.'
+      },
+    ]
+  },
+  {
+    id: '6',
+    title: 'Data Retention',
+    content: [
+      {
+        subtitle: 'Account Data',
+        text: 'We retain your account data for as long as your account remains active. If you request account deletion, we will delete your personal information within 30 days, except where we are required by law to retain certain records (e.g., financial transactions for accounting purposes, typically 7 years).'
+      },
+      {
+        subtitle: 'Transaction Records',
+        text: 'Order and payment records are retained for 7 years to comply with financial regulations and tax requirements. These records are kept in encrypted, access-controlled systems.'
+      },
+    ]
+  },
+  {
+    id: '7',
+    title: 'Your Rights',
+    content: [
+      {
+        subtitle: 'Access & Portability',
+        text: 'You have the right to request a copy of all personal data we hold about you. We will provide this in a machine-readable format (JSON or CSV) within 30 days of your request.'
+      },
+      {
+        subtitle: 'Correction & Deletion',
+        text: 'You may update your personal information at any time through your account settings. You may also request deletion of your account and associated data by contacting support@wowosim.com.'
+      },
+      {
+        subtitle: 'Opt-Out',
+        text: 'You may opt out of marketing communications at any time. You may also request that we restrict processing of your data in certain circumstances, or object to processing based on legitimate interests.'
+      },
+      {
+        subtitle: 'GDPR (EU Residents)',
+        text: 'If you are a resident of the European Economic Area (EEA), you have additional rights under the General Data Protection Regulation (GDPR), including the right to lodge a complaint with your local data protection authority. Our lawful basis for processing is (a) contract performance for order fulfillment, (b) legitimate interests for fraud prevention and service improvement, and (c) consent for marketing communications.'
+      },
+      {
+        subtitle: 'CCPA (California Residents)',
+        text: 'California residents have the right to know what personal information we collect, the right to delete personal information, the right to opt-out of the sale of personal information (we do not sell personal data), and the right to non-discrimination for exercising privacy rights.'
+      },
+    ]
+  },
+  {
+    id: '8',
+    title: 'International Data Transfers',
+    content: [
+      {
+        subtitle: 'Cross-Border Transfers',
+        text: 'WoWo SIM operates globally. Your data may be processed in countries other than your country of residence, including the United States, where data protection laws may differ from those in your country. When we transfer data internationally, we use appropriate safeguards such as Standard Contractual Clauses (SCCs) approved by the European Commission.'
+      },
+    ]
+  },
+  {
+    id: '9',
+    title: "Children's Privacy",
+    content: [
+      {
+        subtitle: 'Age Restriction',
+        text: 'Our services are not directed to children under the age of 16. We do not knowingly collect personal information from children under 16. If we become aware that we have inadvertently collected data from a child under 16, we will delete that information promptly. If you are a parent or guardian and believe your child has provided us with personal information, please contact us at support@wowosim.com.'
+      },
+    ]
+  },
+  {
+    id: '10',
+    title: 'Changes to This Policy',
+    content: [
+      {
+        subtitle: 'Policy Updates',
+        text: 'We may update this Privacy Policy from time to time to reflect changes in our practices or applicable law. When we make material changes, we will notify you by email and by posting a prominent notice on our website. The "Last Updated" date at the top of this page will always reflect the date of the most recent version. Your continued use of our services after the effective date constitutes acceptance of the updated policy.'
+      },
+    ]
+  },
+];
 ---
-<Base title="Privacy Policy">
-  <section style="padding: 5rem 2rem; background: white; min-height: calc(100vh - 140px);">
-    <div style="max-width: 48rem; margin: 0 auto;">
-      <h1 style="font-size: 2.25rem; font-weight: 900; color: #162544; margin: 0 0 0.5rem;">Privacy Policy</h1>
-      <p style="color: #9ca3af; font-size: 0.875rem; margin: 0 0 3rem;">Last updated: January 2025</p>
-      <div style="display: flex; flex-direction: column; gap: 2rem; color: #374151; font-size: 0.9rem; line-height: 1.8;">
-        <div>
-          <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.75rem;">1. Information We Collect</h2>
-          <p style="margin: 0;">We collect personal information you provide when creating an account or making a purchase, including name, email address, and payment information. We also collect usage data to improve our services.</p>
+
+<Base title="Privacy Policy — WoWo SIM" description="WoWo SIM Privacy Policy. How we collect, use, and protect your personal data.">
+
+  <!-- Hero -->
+  <section style="background:linear-gradient(135deg,#162544,#0d1b36);padding:3.5rem 2rem;text-align:center;">
+    <div style="max-width:560px;margin:0 auto;">
+      <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.75rem;">Legal</span>
+      <h1 style="font-size:2.5rem;font-weight:900;color:white;margin:0 0 0.75rem;letter-spacing:-0.5px;">Privacy Policy</h1>
+      <p style="color:#9ca3af;font-size:0.9rem;margin:0;">Last updated: April 2026 · Effective: April 1, 2026</p>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section style="padding:4rem 2rem;background:white;">
+    <div style="max-width:72rem;margin:0 auto;display:grid;grid-template-columns:240px 1fr;gap:4rem;align-items:start;" id="privGrid">
+
+      <!-- TOC Sidebar -->
+      <div style="position:sticky;top:80px;">
+        <p style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9ca3af;margin:0 0 0.75rem;">Contents</p>
+        <nav style="display:flex;flex-direction:column;gap:0.2rem;">
+          {sections.map(s => (
+            <a href={`#section-${s.id}`}
+               style="font-size:0.8rem;color:#6b7280;text-decoration:none;padding:0.35rem 0.75rem;border-radius:0.5rem;border-left:2px solid transparent;transition:all 0.15s;line-height:1.3;"
+               onmouseover="this.style.color='#162544';this.style.borderLeftColor='#03def3';this.style.background='#f8fafc'" onmouseout="this.style.color='#6b7280';this.style.borderLeftColor='transparent';this.style.background='transparent'">
+              {s.id}. {s.title}
+            </a>
+          ))}
+        </nav>
+        <div style="margin-top:2rem;background:#f0fdff;border:1.5px solid #c7f5fc;border-radius:1rem;padding:1.25rem;">
+          <p style="font-size:0.78rem;font-weight:700;color:#162544;margin:0 0 0.4rem;">Questions?</p>
+          <p style="font-size:0.73rem;color:#6b7280;margin:0 0 0.75rem;line-height:1.4;">Contact our privacy team at any time.</p>
+          <a href="mailto:support@wowosim.com" style="font-size:0.78rem;font-weight:700;color:#03def3;text-decoration:none;">support@wowosim.com →</a>
         </div>
-        <div>
-          <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.75rem;">2. How We Use Your Information</h2>
-          <p style="margin: 0;">We use your information to process orders, provide customer support, send transactional emails, and improve our platform. We do not sell your personal data to third parties.</p>
-        </div>
-        <div>
-          <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.75rem;">3. Cookies</h2>
-          <p style="margin: 0;">We use essential cookies to keep you logged in and maintain your cart. Optional analytics cookies help us understand how visitors use our site. You can disable optional cookies at any time.</p>
-        </div>
-        <div>
-          <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.75rem;">4. Data Security</h2>
-          <p style="margin: 0;">We employ industry-standard security including SSL encryption and secure token storage to protect your personal data.</p>
-        </div>
-        <div>
-          <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.75rem;">5. Your Rights</h2>
-          <p style="margin: 0;">You may request access to, correction of, or deletion of your personal data at any time by contacting <a href="mailto:support@wowosim.com" style="color: #03def3;">support@wowosim.com</a>.</p>
+      </div>
+
+      <!-- Sections -->
+      <div style="display:flex;flex-direction:column;gap:3rem;">
+        <p style="font-size:0.875rem;color:#6b7280;line-height:1.8;margin:0;padding:1.25rem;background:#f8fafc;border-radius:1rem;border-left:3px solid #03def3;">
+          At WoWo SIM, we take your privacy seriously. This Privacy Policy explains how we collect, use, share, and protect your personal information when you use our website and eSIM services. Please read this policy carefully — by using our services, you agree to the practices described here.
+        </p>
+
+        {sections.map(s => (
+          <div id={`section-${s.id}`} style="scroll-margin-top:90px;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;padding-bottom:0.75rem;border-bottom:2px solid #f3f4f6;">
+              <span style="width:32px;height:32px;background:linear-gradient(135deg,#162544,#1e3a6e);border-radius:0.5rem;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:900;color:white;flex-shrink:0;">{s.id}</span>
+              <h2 style="font-size:1.25rem;font-weight:800;color:#162544;margin:0;">{s.title}</h2>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:1.5rem;">
+              {s.content.map(block => (
+                <div>
+                  <h3 style="font-size:0.9rem;font-weight:700;color:#162544;margin:0 0 0.6rem;">{block.subtitle}</h3>
+                  <p style="font-size:0.875rem;color:#6b7280;line-height:1.8;margin:0;">{block.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        <div style="background:#f8fafc;border-radius:1rem;padding:1.5rem;border:1.5px solid #f0f0f0;">
+          <h3 style="font-size:1rem;font-weight:700;color:#162544;margin:0 0 0.5rem;">Contact Us About Privacy</h3>
+          <p style="font-size:0.85rem;color:#6b7280;line-height:1.7;margin:0 0 1rem;">If you have questions, concerns, or requests regarding this Privacy Policy or your personal data, please contact us:</p>
+          <div style="display:flex;flex-direction:column;gap:0.4rem;">
+            <p style="font-size:0.85rem;color:#374151;margin:0;"><strong>Email:</strong> <a href="mailto:support@wowosim.com" style="color:#03def3;text-decoration:none;">support@wowosim.com</a></p>
+            <p style="font-size:0.85rem;color:#374151;margin:0;"><strong>Response time:</strong> Within 30 days for privacy requests</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
+
 </Base>
+
+<style>
+  @media (max-width:900px) {
+    #privGrid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+    [style*="position:sticky"] { position:static !important; }
+  }
+</style>

@@ -1,33 +1,217 @@
 ---
 import Base from '../layouts/Base.astro';
+
+const sections = [
+  {
+    id: '1',
+    title: 'Acceptance of Terms',
+    content: 'By accessing or using the WoWo SIM website (wowosim.com) or any of our eSIM services, you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree to these terms, you must not use our services. We may update these terms from time to time; your continued use of our services following notification of changes constitutes acceptance of the updated terms.'
+  },
+  {
+    id: '2',
+    title: 'Service Description',
+    points: [
+      'WoWo SIM provides data-only international eSIM plans for use in 195+ countries and regions worldwide.',
+      'Our eSIM plans are data-only. They do not include voice calls or SMS messaging services.',
+      'Plans are delivered digitally as QR codes to your registered email address and account dashboard.',
+      'Coverage quality depends on local network availability and is subject to the terms of our carrier partners in each country.',
+      'Network speeds (4G/5G) depend on your device capability, your location, and local network conditions.',
+      'We reserve the right to modify, suspend, or discontinue any aspect of our services with reasonable notice.',
+    ]
+  },
+  {
+    id: '3',
+    title: 'Account Registration',
+    content: 'To purchase eSIM plans, you must create an account with accurate and complete information. You are responsible for maintaining the security of your account credentials. You must notify us immediately of any unauthorized use of your account. You must be at least 18 years old to create an account and use our services. One person may not maintain more than one account.'
+  },
+  {
+    id: '4',
+    title: 'Purchases & Payment',
+    points: [
+      'All prices are displayed in USD and include applicable taxes unless otherwise stated.',
+      'Payment is due at the time of purchase. We accept Visa, Mastercard, American Express, Apple Pay, Google Pay, Amazon Pay, and PayPal.',
+      'By providing payment information, you represent that you are authorized to use the payment method.',
+      'We use secure, PCI-compliant payment processors. Your full card details are never stored on our servers.',
+      'In case of suspected fraud, we reserve the right to cancel orders and refund payments.',
+      'Prices are subject to change at any time. Price changes do not affect orders already placed and paid.',
+    ]
+  },
+  {
+    id: '5',
+    title: 'Refund Policy',
+    points: [
+      'Full Refund: A full refund is available if the eSIM QR code has not been installed on any device AND the refund request is submitted within 15 days of the purchase date.',
+      'No Refund After Installation: Once an eSIM profile has been installed on a device (i.e., the QR code has been scanned and accepted), the plan is non-refundable, regardless of whether data has been used.',
+      'No Refund After Data Use: If any data has been consumed, no refund will be issued.',
+      'Technical Issues: If you experience a technical failure attributable to WoWo SIM (e.g., invalid QR code delivered, eSIM not activating due to a system error on our end), we will issue a full refund or replacement plan after investigation.',
+      'Incompatible Device: We strongly recommend verifying device compatibility before purchase. Refunds are not provided for incompatible devices, as our compatibility list is publicly available.',
+      'To request a refund, email support@wowosim.com with your order number and reason within the 15-day window.',
+    ]
+  },
+  {
+    id: '6',
+    title: 'eSIM Installation & Activation',
+    points: [
+      'The eSIM QR code is delivered to your email within minutes of purchase. You are also able to retrieve it from your account dashboard.',
+      'It is your responsibility to verify device compatibility before purchasing.',
+      'Each QR code may only be installed once on one device. If installation fails due to a device error, contact support before attempting again.',
+      'Plans activate automatically upon connecting to a supported network in the destination country.',
+      'Data Roaming must be enabled on your device for the eSIM to function abroad.',
+      'You may install the eSIM on your device before traveling, which is recommended for a smoother experience.',
+    ]
+  },
+  {
+    id: '7',
+    title: 'Fair Use & Prohibited Activities',
+    points: [
+      'Our plans are for personal use. Commercial resale or redistribution of eSIM plans or data is strictly prohibited.',
+      'You may not use our service for any illegal activity, including but not limited to: fraudulent transactions, spam, or unauthorized network access.',
+      'Sharing your account credentials with others is not permitted.',
+      'Attempting to circumvent data limits, plan restrictions, or geographic restrictions is prohibited.',
+      'We reserve the right to suspend or terminate accounts that violate fair use policies without prior notice.',
+    ]
+  },
+  {
+    id: '8',
+    title: 'Intellectual Property',
+    content: 'All content on the WoWo SIM website — including text, graphics, logos, images, and software — is owned by or licensed to WoWo SIM and is protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, or create derivative works from any content without our express written permission. "WoWo SIM" and our logo are registered trademarks.'
+  },
+  {
+    id: '9',
+    title: 'Disclaimer of Warranties',
+    content: 'Our services are provided "as is" and "as available" without warranties of any kind, either express or implied. We do not warrant that our services will be uninterrupted, error-free, or completely secure. Coverage quality and network speeds may vary by location and are subject to local network conditions beyond our control. We disclaim all implied warranties including merchantability, fitness for a particular purpose, and non-infringement.'
+  },
+  {
+    id: '10',
+    title: 'Limitation of Liability',
+    points: [
+      'WoWo SIM\'s total liability for any claims arising from use of our services shall not exceed the amount you paid for the specific plan giving rise to the claim.',
+      'We are not liable for indirect, incidental, special, consequential, or punitive damages including lost profits, data loss, or loss of business.',
+      'We are not responsible for: service interruptions due to factors outside our control (network outages, natural disasters, government actions); costs incurred due to roaming charges on your home carrier; or any losses arising from your failure to configure your device correctly.',
+      'Nothing in these terms limits our liability for death or personal injury caused by negligence, fraud, or fraudulent misrepresentation.',
+    ]
+  },
+  {
+    id: '11',
+    title: 'Governing Law & Disputes',
+    content: 'These Terms are governed by the laws of the United States. Any disputes arising from these Terms or your use of our services shall first be attempted to be resolved through good-faith negotiation. If a resolution cannot be reached within 30 days, disputes shall be submitted to binding arbitration in accordance with the American Arbitration Association rules. You waive any right to participate in a class action lawsuit against WoWo SIM.'
+  },
+  {
+    id: '12',
+    title: 'Contact Information',
+    content: 'For questions about these Terms of Service, please contact us at: Email: support@wowosim.com | WhatsApp: +1 (713) 514-6210 | Hours: Monday–Friday, 9AM–6PM EST'
+  },
+];
 ---
-<Base title="Terms of Service">
-  <section style="padding: 5rem 2rem; background: white; min-height: calc(100vh - 140px);">
-    <div style="max-width: 48rem; margin: 0 auto;">
-      <h1 style="font-size: 2.25rem; font-weight: 900; color: #162544; margin: 0 0 0.5rem;">Terms of Service</h1>
-      <p style="color: #9ca3af; font-size: 0.875rem; margin: 0 0 3rem;">Last updated: January 2025</p>
-      <div style="display: flex; flex-direction: column; gap: 2rem; color: #374151; font-size: 0.9rem; line-height: 1.8;">
-        <div>
-          <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.75rem;">1. Acceptance of Terms</h2>
-          <p style="margin: 0;">By using WoWo SIM services, you agree to these Terms of Service. If you do not agree, please do not use our services.</p>
-        </div>
-        <div>
-          <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.75rem;">2. Service Description</h2>
-          <p style="margin: 0;">WoWo SIM provides data-only eSIM services. Plans do not include voice calls or SMS. Coverage is subject to local network availability.</p>
-        </div>
-        <div>
-          <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.75rem;">3. Refund Policy</h2>
-          <p style="margin: 0;">A full refund is available if the eSIM has not been activated and the request is made within 15 days of purchase. Services already utilized where data has been consumed are not eligible for refunds.</p>
-        </div>
-        <div>
-          <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.75rem;">4. Limitation of Liability</h2>
-          <p style="margin: 0;">WoWo SIM is not liable for interruptions in service due to factors outside our control including local network outages, device incompatibility, or force majeure events.</p>
-        </div>
-        <div>
-          <h2 style="font-size: 1.1rem; font-weight: 700; color: #162544; margin: 0 0 0.75rem;">5. Contact</h2>
-          <p style="margin: 0;">For questions about these terms, contact us at <a href="mailto:support@wowosim.com" style="color: #03def3;">support@wowosim.com</a>.</p>
-        </div>
-      </div>
+
+<Base title="Terms of Service — WoWo SIM" description="WoWo SIM Terms of Service. Read our service terms, refund policy, and usage guidelines.">
+
+  <!-- Hero -->
+  <section style="background:linear-gradient(135deg,#162544,#0d1b36);padding:3.5rem 2rem;text-align:center;">
+    <div style="max-width:560px;margin:0 auto;">
+      <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.75rem;">Legal</span>
+      <h1 style="font-size:2.5rem;font-weight:900;color:white;margin:0 0 0.75rem;letter-spacing:-0.5px;">Terms of Service</h1>
+      <p style="color:#9ca3af;font-size:0.9rem;margin:0;">Last updated: April 2026 · Effective: April 1, 2026</p>
     </div>
   </section>
+
+  <!-- Key highlights bar -->
+  <section style="background:white;border-bottom:1px solid #f3f4f6;padding:1.25rem 2rem;">
+    <div style="max-width:72rem;margin:0 auto;display:flex;gap:2rem;flex-wrap:wrap;align-items:center;justify-content:center;">
+      {[
+        { icon: '✅', text: '15-day refund window' },
+        { icon: '🔒', text: 'Secure payments' },
+        { icon: '📵', text: 'Data only (no calls/SMS)' },
+        { icon: '🚫', text: 'No auto-renewal' },
+      ].map(h => (
+        <span style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;font-weight:600;color:#374151;">
+          <span style="font-size:1rem;">{h.icon}</span>{h.text}
+        </span>
+      ))}
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section style="padding:4rem 2rem;background:#f9fafb;">
+    <div style="max-width:72rem;margin:0 auto;display:grid;grid-template-columns:220px 1fr;gap:4rem;align-items:start;" id="termsGrid">
+
+      <!-- TOC -->
+      <div style="position:sticky;top:80px;">
+        <p style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9ca3af;margin:0 0 0.75rem;">Contents</p>
+        <nav style="display:flex;flex-direction:column;gap:0.2rem;">
+          {sections.map(s => (
+            <a href={`#t${s.id}`}
+               style="font-size:0.78rem;color:#6b7280;text-decoration:none;padding:0.3rem 0.75rem;border-radius:0.5rem;border-left:2px solid transparent;transition:all 0.15s;line-height:1.35;"
+               onmouseover="this.style.color='#162544';this.style.borderLeftColor='#03def3';this.style.background='#f0fdff'" onmouseout="this.style.color='#6b7280';this.style.borderLeftColor='transparent';this.style.background='transparent'">
+              {s.id}. {s.title}
+            </a>
+          ))}
+        </nav>
+      </div>
+
+      <!-- Body -->
+      <div style="background:white;border-radius:1.5rem;border:1.5px solid #f0f0f0;padding:2.5rem;display:flex;flex-direction:column;gap:2.5rem;">
+
+        <p style="font-size:0.875rem;color:#6b7280;line-height:1.8;margin:0;padding:1.25rem;background:#f8fafc;border-radius:1rem;border-left:3px solid #03def3;">
+          Please read these Terms of Service carefully before using WoWo SIM. These terms govern your use of our website and eSIM services. By using our services, you agree to be bound by these terms.
+        </p>
+
+        {sections.map(s => (
+          <div id={`t${s.id}`} style="scroll-margin-top:90px;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;">
+              <span style="width:28px;height:28px;background:linear-gradient(135deg,#162544,#1e3a6e);border-radius:0.4rem;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:900;color:white;flex-shrink:0;">{s.id}</span>
+              <h2 style="font-size:1.1rem;font-weight:800;color:#162544;margin:0;">{s.title}</h2>
+            </div>
+            {s.content && (
+              <p style="font-size:0.875rem;color:#6b7280;line-height:1.8;margin:0;">{s.content}</p>
+            )}
+            {s.points && (
+              <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.75rem;">
+                {s.points.map(pt => (
+                  <li style="display:flex;align-items:flex-start;gap:0.6rem;font-size:0.875rem;color:#6b7280;line-height:1.7;">
+                    <span style="width:18px;height:18px;background:#f0fdff;border-radius:9999px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.15rem;">
+                      <span style="width:5px;height:5px;background:#03def3;border-radius:9999px;"></span>
+                    </span>
+                    {pt}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+
+        <!-- Refund highlight box -->
+        <div style="background:linear-gradient(135deg,#f0fdff,#e0f9ff);border:1.5px solid #c7f5fc;border-radius:1rem;padding:1.5rem;">
+          <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 0.5rem;">🔁 Refund Summary</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:1rem;">
+            <div style="background:white;border-radius:0.75rem;padding:1rem;border:1px solid rgba(34,197,94,0.2);">
+              <p style="font-size:0.75rem;font-weight:700;color:#166534;margin:0 0 0.3rem;">✅ Eligible for Refund</p>
+              <p style="font-size:0.78rem;color:#6b7280;margin:0;line-height:1.5;">eSIM not installed + within 15 days of purchase</p>
+            </div>
+            <div style="background:white;border-radius:0.75rem;padding:1rem;border:1px solid rgba(239,68,68,0.2);">
+              <p style="font-size:0.75rem;font-weight:700;color:#991b1b;margin:0 0 0.3rem;">❌ Not Eligible</p>
+              <p style="font-size:0.78rem;color:#6b7280;margin:0;line-height:1.5;">eSIM installed or data used, or request after 15 days</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center;padding-top:1rem;border-top:1px solid #f3f4f6;">
+          <p style="font-size:0.8rem;color:#9ca3af;margin:0 0 0.75rem;">Questions about these terms?</p>
+          <a href="mailto:support@wowosim.com" style="font-size:0.875rem;font-weight:700;color:#03def3;text-decoration:none;">support@wowosim.com</a>
+          <span style="color:#d1d5db;margin:0 0.5rem;">·</span>
+          <a href="/contact" style="font-size:0.875rem;font-weight:700;color:#162544;text-decoration:none;">Contact Us</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
 </Base>
+
+<style>
+  @media (max-width:900px) {
+    #termsGrid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+    [style*="position:sticky"] { position:static !important; }
+    [style*="grid-template-columns:1fr 1fr;gap:0.75rem"] { grid-template-columns: 1fr !important; }
+  }
+</style>
