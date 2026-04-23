@@ -10,21 +10,23 @@ const jwt = getJwt(Astro.cookies);
 let esim: any = null;
 let fetchError = false;
 
-// Try plural endpoint first, then singular
-try {
-  const res = await portalFetch(`/esims/${iccid}`, {}, jwt);
-  if (res.ok) {
-    const d = await res.json();
-    esim = d.esim ?? d;
-  }
-} catch {}
-
-if (!esim) {
+// Try multiple endpoint patterns
+const endpointPatterns = [
+  `/esims/${iccid}`,
+  `/esim/${iccid}`,
+  `/esims?q[iccid_eq]=${iccid}`,
+  `/esims?iccid=${iccid}`,
+];
+for (const ep of endpointPatterns) {
   try {
-    const res = await portalFetch(`/esim/${iccid}`, {}, jwt);
+    const res = await portalFetch(ep, {}, jwt);
     if (res.ok) {
       const d = await res.json();
-      esim = d.esim ?? d;
+      const candidate = d.esim ?? d.data ?? (Array.isArray(d) ? d[0] : null) ?? d;
+      if (candidate && typeof candidate === 'object' && Object.keys(candidate).length > 1) {
+        esim = candidate;
+        break;
+      }
     }
   } catch {}
 }
@@ -45,21 +47,33 @@ const statusMap: Record<string, { label: string; color: string; bg: string; dot:
 
 const status = statusMap[esim.state ?? 'UNKNOWN'] ?? { label: esim.state ?? '—', color: '#374151', bg: '#f3f4f6', dot: '#9ca3af' };
 
-const qrUrl = esim.qr_code_url ?? esim.qrcode ?? esim.qr_code ?? esim.lpa_code ?? null;
-const manualCode = esim.manual_code ?? esim.activation_code ?? esim.lpa ?? esim.sm_dp_address ?? null;
-const manualPin = esim.confirmation_code ?? esim.matching_id ?? null;
+const qrUrl = esim.qr_code_url ?? esim.qr_code ?? esim.qrcode ?? esim.qr_url
+           ?? esim.lpa_code ?? esim.lpa_string ?? esim.qr_image ?? esim.qr
+           ?? esim.activation_qr ?? null;
+const manualCode = esim.manual_code ?? esim.activation_code ?? esim.lpa
+               ?? esim.sm_dp_address ?? esim.smdp ?? esim.smdp_address
+               ?? esim.lpa_string ?? null;
+const manualPin = esim.confirmation_code ?? esim.matching_id ?? esim.confirmation ?? null;
 
-const plans = esim.plans ?? esim.bundles ?? esim.packages ?? [];
-const countryName = esim.country ?? esim.name ?? esim.country_name ?? 'eSIM Plan';
-const network = esim.network ?? esim.carrier ?? null;
-const quota = esim.quota ? `${esim.quota} GB` : null;
-const validity = esim.valadity ?? esim.validity ?? esim.duration_days ?? null;
-const speed = esim.speed ?? null;
+const plans = esim.plans ?? esim.bundles ?? esim.packages ?? esim.subscriptions ?? [];
+const countryName = esim.country ?? esim.country_name ?? esim.name ?? esim.title ?? 'eSIM Plan';
+const network = esim.network ?? esim.carrier ?? esim.network_type ?? null;
 
-// Compute aggregate data usage from plans
-const totalBytes = plans.reduce((sum: number, p: any) => sum + (p.data_quota_bytes ?? p.data_bytes ?? 0), 0);
-const usedBytes  = plans.reduce((sum: number, p: any) => sum + (p.data_usage_bytes ?? 0), 0);
+// Quota: try numeric (GB) or string
+const rawQuota = esim.quota ?? esim.data ?? esim.data_gb ?? esim.total_data ?? null;
+const quota = rawQuota !== null ? (typeof rawQuota === 'number' ? `${rawQuota} GB` : String(rawQuota)) : null;
+
+const validity = esim.valadity ?? esim.validity ?? esim.duration ?? esim.duration_days ?? esim.days ?? null;
+const speed = esim.speed ?? esim.network_speed ?? null;
+
+// Compute aggregate data usage from plans (byte-level)
+const totalBytes = plans.reduce((sum: number, p: any) => sum + (p.data_quota_bytes ?? p.data_bytes ?? p.total_bytes ?? 0), 0);
+const usedBytes  = plans.reduce((sum: number, p: any) => sum + (p.data_usage_bytes ?? p.used_bytes ?? p.usage_bytes ?? 0), 0);
 const usedPct    = totalBytes > 0 ? Math.min(100, Math.round((usedBytes / totalBytes) * 100)) : 0;
+
+// Fallback quota usage from quota string field
+const rawUsed = esim.used_data ?? esim.data_used ?? esim.usage ?? null;
+const hasUsageData = totalBytes > 0 || (rawQuota !== null && rawUsed !== null);
 
 function fmtBytes(b: number): string {
   if (b >= 1_073_741_824) return (b / 1_073_741_824).toFixed(1) + ' GB';
@@ -395,7 +409,18 @@ function fmtBytes(b: number): string {
   </div>
 </Base>
 
-<script define:vars={{ iccid }}>
+<script define:vars={{ iccid, fetchError }}>
+  // Debug: log raw eSIM data from API so we can see actual field names
+  if (fetchError) {
+    console.warn('[WoWo] eSIM detail fetch failed server-side for ICCID:', iccid);
+    console.warn('[WoWo] Will try client-side fetch...');
+    // Try fetching from client side
+    fetch(`/api/esim-raw?iccid=${iccid}`)
+      .then(r => r.json())
+      .then(d => console.log('[WoWo] Raw eSIM API response:', JSON.stringify(d, null, 2)))
+      .catch(() => {});
+  }
+
   // Copy ICCID
   document.getElementById('copyIccid')?.addEventListener('click', async () => {
     try {
