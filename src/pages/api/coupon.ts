@@ -15,37 +15,38 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const jwt = getJwt(cookies);
   const upperCode = (code ?? '').toUpperCase().trim();
 
-  // Try multiple portal API endpoint patterns
-  const endpoints = [
-    '/coupon/validate',
-    '/coupons/validate',
-    '/coupon/check',
-    '/coupons/check',
-    '/discount/validate',
-  ];
-  for (const endpoint of endpoints) {
-    try {
-      const res = await portalFetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: upperCode, coupon_code: upperCode }),
-      }, jwt ?? undefined);
-      if (res.ok) {
-        const data = await res.json();
-        if (data.valid || data.discount || data.amount || data.percentage) {
-          return new Response(JSON.stringify({
-            valid: true,
-            code: upperCode,
-            discount: data.discount ?? data.percentage ?? data.amount ?? 0,
-            type: data.type ?? data.discount_type ?? 'percent',
-            label: data.description ?? data.label ?? `${data.discount ?? data.percentage}% off`,
-          }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-        }
-        // Portal returned 200 but coupon invalid
-        if (data.valid === false || data.error || data.message) break;
+  // Portal coupon validation endpoint
+  try {
+    const res = await portalFetch(`/validate_coupon?code=${encodeURIComponent(upperCode)}`, {}, jwt ?? undefined);
+    if (res.ok) {
+      const data = await res.json();
+      // Invalid/expired coupon: { status: "No such coupon exists" } or { out: "..." }
+      if (data.status || data.out) {
+        return new Response(JSON.stringify({ valid: false, message: data.status ?? data.out }), {
+          status: 200, headers: { 'Content-Type': 'application/json' },
+        });
       }
-    } catch {}
-  }
+      // Valid coupon: has id + percentage or fixed_amount
+      if (data.id) {
+        const isPercent = data.percentage !== null && data.percentage !== undefined;
+        const discount = isPercent ? Number(data.percentage) : Number(data.fixed_amount ?? 0);
+        const type: 'percent' | 'fixed' = isPercent ? 'percent' : 'fixed';
+        const discountAmount = type === 'percent'
+          ? Math.round((subtotal ?? 0) * discount / 100 * 100) / 100
+          : discount;
+        return new Response(JSON.stringify({
+          valid: true,
+          code: data.code,
+          discount,
+          discountAmount,
+          type,
+          label: data.detail ?? (isPercent ? `${discount}% off` : `$${discount} off`),
+          countries: data.countries ?? null,
+          regions: data.regions ?? null,
+        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+    }
+  } catch {}
 
   // Fallback to local promo codes
   const promo = PROMO_CODES[upperCode];
