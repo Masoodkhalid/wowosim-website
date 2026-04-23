@@ -13,14 +13,16 @@ const topDestinations = [
 ];
 ---
 
-<section style="position:relative;overflow:hidden;background:linear-gradient(150deg,#ffffff 0%,#f0fdff 45%,#e0f9ff 75%,#ffffff 100%);padding:4rem 1.5rem 5rem;">
-  <!-- Decorative blobs -->
-  <div style="position:absolute;top:-100px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(3,222,243,0.07) 0%,transparent 65%);border-radius:50%;pointer-events:none;"></div>
-  <div style="position:absolute;bottom:-60px;left:-60px;width:400px;height:400px;background:radial-gradient(circle,rgba(22,37,68,0.04) 0%,transparent 70%);border-radius:50%;pointer-events:none;"></div>
-  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(3,222,243,0.06) 1.5px,transparent 1.5px);background-size:28px 28px;pointer-events:none;"></div>
+<section style="position:relative;overflow:hidden;background:linear-gradient(150deg,#f8faff 0%,#eef9ff 40%,#e3f5ff 70%,#f0f8ff 100%);padding:4rem 1.5rem 5rem;">
 
-  <div style="max-width:76rem;margin:0 auto;position:relative;z-index:1;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+  <!-- Background mesh pattern -->
+  <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(3,222,243,0.07) 1.5px,transparent 1.5px);background-size:26px 26px;pointer-events:none;"></div>
+  <!-- Glow blobs -->
+  <div style="position:absolute;top:-120px;right:-60px;width:700px;height:500px;background:radial-gradient(ellipse,rgba(3,222,243,0.1) 0%,transparent 60%);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:-80px;left:-80px;width:500px;height:400px;background:radial-gradient(ellipse,rgba(22,37,68,0.05) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <div style="max-width:78rem;margin:0 auto;position:relative;z-index:1;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;" id="heroGrid">
 
       <!-- ── Left: Content ── -->
       <div>
@@ -32,15 +34,18 @@ const topDestinations = [
           <span style="color:#6b7280;">50k+ travelers</span>
         </div>
 
-        <h1 style="font-size:3.5rem;font-weight:900;color:#162544;line-height:1.06;margin:0 0 1.25rem;letter-spacing:-2px;">
-          Travel Smart.<br/>
+        <h1 style="font-size:3.5rem;font-weight:900;color:#162544;line-height:1.05;margin:0 0 1.25rem;letter-spacing:-2px;">
+          Travel Smarter<br/>
           <span style="position:relative;display:inline-block;">
-            <span style="background:linear-gradient(90deg,#03def3,#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Stay Connected.</span>
+            with&nbsp;<span style="background:linear-gradient(100deg,#03def3 0%,#0ea5e9 50%,#42BFCA 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">eSIM</span>
+            <svg style="position:absolute;bottom:-6px;left:0;width:100%;" viewBox="0 0 200 8" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M2 6 Q50 2 100 5 Q150 8 198 4" stroke="#03def3" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+            </svg>
           </span>
         </h1>
 
         <p style="color:#6b7280;font-size:1.05rem;line-height:1.72;margin:0 0 2rem;max-width:440px;">
-          Instant eSIM data in <strong style="color:#162544;">195+ countries</strong>. No physical SIM. No roaming charges. Activate in under 2 minutes.
+          Instant eSIM data in <strong style="color:#162544;">195+ countries</strong>. No physical SIM. No roaming charges. Activate in under 2 minutes — before you even board.
         </p>
 
         <!-- Search bar -->
@@ -49,203 +54,356 @@ const topDestinations = [
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2.2" style="flex-shrink:0;">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.2-5.2m0 0A7.5 7.5 0 105.2 15.8 7.5 7.5 0 0015.8 15.8z"/>
             </svg>
-            <input id="heroSearch" type="text" placeholder="Search country or region..."
+            <input id="heroSearch" type="text" placeholder="Where are you traveling?"
               style="flex:1;border:none;outline:none;font-size:0.9rem;color:#374151;background:transparent;font-family:inherit;"
               autocomplete="off" aria-label="Search destinations" aria-autocomplete="list" aria-controls="heroDropdown" aria-expanded="false" />
             <button id="heroSearchBtn" class="btn-primary" style="font-size:0.825rem;padding:0.6rem 1.1rem;border-radius:0.65rem;white-space:nowrap;flex-shrink:0;">
               Find Plans
             </button>
           </div>
-          <!-- Autocomplete dropdown -->
-          <div id="heroDropdown" class="search-dropdown" role="listbox">
-            <!-- filled by JS -->
-          </div>
+          <div id="heroDropdown" class="search-dropdown" role="listbox"></div>
         </div>
 
         <!-- Stats row -->
-        <div style="display:flex;gap:2.5rem;flex-wrap:wrap;">
+        <div style="display:flex;gap:2.5rem;flex-wrap:wrap;margin-bottom:2rem;">
           {[
             { n:'195+',  l:'Countries covered' },
             { n:'$3.50', l:'Plans from' },
             { n:'2 min', l:'Avg. setup time' },
+            { n:'24/7',  l:'Support' },
           ].map(s => (
             <div>
-              <p style="font-size:1.6rem;font-weight:900;color:#162544;margin:0;line-height:1;letter-spacing:-0.5px;">{s.n}</p>
-              <p style="font-size:0.72rem;color:#9ca3af;margin:0.25rem 0 0;font-weight:500;">{s.l}</p>
+              <p style="font-size:1.5rem;font-weight:900;color:#162544;margin:0;line-height:1;letter-spacing:-0.5px;">{s.n}</p>
+              <p style="font-size:0.7rem;color:#9ca3af;margin:0.2rem 0 0;font-weight:500;">{s.l}</p>
             </div>
           ))}
         </div>
+
+        <!-- App badges -->
+        <div style="display:flex;gap:0.65rem;flex-wrap:wrap;">
+          <a href="#" style="display:flex;align-items:center;gap:0.4rem;background:#162544;color:white;padding:0.5rem 0.9rem;border-radius:0.75rem;font-size:0.75rem;font-weight:700;text-decoration:none;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            App Store
+          </a>
+          <a href="#" style="display:flex;align-items:center;gap:0.4rem;background:#162544;color:white;padding:0.5rem 0.9rem;border-radius:0.75rem;font-size:0.75rem;font-weight:700;text-decoration:none;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M3.18 23.76c.3.17.65.19.98.07l12.56-7.25-2.81-2.82-10.73 9.99zm-1.92-20.2C1.1 3.84 1 4.18 1 4.56v14.88c0 .38.1.72.26 1l10.83-10.84-10.83-10.04zM20.35 9.58l-2.61-1.5-3.19 3.19 3.19 3.19 2.63-1.52c.75-.43.75-1.93-.02-2.36zM4.16.24C3.83.12 3.48.14 3.18.31L13.88 11l-2.81 2.82L4.16.24z"/></svg>
+            Google Play
+          </a>
+        </div>
       </div>
 
-      <!-- ── Right: Globe Mascot ── -->
-      <div style="position:relative;display:flex;justify-content:center;align-items:center;min-height:420px;">
+      <!-- ── Right: Traveler Scene ── -->
+      <div id="heroVisual" style="position:relative;display:flex;justify-content:center;align-items:center;min-height:480px;">
 
-        <!-- Outer orbit ring -->
-        <div class="animate-spin-slow" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;height:380px;border:2px dashed rgba(3,222,243,0.18);border-radius:50%;pointer-events:none;"></div>
+        <!-- Background circle -->
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;height:380px;background:radial-gradient(circle,rgba(3,222,243,0.08) 0%,transparent 70%);border-radius:50%;pointer-events:none;"></div>
+        <div class="hero-ring" style="position:absolute;top:50%;left:50%;width:360px;height:360px;border:2px dashed rgba(3,222,243,0.2);border-radius:50%;pointer-events:none;"></div>
+        <div class="hero-ring-2" style="position:absolute;top:50%;left:50%;width:290px;height:290px;border:1.5px solid rgba(22,37,68,0.06);border-radius:50%;pointer-events:none;"></div>
 
-        <!-- Globe Character SVG -->
-        <div class="animate-globe" style="position:relative;z-index:2;filter:drop-shadow(0 20px 40px rgba(3,222,243,0.25)) drop-shadow(0 10px 20px rgba(22,37,68,0.15));">
-          <svg width="260" height="260" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="WoWo SIM globe mascot">
-
-            <!-- Globe body (main circle) -->
-            <circle cx="130" cy="130" r="115" fill="url(#globeGradient)"/>
-            <circle cx="130" cy="130" r="115" fill="url(#globeSheen)" opacity="0.4"/>
-
-            <!-- Latitude lines -->
-            <ellipse cx="130" cy="130" rx="115" ry="40" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-            <ellipse cx="130" cy="130" rx="115" ry="70" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-            <!-- Vertical meridian -->
-            <line x1="130" y1="15" x2="130" y2="245" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
-            <!-- Equator -->
-            <line x1="15" y1="130" x2="245" y2="130" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
-
-            <!-- Continent shapes (stylized flat) -->
-            <!-- North America -->
-            <path d="M65 88 C55 78 48 90 52 105 C56 118 70 122 80 118 C88 115 90 108 95 100 C98 93 90 80 80 82 Z"
-                  fill="#03def3" opacity="0.9"/>
-            <!-- South America -->
-            <path d="M80 128 C74 124 68 130 70 142 C72 154 80 160 88 158 C95 156 98 148 96 138 C94 130 86 126 80 128 Z"
-                  fill="#03def3" opacity="0.75"/>
-            <!-- Europe -->
-            <path d="M130 80 C124 74 118 78 120 88 C122 96 130 98 136 94 C140 91 140 84 136 80 Z"
-                  fill="#03def3" opacity="0.85"/>
-            <!-- Africa -->
-            <path d="M130 98 C122 96 116 106 118 120 C120 134 128 142 136 140 C144 138 148 128 146 116 C144 106 138 96 130 98 Z"
-                  fill="#03def3" opacity="0.8"/>
-            <!-- Asia (large) -->
-            <path d="M148 72 C138 66 130 74 132 86 C134 96 142 100 152 100 C162 100 172 92 174 82 C176 72 160 64 148 72 Z"
-                  fill="#03def3" opacity="0.9"/>
-            <path d="M172 88 C166 84 160 90 162 100 C164 108 172 112 180 110 C186 108 188 100 186 92 Z"
-                  fill="#03def3" opacity="0.7"/>
-            <!-- Australia -->
-            <path d="M180 140 C174 136 168 142 170 152 C172 160 180 164 188 162 C194 160 196 152 192 144 Z"
-                  fill="#03def3" opacity="0.8"/>
-
-            <!-- Face area overlay (white ellipse to create "face zone") -->
-            <ellipse cx="130" cy="138" rx="50" ry="44" fill="white" opacity="0.15"/>
-
-            <!-- Eyes -->
-            <!-- Left eye -->
-            <circle cx="112" cy="126" r="9" fill="white"/>
-            <circle cx="112" cy="126" r="5.5" fill="#162544"/>
-            <circle cx="114" cy="124" r="2" fill="white" opacity="0.8"/>
-            <!-- Right eye -->
-            <circle cx="148" cy="126" r="9" fill="white"/>
-            <circle cx="148" cy="126" r="5.5" fill="#162544"/>
-            <circle cx="150" cy="124" r="2" fill="white" opacity="0.8"/>
-
-            <!-- Eyebrows (friendly slightly raised) -->
-            <path d="M104 113 Q112 108 120 112" stroke="#162544" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7"/>
-            <path d="M140 112 Q148 108 156 113" stroke="#162544" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7"/>
-
-            <!-- Smile -->
-            <path d="M113 148 Q130 162 147 148" stroke="white" stroke-width="3" stroke-linecap="round" fill="none"/>
-            <!-- Cheek blushes -->
-            <ellipse cx="100" cy="142" rx="8" ry="5" fill="rgba(255,100,100,0.25)"/>
-            <ellipse cx="160" cy="142" rx="8" ry="5" fill="rgba(255,100,100,0.25)"/>
-
-            <!-- Small arms holding phone -->
-            <!-- Left arm -->
-            <path d="M22 145 Q35 140 50 148 Q56 152 62 168 L55 172 Q48 158 44 154 Q32 148 20 152 Z"
-                  fill="#162544" opacity="0.85"/>
-            <!-- Right arm -->
-            <path d="M238 145 Q225 140 210 148 Q204 152 198 168 L205 172 Q212 158 216 154 Q228 148 240 152 Z"
-                  fill="#162544" opacity="0.85"/>
-
-            <!-- Airplane orbiting (animated by CSS) -->
-            <g class="orbit-plane">
-              <path d="M100 40 L108 36 L112 40 L108 44 Z" fill="#03def3" opacity="0.9"/>
-              <path d="M104 40 L108 36 L108 44 Z" fill="white" opacity="0.4"/>
-            </g>
-
-            <!-- Phone in left hand -->
-            <rect x="34" y="160" width="30" height="52" rx="5" fill="#0f172a"/>
-            <rect x="37" y="165" width="24" height="40" rx="3" fill="#1e293b"/>
-            <!-- Phone screen glow -->
-            <rect x="38" y="166" width="22" height="38" rx="2" fill="url(#phoneScreen)"/>
-            <!-- WiFi icon on phone -->
-            <path d="M49 178 Q44 173 39 177" stroke="#03def3" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <path d="M49 178 Q46 175 43 177" stroke="#03def3" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <circle cx="49" cy="178" r="1.5" fill="#03def3"/>
-            <!-- "eSIM" text on phone -->
-            <text x="49" y="198" text-anchor="middle" fill="#03def3" font-size="5.5" font-weight="800" font-family="system-ui">eSIM</text>
-
-            <!-- Globe shine highlight -->
-            <ellipse cx="94" cy="72" rx="30" ry="18" fill="white" opacity="0.12" transform="rotate(-30 94 72)"/>
-
+        <!-- Central phone illustration -->
+        <div class="hero-phone" style="position:relative;z-index:4;">
+          <svg width="200" height="340" viewBox="0 0 200 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Phone shadow -->
+            <ellipse cx="100" cy="325" rx="60" ry="10" fill="rgba(22,37,68,0.12)"/>
+            <!-- Phone body -->
+            <rect x="30" y="10" width="140" height="300" rx="24" fill="#0f172a"/>
+            <rect x="34" y="14" width="132" height="292" rx="20" fill="#1e293b"/>
+            <!-- Screen -->
+            <rect x="38" y="18" width="124" height="284" rx="16" fill="url(#phoneGrad)"/>
+            <!-- Notch -->
+            <rect x="72" y="22" width="56" height="12" rx="6" fill="#0f172a"/>
+            <!-- Screen content: map lines -->
+            <line x1="38" y1="80" x2="162" y2="80" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <line x1="38" y1="130" x2="162" y2="130" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <line x1="38" y1="180" x2="162" y2="180" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <line x1="88" y1="18" x2="88" y2="302" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="128" y1="18" x2="128" y2="302" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <!-- WoWo SIM logo area -->
+            <rect x="50" y="40" width="100" height="28" rx="6" fill="rgba(3,222,243,0.15)"/>
+            <text x="100" y="58" text-anchor="middle" fill="#03def3" font-size="10" font-weight="800" font-family="system-ui">WoWoSIM</text>
+            <!-- Signal bars -->
+            <rect x="50" y="85" width="8" height="8" rx="1" fill="#03def3" opacity="0.5"/>
+            <rect x="61" y="80" width="8" height="13" rx="1" fill="#03def3" opacity="0.7"/>
+            <rect x="72" y="75" width="8" height="18" rx="1" fill="#03def3"/>
+            <!-- QR Code area -->
+            <rect x="55" y="105" width="90" height="90" rx="8" fill="white" opacity="0.95"/>
+            <text x="100" y="122" text-anchor="middle" fill="#162544" font-size="6.5" font-weight="700" font-family="system-ui">SCAN QR CODE</text>
+            <!-- QR pattern (stylized) -->
+            <rect x="63" y="128" width="16" height="16" rx="2" fill="#162544"/>
+            <rect x="65" y="130" width="12" height="12" rx="1" fill="white"/>
+            <rect x="67" y="132" width="8" height="8" rx="1" fill="#162544"/>
+            <rect x="103" y="128" width="16" height="16" rx="2" fill="#162544"/>
+            <rect x="105" y="130" width="12" height="12" rx="1" fill="white"/>
+            <rect x="107" y="132" width="8" height="8" rx="1" fill="#162544"/>
+            <rect x="63" y="166" width="16" height="16" rx="2" fill="#162544"/>
+            <rect x="65" y="168" width="12" height="12" rx="1" fill="white"/>
+            <rect x="67" y="170" width="8" height="8" rx="1" fill="#162544"/>
+            <!-- QR dots pattern -->
+            <rect x="83" y="128" width="5" height="5" rx="0.5" fill="#162544"/>
+            <rect x="91" y="128" width="5" height="5" rx="0.5" fill="#162544"/>
+            <rect x="83" y="136" width="5" height="5" rx="0.5" fill="#162544"/>
+            <rect x="91" y="136" rx="0.5" width="5" height="5" fill="#162544"/>
+            <rect x="83" y="144" width="5" height="5" rx="0.5" fill="#162544"/>
+            <rect x="91" y="144" width="5" height="5" rx="0.5" fill="#162544"/>
+            <rect x="83" y="152" width="5" height="5" rx="0.5" fill="#162544"/>
+            <rect x="91" y="152" width="5" height="5" rx="0.5" fill="#162544"/>
+            <rect x="83" y="160" width="5" height="5" rx="0.5" fill="#162544"/>
+            <rect x="91" y="160" width="5" height="5" rx="0.5" fill="#162544"/>
+            <rect x="123" y="136" width="5" height="5" rx="0.5" fill="#162544"/>
+            <rect x="123" y="144" width="5" height="5" rx="0.5" fill="#162544"/>
+            <rect x="123" y="152" width="5" height="5" rx="0.5" fill="#162544"/>
+            <rect x="123" y="160" width="5" height="5" rx="0.5" fill="#162544"/>
+            <!-- Active status -->
+            <circle cx="100" cy="210" r="6" fill="#22c55e"/>
+            <text x="112" y="214" fill="#22c55e" font-size="8" font-weight="700" font-family="system-ui">ACTIVE</text>
+            <!-- Data usage bar -->
+            <rect x="55" y="228" width="90" height="6" rx="3" fill="rgba(255,255,255,0.1)"/>
+            <rect x="55" y="228" width="60" height="6" rx="3" fill="url(#barGrad)"/>
+            <text x="55" y="248" fill="rgba(255,255,255,0.5)" font-size="6.5" font-family="system-ui">3.2 GB used</text>
+            <text x="145" y="248" text-anchor="end" fill="rgba(255,255,255,0.5)" font-size="6.5" font-family="system-ui">5 GB total</text>
+            <!-- Bottom nav indicator -->
+            <circle cx="100" cy="290" r="3" fill="rgba(255,255,255,0.3)"/>
             <!-- Defs -->
             <defs>
-              <radialGradient id="globeGradient" cx="35%" cy="30%" r="65%">
-                <stop offset="0%"   stop-color="#1a3766"/>
-                <stop offset="60%"  stop-color="#162544"/>
+              <linearGradient id="phoneGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1a3060"/>
                 <stop offset="100%" stop-color="#0d1a33"/>
-              </radialGradient>
-              <radialGradient id="globeSheen" cx="30%" cy="25%" r="60%">
-                <stop offset="0%"   stop-color="white" stop-opacity="0.18"/>
-                <stop offset="100%" stop-color="white" stop-opacity="0"/>
-              </radialGradient>
-              <linearGradient id="phoneScreen" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%"  stop-color="#0ea5e9"/>
-                <stop offset="100%" stop-color="#162544"/>
+              </linearGradient>
+              <linearGradient id="barGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#03def3"/>
+                <stop offset="100%" stop-color="#0ea5e9"/>
               </linearGradient>
             </defs>
           </svg>
         </div>
 
+        <!-- ── Traveler 1: Business woman (top-left) ── -->
+        <div class="traveler t1" style="position:absolute;top:20px;left:0;z-index:3;">
+          <svg width="90" height="130" viewBox="0 0 90 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Shadow -->
+            <ellipse cx="45" cy="124" rx="22" ry="5" fill="rgba(22,37,68,0.1)"/>
+            <!-- Legs -->
+            <rect x="35" y="95" width="10" height="28" rx="5" fill="#162544"/>
+            <rect x="47" y="95" width="10" height="28" rx="5" fill="#1e3a6e"/>
+            <!-- Shoes -->
+            <ellipse cx="40" cy="122" rx="8" ry="4" fill="#0f172a"/>
+            <ellipse cx="52" cy="122" rx="8" ry="4" fill="#0f172a"/>
+            <!-- Body: blazer -->
+            <rect x="28" y="55" width="34" height="44" rx="8" fill="#162544"/>
+            <!-- Shirt detail -->
+            <rect x="40" y="55" width="10" height="20" rx="0" fill="white" opacity="0.9"/>
+            <!-- Left arm with phone -->
+            <path d="M28 65 Q14 70 12 82" stroke="#e8c49a" stroke-width="9" stroke-linecap="round" fill="none"/>
+            <!-- Phone in hand -->
+            <rect x="5" y="78" width="14" height="22" rx="3" fill="#0f172a"/>
+            <rect x="7" y="80" width="10" height="18" rx="2" fill="#03def3" opacity="0.8"/>
+            <!-- Right arm (down) -->
+            <path d="M62 65 Q72 72 70 85" stroke="#e8c49a" stroke-width="9" stroke-linecap="round" fill="none"/>
+            <!-- Briefcase -->
+            <rect x="62" y="82" width="20" height="15" rx="3" fill="#374151"/>
+            <rect x="69" y="79" width="6" height="5" rx="1" fill="none" stroke="#374151" stroke-width="1.5"/>
+            <line x1="62" y1="89" x2="82" y2="89" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <!-- Neck -->
+            <rect x="40" y="46" width="10" height="12" rx="5" fill="#e8c49a"/>
+            <!-- Head -->
+            <circle cx="45" cy="36" r="20" fill="#e8c49a"/>
+            <!-- Hair (bun) -->
+            <path d="M28 28 Q30 10 45 8 Q60 10 62 28" fill="#2d1810"/>
+            <circle cx="45" cy="12" r="8" fill="#2d1810"/>
+            <!-- Eyes -->
+            <circle cx="39" cy="32" r="3" fill="white"/>
+            <circle cx="51" cy="32" r="3" fill="white"/>
+            <circle cx="40" cy="33" r="1.8" fill="#1a0a05"/>
+            <circle cx="52" cy="33" r="1.8" fill="#1a0a05"/>
+            <!-- Smile -->
+            <path d="M39 40 Q45 45 51 40" stroke="#c27b5a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <!-- Glasses -->
+            <path d="M34 31 Q39 28 44 31 Q45 31 46 31 Q51 28 56 31" stroke="#374151" stroke-width="1.5" fill="none"/>
+          </svg>
+        </div>
+
+        <!-- ── Traveler 2: Young man with backpack (bottom-left) ── -->
+        <div class="traveler t2" style="position:absolute;bottom:10px;left:5px;z-index:3;">
+          <svg width="85" height="120" viewBox="0 0 85 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="42" cy="115" rx="20" ry="4" fill="rgba(22,37,68,0.1)"/>
+            <!-- Legs -->
+            <rect x="30" y="88" width="10" height="26" rx="5" fill="#374151"/>
+            <rect x="43" y="88" width="10" height="26" rx="5" fill="#4b5563"/>
+            <!-- Sneakers -->
+            <ellipse cx="35" cy="113" rx="9" ry="4" fill="#03def3"/>
+            <ellipse cx="48" cy="113" rx="9" ry="4" fill="#03def3"/>
+            <!-- Body: hoodie -->
+            <rect x="22" y="50" width="40" height="42" rx="9" fill="#FF5F00"/>
+            <!-- Hoodie pocket -->
+            <rect x="32" y="72" width="20" height="12" rx="4" fill="rgba(0,0,0,0.15)"/>
+            <!-- Backpack -->
+            <rect x="14" y="50" width="16" height="32" rx="6" fill="#162544"/>
+            <rect x="16" y="52" width="12" height="28" rx="4" fill="#1e3a6e"/>
+            <rect x="16" y="62" width="12" height="1" stroke="#03def3" stroke-width="1" fill="none"/>
+            <!-- Shoulder straps -->
+            <path d="M22 50 Q20 42 26 40" stroke="#162544" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <path d="M30 50 Q28 42 26 40" stroke="#162544" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <!-- Right arm raised (waving) -->
+            <path d="M62 58 Q74 45 76 36" stroke="#f5c5a3" stroke-width="9" stroke-linecap="round" fill="none"/>
+            <!-- Waving hand -->
+            <circle cx="76" cy="32" r="7" fill="#f5c5a3"/>
+            <!-- Neck -->
+            <rect x="37" y="40" width="10" height="13" rx="5" fill="#f5c5a3"/>
+            <!-- Head -->
+            <circle cx="42" cy="30" r="19" fill="#f5c5a3"/>
+            <!-- Hair -->
+            <path d="M24 24 Q26 8 42 6 Q58 8 60 24" fill="#1a0a05"/>
+            <!-- Eyes -->
+            <circle cx="36" cy="27" r="3" fill="white"/>
+            <circle cx="48" cy="27" r="3" fill="white"/>
+            <circle cx="37" cy="28" r="1.8" fill="#1a0a05"/>
+            <circle cx="49" cy="28" r="1.8" fill="#1a0a05"/>
+            <!-- Big smile -->
+            <path d="M35 35 Q42 42 49 35" stroke="#c27b5a" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <!-- Earphone wire -->
+            <path d="M24 26 Q20 35 22 46" stroke="white" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.7"/>
+            <circle cx="22" cy="46" r="2.5" fill="white" opacity="0.7"/>
+          </svg>
+        </div>
+
+        <!-- ── Traveler 3: Woman with suitcase (top-right) ── -->
+        <div class="traveler t3" style="position:absolute;top:15px;right:0;z-index:3;">
+          <svg width="90" height="130" viewBox="0 0 90 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="45" cy="125" rx="20" ry="4" fill="rgba(22,37,68,0.1)"/>
+            <!-- Suitcase -->
+            <rect x="54" y="88" width="28" height="32" rx="4" fill="#42BFCA"/>
+            <rect x="60" y="84" width="16" height="7" rx="2" fill="none" stroke="#42BFCA" stroke-width="2"/>
+            <line x1="68" y1="88" x2="68" y2="120" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            <line x1="54" y1="104" x2="82" y2="104" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            <circle cx="58" cy="120" r="3" fill="#0d7a8a"/>
+            <circle cx="78" cy="120" r="3" fill="#0d7a8a"/>
+            <!-- Arm holding suitcase -->
+            <path d="M62 62 Q68 76 66 90" stroke="#d4956a" stroke-width="9" stroke-linecap="round" fill="none"/>
+            <!-- Legs -->
+            <rect x="30" y="92" width="10" height="28" rx="5" fill="#FF5F00"/>
+            <rect x="42" y="92" width="10" height="28" rx="5" fill="#e55200"/>
+            <!-- Heels -->
+            <path d="M30 118 L30 124 L38 124 L40 118" fill="#1a0a05"/>
+            <path d="M42 118 L42 124 L50 124 L52 118" fill="#1a0a05"/>
+            <!-- Dress/skirt -->
+            <path d="M22 55 Q18 80 22 95 L58 95 Q62 80 58 55 Z" fill="#162544"/>
+            <!-- Left arm (down, holding bag) -->
+            <path d="M22 62 Q10 70 8 80" stroke="#d4956a" stroke-width="9" stroke-linecap="round" fill="none"/>
+            <!-- Small bag -->
+            <rect x="2" y="76" width="16" height="20" rx="4" fill="#FF5F00"/>
+            <path d="M6 76 Q10 70 14 76" fill="none" stroke="#FF5F00" stroke-width="1.5"/>
+            <!-- Neck -->
+            <rect x="38" y="44" width="10" height="14" rx="5" fill="#d4956a"/>
+            <!-- Head -->
+            <circle cx="43" cy="32" r="20" fill="#d4956a"/>
+            <!-- Long hair -->
+            <path d="M23 28 Q22 50 28 58" stroke="#2d1810" stroke-width="8" stroke-linecap="round" fill="none"/>
+            <path d="M63 28 Q64 50 58 58" stroke="#2d1810" stroke-width="8" stroke-linecap="round" fill="none"/>
+            <path d="M24 22 Q26 6 43 4 Q60 6 62 22" fill="#2d1810"/>
+            <!-- Eyes with lashes -->
+            <circle cx="37" cy="28" r="3.5" fill="white"/>
+            <circle cx="49" cy="28" r="3.5" fill="white"/>
+            <circle cx="38" cy="29" r="2" fill="#1a0a05"/>
+            <circle cx="50" cy="29" r="2" fill="#1a0a05"/>
+            <!-- Eyelashes -->
+            <path d="M34 24 Q36 21 38 24" stroke="#1a0a05" stroke-width="1.2" fill="none"/>
+            <path d="M46 24 Q48 21 50 24" stroke="#1a0a05" stroke-width="1.2" fill="none"/>
+            <!-- Smile + lipstick -->
+            <path d="M37 38 Q43 44 49 38" stroke="#c0392b" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <!-- Scarf/necklace -->
+            <path d="M35 43 Q43 50 51 43" stroke="#03def3" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.8"/>
+          </svg>
+        </div>
+
+        <!-- ── Traveler 4: Man with map (bottom-right) ── -->
+        <div class="traveler t4" style="position:absolute;bottom:5px;right:0;z-index:3;">
+          <svg width="85" height="118" viewBox="0 0 85 118" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="42" cy="112" rx="20" ry="4" fill="rgba(22,37,68,0.1)"/>
+            <!-- Legs -->
+            <rect x="30" y="85" width="11" height="26" rx="5" fill="#374151"/>
+            <rect x="43" y="85" width="11" height="26" rx="5" fill="#4b5563"/>
+            <!-- Shoes -->
+            <ellipse cx="35" cy="110" rx="9" ry="4" fill="#1a0a05"/>
+            <ellipse cx="49" cy="110" rx="9" ry="4" fill="#1a0a05"/>
+            <!-- Body: polo shirt -->
+            <rect x="22" y="48" width="40" height="42" rx="9" fill="#1e3a6e"/>
+            <!-- Polo collar -->
+            <path d="M38 48 L42 56 L46 48" fill="white" opacity="0.9"/>
+            <!-- Both arms holding map -->
+            <path d="M22 60 Q10 58 8 50" stroke="#c8a07a" stroke-width="9" stroke-linecap="round" fill="none"/>
+            <path d="M62 60 Q72 58 74 50" stroke="#c8a07a" stroke-width="9" stroke-linecap="round" fill="none"/>
+            <!-- Map -->
+            <rect x="4" y="38" width="76" height="16" rx="4" fill="#fef3c7" transform="rotate(-5 40 46)"/>
+            <!-- Map lines -->
+            <line x1="12" y1="43" x2="35" y2="43" stroke="#d97706" stroke-width="1" transform="rotate(-5 40 46)" opacity="0.6"/>
+            <line x1="12" y1="48" x2="48" y2="48" stroke="#d97706" stroke-width="1" transform="rotate(-5 40 46)" opacity="0.6"/>
+            <circle cx="40" cy="44" r="4" fill="#FF5F00" opacity="0.8" transform="rotate(-5 40 46)"/>
+            <!-- Neck -->
+            <rect x="37" y="38" width="10" height="13" rx="5" fill="#c8a07a"/>
+            <!-- Head -->
+            <circle cx="42" cy="27" r="19" fill="#c8a07a"/>
+            <!-- Hair (short, casual) -->
+            <path d="M24 22 Q26 7 42 5 Q58 7 60 22 Q56 18 42 17 Q28 18 24 22" fill="#4a2c0a"/>
+            <!-- Eyes -->
+            <circle cx="36" cy="24" r="3" fill="white"/>
+            <circle cx="48" cy="24" r="3" fill="white"/>
+            <circle cx="37" cy="25" r="1.8" fill="#1a0a05"/>
+            <circle cx="49" cy="25" r="1.8" fill="#1a0a05"/>
+            <!-- Eyebrows -->
+            <path d="M33 20 Q36 18 39 20" stroke="#4a2c0a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M45 20 Q48 18 51 20" stroke="#4a2c0a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <!-- Grin -->
+            <path d="M36 33 Q42 39 48 33" stroke="#9e6047" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+            <!-- Stubble dots -->
+            <circle cx="34" cy="35" r="1" fill="#9e6047" opacity="0.4"/>
+            <circle cx="50" cy="35" r="1" fill="#9e6047" opacity="0.4"/>
+          </svg>
+        </div>
+
         <!-- Floating Info Cards -->
-        <div class="animate-float" style="position:absolute;top:20px;left:-20px;background:white;border-radius:1rem;padding:0.7rem 1rem;box-shadow:0 8px 32px rgba(0,0,0,0.12);display:flex;align-items:center;gap:0.6rem;z-index:3;">
-          <div style="width:36px;height:36px;background:#f0fdff;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-          </div>
+        <div class="hero-card fc1" style="position:absolute;top:0px;left:50%;transform:translateX(-50%);background:white;border-radius:1rem;padding:0.65rem 1rem;box-shadow:0 8px 30px rgba(0,0,0,0.1);display:flex;align-items:center;gap:0.6rem;z-index:5;white-space:nowrap;border:1.5px solid #f0f0f0;">
+          <span style="font-size:1.1rem;">✈️</span>
           <div>
-            <p style="font-size:0.72rem;font-weight:800;color:#162544;margin:0;">Instant</p>
-            <p style="font-size:0.65rem;color:#9ca3af;margin:0;">Activation</p>
+            <p style="font-size:0.65rem;font-weight:800;color:#162544;margin:0;">247 travelers active</p>
+            <p style="font-size:0.6rem;color:#22c55e;margin:0;font-weight:700;">▲ in the last hour</p>
           </div>
         </div>
 
-        <div class="animate-float" style="position:absolute;top:20px;right:-20px;background:white;border-radius:1rem;padding:0.7rem 1rem;box-shadow:0 8px 32px rgba(0,0,0,0.12);display:flex;align-items:center;gap:0.6rem;z-index:3;animation-delay:0.8s;">
-          <div style="width:36px;height:36px;background:#f0fdff;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/>
-            </svg>
+        <div class="hero-card fc2" style="position:absolute;top:110px;left:-30px;background:white;border-radius:1rem;padding:0.65rem 1rem;box-shadow:0 8px 30px rgba(0,0,0,0.1);display:flex;align-items:center;gap:0.6rem;z-index:5;border:1.5px solid #f0f0f0;">
+          <div style="width:32px;height:32px;background:linear-gradient(135deg,#03def3,#0ea5e9);border-radius:0.65rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           </div>
           <div>
-            <p style="font-size:0.72rem;font-weight:800;color:#162544;margin:0;">195+</p>
-            <p style="font-size:0.65rem;color:#9ca3af;margin:0;">Countries</p>
+            <p style="font-size:0.7rem;font-weight:800;color:#162544;margin:0;">Instant Setup</p>
+            <p style="font-size:0.62rem;color:#9ca3af;margin:0;">Under 2 minutes</p>
           </div>
         </div>
 
-        <div class="animate-float" style="position:absolute;bottom:30px;left:-10px;background:white;border-radius:1rem;padding:0.7rem 1rem;box-shadow:0 8px 32px rgba(0,0,0,0.12);display:flex;align-items:center;gap:0.6rem;z-index:3;animation-delay:1.6s;">
-          <div style="width:36px;height:36px;background:#f0fdff;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-            </svg>
+        <div class="hero-card fc3" style="position:absolute;top:110px;right:-30px;background:#162544;border-radius:1rem;padding:0.65rem 1rem;box-shadow:0 8px 30px rgba(22,37,68,0.2);display:flex;align-items:center;gap:0.6rem;z-index:5;">
+          <div style="width:32px;height:32px;background:rgba(3,222,243,0.15);border-radius:0.65rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
           <div>
-            <p style="font-size:0.72rem;font-weight:800;color:#162544;margin:0;">No Roaming</p>
-            <p style="font-size:0.65rem;color:#9ca3af;margin:0;">Ever</p>
+            <p style="font-size:0.7rem;font-weight:800;color:#03def3;margin:0;">From $3.50</p>
+            <p style="font-size:0.62rem;color:rgba(255,255,255,0.5);margin:0;">Best value eSIMs</p>
           </div>
         </div>
 
-        <div class="animate-float" style="position:absolute;bottom:30px;right:-15px;background:#162544;border-radius:1rem;padding:0.7rem 1rem;box-shadow:0 8px 32px rgba(22,37,68,0.25);display:flex;align-items:center;gap:0.6rem;z-index:3;animation-delay:2.2s;">
-          <div style="width:36px;height:36px;background:rgba(3,222,243,0.15);border-radius:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2.2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
+        <div class="hero-card fc4" style="position:absolute;bottom:60px;left:-20px;background:white;border-radius:1rem;padding:0.65rem 1rem;box-shadow:0 8px 30px rgba(0,0,0,0.1);display:flex;align-items:center;gap:0.6rem;z-index:5;border:1.5px solid #f0f0f0;">
+          <div style="width:32px;height:32px;background:#f0fdf4;border-radius:0.65rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#22c55e" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
           </div>
           <div>
-            <p style="font-size:0.72rem;font-weight:800;color:#03def3;margin:0;">From $3.50</p>
-            <p style="font-size:0.65rem;color:rgba(255,255,255,0.5);margin:0;">Best prices</p>
+            <p style="font-size:0.7rem;font-weight:800;color:#162544;margin:0;">No Roaming</p>
+            <p style="font-size:0.62rem;color:#9ca3af;margin:0;">Ever again</p>
           </div>
         </div>
 
-        <div class="animate-float" style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);background:white;border-radius:1rem;padding:0.6rem 1rem;box-shadow:0 8px 32px rgba(0,0,0,0.1);display:flex;align-items:center;gap:0.5rem;z-index:3;animation-delay:3s;white-space:nowrap;">
-          <span style="font-size:1rem;">✈️</span>
+        <div class="hero-card fc5" style="position:absolute;bottom:60px;right:-20px;background:white;border-radius:1rem;padding:0.65rem 1rem;box-shadow:0 8px 30px rgba(0,0,0,0.1);display:flex;align-items:center;gap:0.6rem;z-index:5;border:1.5px solid #f0f0f0;">
+          <div style="width:32px;height:32px;background:#fff7ed;border-radius:0.65rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem;">🌍</div>
           <div>
-            <p style="font-size:0.65rem;font-weight:800;color:#162544;margin:0;">Active Travelers</p>
-            <p style="font-size:0.6rem;color:#22c55e;margin:0;font-weight:700;">+247 in last hour</p>
+            <p style="font-size:0.7rem;font-weight:800;color:#162544;margin:0;">195+ Countries</p>
+            <p style="font-size:0.62rem;color:#9ca3af;margin:0;">Full coverage</p>
           </div>
         </div>
       </div>
@@ -273,7 +431,6 @@ const topDestinations = [
 </section>
 
 <script>
-// ── Country autocomplete data ──
 const COUNTRIES: Array<{ name: string; slug: string; flag: string }> = [
   { name: 'Afghanistan', slug: 'afghanistan', flag: '🇦🇫' },
   { name: 'Albania', slug: 'albania', flag: '🇦🇱' },
@@ -372,7 +529,6 @@ const COUNTRIES: Array<{ name: string; slug: string; flag: string }> = [
   { name: 'Venezuela', slug: 'venezuela', flag: '🇻🇪' },
   { name: 'Vietnam', slug: 'vietnam', flag: '🇻🇳' },
   { name: 'Zimbabwe', slug: 'zimbabwe', flag: '🇿🇼' },
-  // Regions
   { name: 'Europe', slug: 'europe', flag: '🌍' },
   { name: 'Asia Pacific', slug: 'asia-pacific', flag: '🌏' },
   { name: 'North America', slug: 'north-america', flag: '🌎' },
@@ -406,12 +562,11 @@ function showDropdown(results: typeof COUNTRIES) {
   `).join('');
   dropdown.classList.add('open');
   input.setAttribute('aria-expanded', 'true');
-
   dropdown.querySelectorAll('.search-option').forEach(opt => {
     opt.addEventListener('mousedown', (e) => {
       e.preventDefault();
       const slug = (opt as HTMLElement).dataset.slug;
-      if (slug) navigate(slug);
+      if (slug) window.location.href = `/${slug}`;
     });
   });
 }
@@ -422,10 +577,6 @@ function hideDropdown() {
   highlighted = -1;
 }
 
-function navigate(slug: string) {
-  window.location.href = `/${slug}`;
-}
-
 function filterCountries(query: string) {
   const q = query.toLowerCase().trim();
   if (!q) return [];
@@ -433,9 +584,8 @@ function filterCountries(query: string) {
 }
 
 input?.addEventListener('input', () => {
-  const val = input.value;
-  if (val.trim().length < 1) { hideDropdown(); return; }
-  showDropdown(filterCountries(val));
+  if (input.value.trim().length < 1) { hideDropdown(); return; }
+  showDropdown(filterCountries(input.value));
 });
 
 input?.addEventListener('keydown', (e) => {
@@ -451,48 +601,55 @@ input?.addEventListener('keydown', (e) => {
   } else if (e.key === 'Enter') {
     e.preventDefault();
     if (highlighted >= 0 && filteredResults[highlighted]) {
-      navigate(filteredResults[highlighted].slug);
+      window.location.href = `/${filteredResults[highlighted].slug}`;
     } else {
       const val = input.value.trim().toLowerCase().replace(/\s+/g, '-');
-      if (val) navigate(val);
+      if (val) window.location.href = `/${val}`;
     }
-  } else if (e.key === 'Escape') {
-    hideDropdown();
-  }
+  } else if (e.key === 'Escape') { hideDropdown(); }
 });
 
 input?.addEventListener('focus', () => {
   if (wrapper) wrapper.style.borderColor = '#03def3';
   if (input.value.trim().length >= 1) showDropdown(filterCountries(input.value));
 });
-
 input?.addEventListener('blur', () => {
   if (wrapper) wrapper.style.borderColor = '#e5e7eb';
   setTimeout(hideDropdown, 150);
 });
-
-searchBtn?.addEventListener('click', (e) => {
+searchBtn?.addEventListener('click', () => {
   const val = input?.value.trim().toLowerCase().replace(/\s+/g, '-');
-  if (val) { e.preventDefault(); navigate(val); }
+  if (val) window.location.href = `/${val}`;
 });
 </script>
 
 <style>
-  @keyframes orbit { from{transform-origin:130px 130px;transform:rotate(0deg) translateX(120px) rotate(0deg)} to{transform-origin:130px 130px;transform:rotate(360deg) translateX(120px) rotate(-360deg)} }
-  .orbit-plane { animation: orbit 8s linear infinite; }
-  @keyframes globe-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-  .animate-globe { animation: globe-float 4s ease-in-out infinite; }
-  @keyframes spin-slow { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
-  .animate-spin-slow { animation: spin-slow 20s linear infinite; }
-  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-  .animate-float { animation: float 3s ease-in-out infinite; }
-  @media (max-width: 768px) {
-    section > div > div:first-child {
-      grid-template-columns: 1fr !important;
-    }
-    section > div > div:first-child > div:last-child {
-      display: none !important;
-    }
-    h1 { font-size: 2.5rem !important; }
+  /* Traveler float animations */
+  @keyframes traveler-float-1 { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-12px) rotate(2deg)} }
+  @keyframes traveler-float-2 { 0%,100%{transform:translateY(0) rotate(1deg)} 50%{transform:translateY(-10px) rotate(-1deg)} }
+  @keyframes traveler-float-3 { 0%,100%{transform:translateY(0) rotate(2deg)} 50%{transform:translateY(-14px) rotate(-2deg)} }
+  @keyframes traveler-float-4 { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-8px) rotate(1deg)} }
+  @keyframes phone-float { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-8px) scale(1.01)} }
+  @keyframes card-float-1 { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-5px)} }
+  @keyframes card-float-2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+  @keyframes ring-spin { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+
+  .traveler.t1 { animation: traveler-float-1 4.5s ease-in-out infinite; }
+  .traveler.t2 { animation: traveler-float-2 5s ease-in-out infinite 0.6s; }
+  .traveler.t3 { animation: traveler-float-3 4.2s ease-in-out infinite 1.2s; }
+  .traveler.t4 { animation: traveler-float-4 4.8s ease-in-out infinite 0.3s; }
+  .hero-phone { animation: phone-float 3.5s ease-in-out infinite; }
+  .hero-ring { animation: ring-spin 25s linear infinite; }
+  .hero-ring-2 { animation: ring-spin 18s linear infinite reverse; }
+  .fc1 { animation: card-float-1 3s ease-in-out infinite; }
+  .fc2 { animation: card-float-2 3.8s ease-in-out infinite 0.5s; }
+  .fc3 { animation: card-float-2 3.2s ease-in-out infinite 1s; }
+  .fc4 { animation: card-float-2 4.1s ease-in-out infinite 1.5s; }
+  .fc5 { animation: card-float-2 3.6s ease-in-out infinite 0.8s; }
+
+  @media (max-width: 900px) {
+    #heroGrid { grid-template-columns: 1fr !important; }
+    #heroVisual { display: none !important; }
+    h1 { font-size: 2.6rem !important; letter-spacing: -1px !important; }
   }
 </style>

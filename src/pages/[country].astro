@@ -159,6 +159,42 @@ const minPrice = plans.length > 0 ? Math.min(...plans.map((p:any) => parseFloat(
 const isRegion = ['EUR','ASIA','NAM','LAM','MDE','CAR','CAU','GLOBAL'].includes(iso3);
 const coveredCountries = regionCountries[iso3] ?? [];
 
+// For regional plans: detect coverage tier from plan data
+function getPlanCoverageCount(plan: any): number {
+  if (Array.isArray(plan.countries)) return plan.countries.length;
+  if (typeof plan.countries_count === 'number') return plan.countries_count;
+  if (typeof plan.country_count === 'number') return plan.country_count;
+  // Try to extract from name e.g. "Asia 7 Countries" or "7 Countries"
+  const nameMatch = String(plan.name ?? plan.title ?? '').match(/(\d+)\s*countr/i);
+  if (nameMatch) return parseInt(nameMatch[1]);
+  return 0;
+}
+
+// Group regional plans by coverage tier
+type PlanGroup = { count: number; label: string; plans: any[] };
+const planGroups: PlanGroup[] = [];
+if (isRegion) {
+  const grouped = new Map<number, any[]>();
+  for (const p of plans) {
+    const cnt = getPlanCoverageCount(p);
+    if (!grouped.has(cnt)) grouped.set(cnt, []);
+    grouped.get(cnt)!.push(p);
+  }
+  // Sort groups: 0 (unknown) last, others ascending
+  const sorted = [...grouped.entries()].sort((a, b) => {
+    if (a[0] === 0) return 1;
+    if (b[0] === 0) return -1;
+    return a[0] - b[0];
+  });
+  for (const [count, groupPlans] of sorted) {
+    let label = count > 0 ? `${count} Countries` : countryName;
+    planGroups.push({ count, label, plans: groupPlans });
+  }
+}
+
+// Tier color map for regional plans
+const tierColors = ['#03def3', '#FF5F00', '#42BFCA', '#6366f1'];
+
 const faqs = [
   {
     q: `How does ${countryName} eSIM work?`,
@@ -281,6 +317,92 @@ const faqs = [
         <h3 style="font-size:1.1rem;font-weight:700;color:#162544;margin:0 0 0.5rem;">Plans coming soon</h3>
         <p style="color:#9ca3af;font-size:0.875rem;margin:0 0 1.5rem;">No plans are available for this destination right now.</p>
         <a href="/" class="btn-primary">Browse Other Destinations →</a>
+      </div>
+    ) : isRegion && planGroups.length > 1 ? (
+      <!-- Regional grouped display -->
+      <div style="display:flex;flex-direction:column;gap:2.5rem;" id="plansGrid">
+        {planGroups.map((group, gi) => (
+          <div>
+            <!-- Tier header -->
+            <div style={`display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;padding:1rem 1.25rem;background:white;border-radius:1rem;border-left:4px solid ${tierColors[gi % tierColors.length]};box-shadow:0 1px 4px rgba(0,0,0,0.06);`}>
+              <div style={`width:40px;height:40px;border-radius:0.75rem;background:${tierColors[gi % tierColors.length]}20;display:flex;align-items:center;justify-content:center;flex-shrink:0;`}>
+                <span style="font-size:1.2rem;">{gi === 0 ? '🌏' : gi === 1 ? '🌍' : '🌐'}</span>
+              </div>
+              <div style="flex:1;">
+                <h3 style={`font-size:1rem;font-weight:800;color:#162544;margin:0 0 0.1rem;`}>
+                  {group.count > 0 ? `${group.label} Coverage` : `${countryName} Plans`}
+                </h3>
+                <p style="font-size:0.78rem;color:#9ca3af;margin:0;">
+                  {group.count > 0
+                    ? `Works in ${group.count} countries across the region`
+                    : `All ${countryName} plans`}
+                  &nbsp;·&nbsp;{group.plans.length} plan{group.plans.length > 1 ? 's' : ''} available
+                </p>
+              </div>
+              {group.count > 0 && (
+                <span style={`font-size:0.72rem;font-weight:700;padding:0.25rem 0.65rem;border-radius:9999px;background:${tierColors[gi % tierColors.length]}15;color:${tierColors[gi % tierColors.length]};border:1px solid ${tierColors[gi % tierColors.length]}40;`}>
+                  {group.count} Countries
+                </span>
+              )}
+            </div>
+            <!-- Plans in this tier -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;">
+              {group.plans.map((plan: any) => (
+                <div class="plan-card"
+                     style={`background:white;border-radius:1.25rem;border:${plan._bestValue?`2px solid ${tierColors[gi % tierColors.length]}`:'1.5px solid #f3f4f6'};padding:1.5rem;position:relative;transition:all 0.25s;box-shadow:${plan._bestValue?`0 4px 20px ${tierColors[gi % tierColors.length]}25`:'0 1px 4px rgba(0,0,0,0.06)'};`}
+                     data-quota={plan.quota} data-price={plan.price_usd} data-days={plan.valadity}>
+                  {plan._bestValue && (
+                    <div style={`position:absolute;top:-1px;right:1rem;background:${tierColors[gi % tierColors.length]};color:${gi===0?'#162544':'white'};font-size:0.65rem;font-weight:800;padding:0.25rem 0.6rem;border-radius:0 0 0.5rem 0.5rem;text-transform:uppercase;letter-spacing:0.05em;`}>
+                      Best Value
+                    </div>
+                  )}
+                  {plan.discount_percentage > 0 && (
+                    <div style="position:absolute;top:1rem;left:1rem;background:#fef3c7;color:#d97706;font-size:0.65rem;font-weight:700;padding:0.2rem 0.5rem;border-radius:9999px;">
+                      -{plan.discount_percentage}% OFF
+                    </div>
+                  )}
+                  <div style={`text-align:center;padding:1.5rem 0 1rem;margin-bottom:1rem;border-bottom:1px solid #f3f4f6;${plan.discount_percentage>0?'padding-top:2rem;':''}`}>
+                    <p style="font-size:3rem;font-weight:900;color:#162544;margin:0;line-height:1;">{plan.quota}<span style="font-size:1.25rem;color:#6b7280;font-weight:600;">GB</span></p>
+                    <p style="color:#9ca3af;font-size:0.8rem;margin:0.3rem 0 0;">{plan.valadity} days validity</p>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.25rem;">
+                    {[
+                      { icon:'📶', label:'Network',  val: plan.network ?? '—' },
+                      { icon:'⚡', label:'Speed',    val: plan.speed ?? '4G LTE/5G' },
+                      { icon:'🔄', label:'Type',     val: 'Data Only' },
+                      { icon:'🌍', label:'Coverage', val: group.count > 0 ? `${group.count} Countries` : `${countryName} Region` },
+                    ].map(row => (
+                      <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:0.78rem;color:#9ca3af;display:flex;align-items:center;gap:0.3rem;">{row.icon} {row.label}</span>
+                        <span style="font-size:0.78rem;font-weight:600;color:#374151;text-align:right;max-width:55%;">{row.val}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;">
+                    <div>
+                      <p style="font-size:1.6rem;font-weight:900;color:#162544;margin:0;line-height:1;">${plan.price_usd}</p>
+                      {plan.price_regular > plan.price_usd && (
+                        <p style="font-size:0.75rem;color:#9ca3af;margin:0.1rem 0 0;text-decoration:line-through;">${plan.price_regular}</p>
+                      )}
+                    </div>
+                    <button class="add-to-cart btn-primary" style="font-size:0.82rem;padding:0.6rem 1rem;flex-shrink:0;"
+                      data-plan={JSON.stringify({
+                        id: plan.id, system_id: plan.system_id,
+                        name: plan.name ?? countryName + ' eSIM',
+                        country: plan.country ?? countryName,
+                        flag: plan.flag ?? flagUrl,
+                        quota: plan.quota, valadity: plan.valadity,
+                        price_usd: plan.price_usd, price: plan.price_usd,
+                        quantity: 1,
+                      })}>
+                      Buy Now
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     ) : (
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;" id="plansGrid">
