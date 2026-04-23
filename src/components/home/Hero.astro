@@ -152,6 +152,12 @@ const topDestinations = [
             <path d="M238 145 Q225 140 210 148 Q204 152 198 168 L205 172 Q212 158 216 154 Q228 148 240 152 Z"
                   fill="#162544" opacity="0.85"/>
 
+            <!-- Airplane orbiting (animated by CSS) -->
+            <g class="orbit-plane">
+              <path d="M100 40 L108 36 L112 40 L108 44 Z" fill="#03def3" opacity="0.9"/>
+              <path d="M104 40 L108 36 L108 44 Z" fill="white" opacity="0.4"/>
+            </g>
+
             <!-- Phone in left hand -->
             <rect x="34" y="160" width="30" height="52" rx="5" fill="#0f172a"/>
             <rect x="37" y="165" width="24" height="40" rx="3" fill="#1e293b"/>
@@ -232,6 +238,14 @@ const topDestinations = [
           <div>
             <p style="font-size:0.72rem;font-weight:800;color:#03def3;margin:0;">From $3.50</p>
             <p style="font-size:0.65rem;color:rgba(255,255,255,0.5);margin:0;">Best prices</p>
+          </div>
+        </div>
+
+        <div class="animate-float" style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);background:white;border-radius:1rem;padding:0.6rem 1rem;box-shadow:0 8px 32px rgba(0,0,0,0.1);display:flex;align-items:center;gap:0.5rem;z-index:3;animation-delay:3s;white-space:nowrap;">
+          <span style="font-size:1rem;">✈️</span>
+          <div>
+            <p style="font-size:0.65rem;font-weight:800;color:#162544;margin:0;">Active Travelers</p>
+            <p style="font-size:0.6rem;color:#22c55e;margin:0;font-weight:700;">+247 in last hour</p>
           </div>
         </div>
       </div>
@@ -464,6 +478,14 @@ searchBtn?.addEventListener('click', (e) => {
 </script>
 
 <style>
+  @keyframes orbit { from{transform-origin:130px 130px;transform:rotate(0deg) translateX(120px) rotate(0deg)} to{transform-origin:130px 130px;transform:rotate(360deg) translateX(120px) rotate(-360deg)} }
+  .orbit-plane { animation: orbit 8s linear infinite; }
+  @keyframes globe-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .animate-globe { animation: globe-float 4s ease-in-out infinite; }
+  @keyframes spin-slow { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+  .animate-spin-slow { animation: spin-slow 20s linear infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .animate-float { animation: float 3s ease-in-out infinite; }
   @media (max-width: 768px) {
     section > div > div:first-child {
       grid-template-columns: 1fr !important;

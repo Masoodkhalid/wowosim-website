@@ -45,6 +45,10 @@ const statusMap: Record<string, { label: string; color: string; bg: string; dot:
 
 const status = statusMap[esim.state ?? 'UNKNOWN'] ?? { label: esim.state ?? '—', color: '#374151', bg: '#f3f4f6', dot: '#9ca3af' };
 
+const qrUrl = esim.qr_code_url ?? esim.qrcode ?? esim.qr_code ?? esim.lpa_code ?? null;
+const manualCode = esim.manual_code ?? esim.activation_code ?? esim.lpa ?? esim.sm_dp_address ?? null;
+const manualPin = esim.confirmation_code ?? esim.matching_id ?? null;
+
 const plans = esim.plans ?? esim.bundles ?? esim.packages ?? [];
 const countryName = esim.country ?? esim.name ?? esim.country_name ?? 'eSIM Plan';
 const network = esim.network ?? esim.carrier ?? null;
@@ -264,6 +268,56 @@ function fmtBytes(b: number): string {
             </div>
           </div>
 
+          <!-- Installation Guide -->
+          <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:2rem;" id="installGuide">
+            <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">📲 How to Install This eSIM</h3>
+
+            <!-- OS Tabs -->
+            <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;">
+              <button class="os-tab active" data-os="ios" style="flex:1;padding:0.6rem;border-radius:0.625rem;font-size:0.8rem;font-weight:700;cursor:pointer;border:1.5px solid #162544;background:#162544;color:white;transition:all 0.2s;">🍎 iPhone (iOS)</button>
+              <button class="os-tab" data-os="android" style="flex:1;padding:0.6rem;border-radius:0.625rem;font-size:0.8rem;font-weight:700;cursor:pointer;border:1.5px solid #e5e7eb;background:white;color:#6b7280;transition:all 0.2s;">🤖 Android</button>
+            </div>
+
+            <!-- iOS steps -->
+            <div id="steps-ios" class="os-steps">
+              {['Open Settings → Cellular (or Mobile Data)', 'Tap "Add eSIM" or "Add Cellular Plan"', 'Tap "Use QR Code" and scan the QR code above', 'Name the plan (e.g. "WoWo SIM Travel")', 'Set as Secondary line, keep Primary for calls/SMS', 'Go to Cellular Data → select WoWo SIM line', 'Enable "Data Roaming" for this line', 'You\'re connected! ✅'].map((step, i) => (
+                <div style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.875rem;">
+                  <span style="width:24px;height:24px;background:linear-gradient(135deg,#162544,#1e3a6e);border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:900;color:white;flex-shrink:0;margin-top:0.05rem;">{i+1}</span>
+                  <p style="font-size:0.82rem;color:#374151;margin:0;line-height:1.5;">{step}</p>
+                </div>
+              ))}
+            </div>
+
+            <!-- Android steps -->
+            <div id="steps-android" class="os-steps" style="display:none;">
+              {['Open Settings → Connections (or Network & Internet)', 'Tap "SIM Manager" or "Mobile Networks"', 'Tap "Add eSIM" or "+" icon', 'Choose "Scan QR Code" and scan the code above', 'Accept the downloaded eSIM profile', 'Set WoWo SIM as your Mobile Data SIM', 'Enable "Data Roaming" in Mobile Network settings', 'You\'re connected! ✅'].map((step, i) => (
+                <div style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.875rem;">
+                  <span style="width:24px;height:24px;background:linear-gradient(135deg,#162544,#1e3a6e);border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:900;color:white;flex-shrink:0;margin-top:0.05rem;">{i+1}</span>
+                  <p style="font-size:0.82rem;color:#374151;margin:0;line-height:1.5;">{step}</p>
+                </div>
+              ))}
+            </div>
+
+            <!-- Manual install fallback (shown when manualCode exists) -->
+            {manualCode && (
+              <div style="margin-top:1.25rem;padding:1.25rem;background:#f0fdff;border:1.5px solid #c7f5fc;border-radius:1rem;">
+                <p style="font-size:0.75rem;font-weight:700;color:#162544;margin:0 0 0.75rem;">📋 Manual Installation (if QR scan fails)</p>
+                <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                  <div>
+                    <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.2rem;">SM-DP+ Address / Activation Code</p>
+                    <code style="font-size:0.75rem;color:#162544;background:white;padding:0.4rem 0.75rem;border-radius:0.5rem;display:block;word-break:break-all;border:1px solid #e5e7eb;">{manualCode}</code>
+                  </div>
+                  {manualPin && (
+                    <div>
+                      <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.2rem;">Confirmation Code</p>
+                      <code style="font-size:0.75rem;color:#162544;background:white;padding:0.4rem 0.75rem;border-radius:0.5rem;display:block;border:1px solid #e5e7eb;">{manualPin}</code>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
         </div>
 
         <!-- Right Column -->
@@ -273,9 +327,9 @@ function fmtBytes(b: number): string {
           <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:1.75rem;text-align:center;">
             <h3 style="font-size:0.95rem;font-weight:800;color:#162544;margin:0 0 0.4rem;">Installation QR Code</h3>
             <p style="font-size:0.75rem;color:#9ca3af;margin:0 0 1.25rem;line-height:1.4;">Scan this code on your device to install or reinstall your eSIM</p>
-            {esim.qr_code_url ? (
+            {qrUrl ? (
               <div style="background:#f8fafc;border:1.5px solid #f0f0f0;border-radius:1rem;padding:1rem;display:inline-block;margin-bottom:1rem;">
-                <img src={esim.qr_code_url} alt="eSIM QR Code" style="width:160px;height:160px;display:block;" />
+                <img src={qrUrl} alt="eSIM QR Code" style="width:160px;height:160px;display:block;" />
               </div>
             ) : (
               <div style="background:#f8fafc;border:1.5px dashed #e5e7eb;border-radius:1rem;padding:2rem;display:flex;flex-direction:column;align-items:center;gap:0.75rem;margin-bottom:1rem;">
@@ -286,10 +340,10 @@ function fmtBytes(b: number): string {
               </div>
             )}
             <p style="font-size:0.72rem;color:#9ca3af;margin:0 0 1rem;line-height:1.5;">📧 QR code also sent to your email. Cannot scan? Use manual install code below.</p>
-            {esim.manual_code && (
+            {manualCode && (
               <div style="background:#f0fdff;border:1px solid #c7f5fc;border-radius:0.75rem;padding:0.75rem;text-align:left;">
                 <p style="font-size:0.68rem;font-weight:600;color:#0369a1;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.3rem;">Manual Install Code</p>
-                <p style="font-family:monospace;font-size:0.78rem;color:#162544;margin:0;word-break:break-all;">{esim.manual_code}</p>
+                <p style="font-family:monospace;font-size:0.78rem;color:#162544;margin:0;word-break:break-all;">{manualCode}</p>
               </div>
             )}
           </div>
@@ -350,6 +404,22 @@ function fmtBytes(b: number): string {
       if (lbl) { lbl.textContent = 'COPIED!'; lbl.style.color = '#03def3'; }
       setTimeout(() => { if (lbl) { lbl.textContent = 'COPY'; lbl.style.color = 'rgba(255,255,255,0.6)'; }}, 2000);
     } catch {}
+  });
+
+  // OS Tabs
+  document.querySelectorAll('.os-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const os = (btn as HTMLElement).dataset.os;
+      document.querySelectorAll('.os-tab').forEach((b: any) => {
+        b.style.background = 'white'; b.style.color = '#6b7280'; b.style.borderColor = '#e5e7eb';
+      });
+      (btn as HTMLElement).style.background = '#162544';
+      (btn as HTMLElement).style.color = 'white';
+      (btn as HTMLElement).style.borderColor = '#162544';
+      document.querySelectorAll('.os-steps').forEach((s: any) => s.style.display = 'none');
+      const panel = document.getElementById(`steps-${os}`);
+      if (panel) panel.style.display = 'block';
+    });
   });
 </script>
 

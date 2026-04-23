@@ -124,17 +124,30 @@ let plans: any[] = [];
 let flagUrl = '';
 let networkName = '';
 
-try {
-  const res = await portalFetch(`/plans?q[iso3_eq]=${iso3}`);
-  if (res.ok) {
-    const d = await res.json();
-    plans = (d.plans ?? []).filter((p: any) => p.is_active !== false);
-    if (plans.length > 0) {
-      flagUrl = plans[0].flag ?? '';
-      networkName = plans[0].network ?? '';
+const apiAttempts = [
+  `/plans?q[iso3_eq]=${iso3}`,
+  `/plans?q[iso3_eq]=${iso3.toLowerCase()}`,
+  `/plans?iso3=${iso3}`,
+  `/plans?region=${iso3.toLowerCase()}`,
+];
+
+for (const endpoint of apiAttempts) {
+  try {
+    const res = await portalFetch(endpoint);
+    if (res.ok) {
+      const d = await res.json();
+      const found = (d.plans ?? d.data ?? d ?? []);
+      if (Array.isArray(found) && found.length > 0) {
+        plans = found.filter((p: any) => p.is_active !== false);
+        if (plans.length > 0) {
+          flagUrl = plans[0].flag ?? '';
+          networkName = plans[0].network ?? '';
+          break;
+        }
+      }
     }
-  }
-} catch {}
+  } catch {}
+}
 
 if (plans.length > 0) {
   const bestIdx = plans.reduce((best, p, i) =>

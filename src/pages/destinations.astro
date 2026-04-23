@@ -125,76 +125,171 @@ const countries = [
 ];
 
 const regions = [
-  { name:'Europe',        slug:'europe',        flag:'🌍', count:'30+' },
-  { name:'Asia Pacific',  slug:'asia-pacific',  flag:'🌏', count:'20+' },
-  { name:'North America', slug:'north-america', flag:'🌎', count:'3' },
-  { name:'Latin America', slug:'latin-america', flag:'🌎', count:'15+' },
-  { name:'Middle East',   slug:'middle-east',   flag:'🌍', count:'10+' },
-  { name:'Caribbean',     slug:'caribbean',     flag:'🏖️',  count:'20+' },
-  { name:'Caucasus',      slug:'caucasus-region', flag:'🏔️', count:'3' },
-  { name:'Global',        slug:'global',        flag:'🌐', count:'195+' },
+  { name:'Europe', slug:'europe', flag:'🌍', count:'30+', color:'#3b82f6', bg:'#eff6ff', from:'4.50', desc:'France, Germany, Italy + 27 more' },
+  { name:'Asia Pacific', slug:'asia-pacific', flag:'🌏', count:'20+', color:'#10b981', bg:'#ecfdf5', from:'5.00', desc:'Japan, Australia, Thailand + 17 more' },
+  { name:'North America', slug:'north-america', flag:'🌎', count:'3', color:'#f59e0b', bg:'#fffbeb', from:'6.00', desc:'USA, Canada & Mexico' },
+  { name:'Latin America', slug:'latin-america', flag:'🌎', count:'15+', color:'#ef4444', bg:'#fef2f2', from:'7.00', desc:'Brazil, Argentina + 13 more' },
+  { name:'Middle East', slug:'middle-east', flag:'🌍', count:'10+', color:'#8b5cf6', bg:'#f5f3ff', from:'6.50', desc:'UAE, Saudi Arabia, Qatar + 8 more' },
+  { name:'Caribbean', slug:'caribbean', flag:'🏖️', count:'20+', color:'#06b6d4', bg:'#ecfeff', from:'7.00', desc:'Bahamas, Jamaica + 18 more' },
+  { name:'Caucasus', slug:'caucasus-region', flag:'🏔️', count:'3', color:'#84cc16', bg:'#f7fee7', from:'5.00', desc:'Georgia, Armenia, Azerbaijan' },
+  { name:'Global', slug:'global', flag:'🌐', count:'195+', color:'#162544', bg:'#f0fdff', from:'14.00', desc:'195+ countries worldwide' },
 ];
 
 const allRegions = [...new Set(countries.map(c => c.region))].sort();
 ---
 
-<Base title="All eSIM Destinations — 195+ Countries | WoWo SIM" description="Browse WoWo SIM eSIM plans for 195+ countries and 8 regional plans. Find your destination and compare data plans.">
+<Base title="All eSIM Destinations — 195+ Countries | WoWo SIM" description="Browse WoWo SIM eSIM plans for 195+ countries. Local and regional plans. Find your destination.">
 
-  <!-- Hero -->
-  <section style="background:linear-gradient(135deg,#162544,#0d1b36);padding:4rem 2rem;text-align:center;">
-    <div style="max-width:600px;margin:0 auto;">
-      <span style="color:#03def3;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.75rem;">Destinations</span>
-      <h1 style="font-size:2.5rem;font-weight:900;color:white;margin:0 0 0.75rem;letter-spacing:-0.5px;">195+ Countries. One Account.</h1>
-      <p style="color:#9ca3af;font-size:0.95rem;margin:0 0 1.5rem;">Instant eSIM data for wherever your travels take you. Buy before you fly.</p>
+  <!-- HERO -->
+  <section style="background:linear-gradient(135deg,#0f1f3d 0%,#162544 50%,#1a2d50 100%);padding:5rem 2rem 4rem;position:relative;overflow:hidden;min-height:420px;display:flex;align-items:center;">
+
+    <!-- Dot grid background -->
+    <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(3,222,243,0.08) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;"></div>
+
+    <!-- Glowing orbs -->
+    <div style="position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(3,222,243,0.1),transparent 70%);border-radius:50%;"></div>
+    <div style="position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(255,95,0,0.06),transparent 70%);border-radius:50%;"></div>
+
+    <!-- Floating flags -->
+    <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;" aria-hidden="true">
+      <span class="ff" style="position:absolute;font-size:2rem;top:10%;left:8%;animation:ff1 8s ease-in-out infinite;opacity:0.25;">🇫🇷</span>
+      <span class="ff" style="position:absolute;font-size:1.5rem;top:20%;right:12%;animation:ff2 10s ease-in-out infinite;opacity:0.2;">🇯🇵</span>
+      <span class="ff" style="position:absolute;font-size:1.75rem;top:60%;left:5%;animation:ff3 7s ease-in-out infinite;opacity:0.2;">🇺🇸</span>
+      <span class="ff" style="position:absolute;font-size:2.25rem;top:70%;right:8%;animation:ff1 9s ease-in-out infinite reverse;opacity:0.2;">🇬🇧</span>
+      <span class="ff" style="position:absolute;font-size:1.5rem;top:35%;left:15%;animation:ff2 6s ease-in-out infinite;opacity:0.18;">🇦🇺</span>
+      <span class="ff" style="position:absolute;font-size:1.25rem;top:15%;left:45%;animation:ff3 11s ease-in-out infinite;opacity:0.15;">🇮🇳</span>
+      <span class="ff" style="position:absolute;font-size:2rem;top:80%;left:35%;animation:ff1 8s ease-in-out infinite;opacity:0.18;">🇧🇷</span>
+      <span class="ff" style="position:absolute;font-size:1.5rem;top:45%;right:20%;animation:ff2 9s ease-in-out infinite;opacity:0.2;">🇩🇪</span>
+      <span class="ff" style="position:absolute;font-size:1.75rem;top:25%;right:35%;animation:ff3 7s ease-in-out infinite;opacity:0.15;">🇮🇹</span>
+      <span class="ff" style="position:absolute;font-size:1.25rem;top:55%;left:25%;animation:ff1 12s ease-in-out infinite;opacity:0.17;">🇰🇷</span>
+      <span class="ff" style="position:absolute;font-size:2rem;top:5%;right:25%;animation:ff2 8s ease-in-out infinite;opacity:0.15;">🇸🇬</span>
+      <span class="ff" style="position:absolute;font-size:1.5rem;top:88%;right:30%;animation:ff3 10s ease-in-out infinite;opacity:0.2;">🇦🇪</span>
+    </div>
+
+    <div style="max-width:680px;margin:0 auto;text-align:center;position:relative;z-index:2;width:100%;">
+      <span style="display:inline-block;background:rgba(3,222,243,0.15);border:1px solid rgba(3,222,243,0.3);color:#03def3;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;padding:0.35rem 1rem;border-radius:9999px;margin-bottom:1.5rem;">✈️ 195+ Destinations Available</span>
+
+      <h1 style="font-size:3.25rem;font-weight:900;color:white;margin:0 0 1rem;line-height:1.1;letter-spacing:-1.5px;">
+        Where Are You<br/>
+        <span style="background:linear-gradient(90deg,#03def3,#42BFCA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Travelling Next?</span>
+      </h1>
+
+      <p style="color:rgba(255,255,255,0.65);font-size:1rem;margin:0 0 2.5rem;line-height:1.6;">Instant eSIM data for every destination. Buy before you fly — no physical SIM needed.</p>
+
       <!-- Search -->
-      <div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:0.875rem;padding:0.5rem 1rem;display:flex;align-items:center;gap:0.5rem;max-width:400px;margin:0 auto;">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.2-5.2m0 0A7.5 7.5 0 105.2 15.8 7.5 7.5 0 0015.8 15.8z"/></svg>
-        <input id="destSearch" type="text" placeholder="Search destinations..." autocomplete="off"
-          style="flex:1;background:none;border:none;outline:none;color:white;font-size:0.875rem;font-family:inherit;" />
+      <div style="position:relative;max-width:520px;margin:0 auto;">
+        <div style="background:white;border-radius:1rem;padding:0.4rem 0.4rem 0.4rem 1.1rem;display:flex;align-items:center;gap:0.75rem;box-shadow:0 16px 48px rgba(0,0,0,0.3);">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2.2" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.2-5.2m0 0A7.5 7.5 0 105.2 15.8 7.5 7.5 0 0015.8 15.8z"/></svg>
+          <input id="destSearch" type="text" placeholder="Search any country, region, or city..." autocomplete="off"
+            style="flex:1;background:none;border:none;outline:none;color:#162544;font-size:0.9rem;font-family:inherit;min-width:0;" />
+          <button onclick="filterCards()" style="background:linear-gradient(135deg,#162544,#1e3a6e);color:white;font-weight:700;padding:0.65rem 1.5rem;border-radius:0.75rem;border:none;cursor:pointer;font-size:0.85rem;white-space:nowrap;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Search</button>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Regional Plans -->
-  <section style="padding:3rem 2rem;background:white;border-bottom:1px solid #f3f4f6;">
+  <!-- Stats Bar -->
+  <section style="background:white;border-bottom:1px solid #f3f4f6;padding:0;">
+    <div style="max-width:80rem;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);">
+      {[
+        { icon:'🌍', value:'195+', label:'Countries' },
+        { icon:'🗺️', value:'8', label:'Regional Plans' },
+        { icon:'💰', value:'$3.50', label:'Plans from' },
+        { icon:'⚡', value:'<2 min', label:'Instant Setup' },
+      ].map((s, i) => (
+        <div style={`padding:1.25rem 2rem;text-align:center;${i > 0 ? 'border-left:1px solid #f3f4f6;' : ''}`}>
+          <div style="font-size:1.4rem;margin-bottom:0.25rem;">{s.icon}</div>
+          <div style="font-size:1.35rem;font-weight:900;color:#162544;line-height:1;">{s.value}</div>
+          <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.15rem;font-weight:500;">{s.label}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Regional Plans Section -->
+  <section style="padding:4rem 2rem;background:#f9fafb;">
     <div style="max-width:80rem;margin:0 auto;">
-      <h2 style="font-size:1.25rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">Regional Plans</h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;">
+
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <span style="color:#03def3;font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.4rem;">Multi-Country Coverage</span>
+          <h2 style="font-size:2rem;font-weight:900;color:#162544;margin:0;letter-spacing:-0.5px;">Regional eSIM Plans</h2>
+          <p style="color:#6b7280;font-size:0.875rem;margin:0.4rem 0 0;">One plan, multiple countries. No SIM swapping.</p>
+        </div>
+        <a href="/europe" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;font-weight:700;color:#162544;text-decoration:none;border:1.5px solid #e5e7eb;padding:0.6rem 1.25rem;border-radius:9999px;transition:all 0.2s;" onmouseover="this.style.borderColor='#03def3';this.style.color='#03def3'" onmouseout="this.style.borderColor='#e5e7eb';this.style.color='#162544'">Most popular: Europe →</a>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;" id="regionsGrid">
         {regions.map(r => (
           <a href={`/${r.slug}`}
-             style="background:linear-gradient(135deg,#f0fdff,#e8f8ff);border:1.5px solid #e0f4ff;border-radius:1.25rem;padding:1.25rem;text-decoration:none;transition:all 0.2s;"
-             onmouseover="this.style.borderColor='#03def3';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 20px rgba(3,222,243,0.15)'" onmouseout="this.style.borderColor='#e0f4ff';this.style.transform='';this.style.boxShadow=''">
-            <span style="font-size:2rem;display:block;margin-bottom:0.5rem;">{r.flag}</span>
-            <p style="font-size:0.9rem;font-weight:700;color:#162544;margin:0;">{r.name}</p>
-            <p style="font-size:0.72rem;color:#0ea5e9;margin:0.15rem 0 0;font-weight:600;">{r.count} countries</p>
+             style={`background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;overflow:hidden;text-decoration:none;transition:all 0.25s;display:flex;flex-direction:column;box-shadow:0 1px 4px rgba(0,0,0,0.05);`}
+             onmouseover={`this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(0,0,0,0.12)';this.style.borderColor='${r.color}'`}
+             onmouseout="this.style.transform='';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)';this.style.borderColor='#f0f0f0'">
+
+            <!-- Color header strip -->
+            <div style={`background:${r.bg};padding:1.5rem;text-align:center;border-bottom:1px solid rgba(0,0,0,0.05);`}>
+              <span style="font-size:2.75rem;display:block;margin-bottom:0.5rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1));">{r.flag}</span>
+              <h3 style={`font-size:1rem;font-weight:800;color:${r.color};margin:0;`}>{r.name}</h3>
+              <span style={`display:inline-block;margin-top:0.3rem;background:${r.color};color:white;font-size:0.65rem;font-weight:700;padding:0.15rem 0.55rem;border-radius:9999px;`}>{r.count} countries</span>
+            </div>
+
+            <!-- Card body -->
+            <div style="padding:1.25rem;flex:1;display:flex;flex-direction:column;gap:0.75rem;">
+              <p style="font-size:0.775rem;color:#6b7280;margin:0;line-height:1.4;">{r.desc}</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;">
+                <div>
+                  <span style="font-size:0.65rem;color:#9ca3af;font-weight:600;">FROM</span>
+                  <span style="font-size:1.1rem;font-weight:900;color:#162544;margin-left:0.3rem;">${r.from}</span>
+                </div>
+                <span style={`font-size:0.75rem;font-weight:700;color:${r.color};display:flex;align-items:center;gap:0.2rem;`}>View Plans →</span>
+              </div>
+            </div>
           </a>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- All Countries -->
-  <section style="padding:3rem 2rem;background:#f9fafb;">
+  <!-- All Countries Section -->
+  <section style="padding:4rem 2rem 5rem;background:white;" id="allCountries">
     <div style="max-width:80rem;margin:0 auto;">
-      <!-- Region filter -->
-      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.75rem;align-items:center;">
-        <button class="region-filter active" data-region="All" style="padding:0.35rem 0.9rem;border-radius:9999px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1.5px solid #03def3;background:#03def3;color:#162544;transition:all 0.2s;">All</button>
+
+      <div style="text-align:center;margin-bottom:2.5rem;">
+        <span style="color:#03def3;font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.4rem;">Single Country</span>
+        <h2 style="font-size:2rem;font-weight:900;color:#162544;margin:0;letter-spacing:-0.5px;">All Destinations</h2>
+        <p style="color:#6b7280;font-size:0.875rem;margin:0.4rem 0 0;">Browse <span id="countryCount">{countries.length}</span> countries — click any to see plans</p>
+      </div>
+
+      <!-- Region filter pills -->
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;justify-content:center;margin-bottom:2rem;" id="regionFilters">
+        <button class="rf active" data-r="All"
+          style="padding:0.45rem 1.1rem;border-radius:9999px;font-size:0.8rem;font-weight:700;cursor:pointer;border:1.5px solid #162544;background:#162544;color:white;transition:all 0.2s;">
+          🌐 All
+        </button>
         {allRegions.map(r => (
-          <button class="region-filter" data-region={r} style="padding:0.35rem 0.9rem;border-radius:9999px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1.5px solid #e5e7eb;background:white;color:#6b7280;transition:all 0.2s;">{r}</button>
+          <button class="rf" data-r={r}
+            style="padding:0.45rem 1.1rem;border-radius:9999px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1.5px solid #e5e7eb;background:white;color:#6b7280;transition:all 0.2s;">
+            {r}
+          </button>
         ))}
       </div>
 
-      <div id="countriesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.875rem;">
-        {countries.map(c => (
+      <!-- Countries Grid -->
+      <div id="countriesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.875rem;">
+        {countries.map((c, i) => (
           <a href={`/${c.slug}`} data-region={c.region}
-             style="background:white;border:1.5px solid #f0f0f0;border-radius:1rem;padding:1rem;text-decoration:none;display:flex;align-items:center;gap:0.6rem;transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.04);"
-             onmouseover="this.style.borderColor='#03def3';this.style.background='#f0fdff';this.style.boxShadow='0 4px 12px rgba(3,222,243,0.12)'" onmouseout="this.style.borderColor='#f0f0f0';this.style.background='white';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.04)'">
-            <span style="font-size:1.4rem;flex-shrink:0;">{c.flag}</span>
-            <span style="font-size:0.8rem;font-weight:600;color:#162544;line-height:1.3;">{c.name}</span>
+             style={`background:white;border:1.5px solid #f0f0f0;border-radius:1.1rem;padding:1.1rem 0.75rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:0.5rem;transition:all 0.22s;box-shadow:0 1px 3px rgba(0,0,0,0.04);text-align:center;animation:fadeIn 0.3s ${i*0.01}s both;`}
+             onmouseover="this.style.borderColor='#03def3';this.style.background='#f0fdff';this.style.boxShadow='0 6px 20px rgba(3,222,243,0.15)';this.style.transform='translateY(-2px)';this.querySelector('.see-plans').style.opacity='1'" onmouseout="this.style.borderColor='#f0f0f0';this.style.background='white';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.04)';this.style.transform='';this.querySelector('.see-plans').style.opacity='0'">
+            <span style="font-size:2rem;line-height:1;">{c.flag}</span>
+            <span style="font-size:0.78rem;font-weight:700;color:#162544;line-height:1.3;">{c.name}</span>
+            <span class="see-plans" style="font-size:0.65rem;font-weight:700;color:#03def3;opacity:0;transition:opacity 0.2s;">See Plans →</span>
           </a>
         ))}
       </div>
-      <p id="noResults" style="display:none;text-align:center;padding:3rem;color:#9ca3af;">No destinations found. Try a different search.</p>
+
+      <p id="noResults" style="display:none;text-align:center;padding:3rem;color:#9ca3af;font-size:0.9rem;">
+        No destinations match your search. <a href="/contact" style="color:#03def3;font-weight:700;text-decoration:none;">Contact us</a> to request a country.
+      </p>
     </div>
   </section>
 
@@ -204,14 +299,15 @@ const allRegions = [...new Set(countries.map(c => c.region))].sort();
   const search = document.getElementById('destSearch') as HTMLInputElement;
   const grid = document.getElementById('countriesGrid') as HTMLElement;
   const noResults = document.getElementById('noResults') as HTMLElement;
+  const countLabel = document.getElementById('countryCount') as HTMLElement;
   const cards = Array.from(grid.querySelectorAll('a[data-region]')) as HTMLElement[];
   let activeRegion = 'All';
 
   function filterCards() {
-    const q = search.value.toLowerCase().trim();
+    const q = (search?.value ?? '').toLowerCase().trim();
     let visible = 0;
     cards.forEach(card => {
-      const name = card.querySelector('span:last-child')?.textContent?.toLowerCase() ?? '';
+      const name = card.querySelector('span:nth-child(2)')?.textContent?.toLowerCase() ?? '';
       const region = card.dataset.region ?? '';
       const matchSearch = !q || name.includes(q);
       const matchRegion = activeRegion === 'All' || region === activeRegion;
@@ -220,22 +316,36 @@ const allRegions = [...new Set(countries.map(c => c.region))].sort();
       if (show) visible++;
     });
     noResults.style.display = visible === 0 ? 'block' : 'none';
+    if (countLabel) countLabel.textContent = String(visible);
   }
+
+  // Make filterCards global for onclick
+  (window as any).filterCards = filterCards;
 
   search?.addEventListener('input', filterCards);
 
-  document.querySelectorAll('.region-filter').forEach(btn => {
+  document.querySelectorAll('.rf').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.region-filter').forEach((b: any) => {
+      document.querySelectorAll('.rf').forEach((b: any) => {
         b.style.background = 'white'; b.style.color = '#6b7280'; b.style.borderColor = '#e5e7eb';
         b.classList.remove('active');
       });
-      (btn as HTMLElement).style.background = '#03def3';
-      (btn as HTMLElement).style.color = '#162544';
-      (btn as HTMLElement).style.borderColor = '#03def3';
+      (btn as HTMLElement).style.background = '#162544';
+      (btn as HTMLElement).style.color = 'white';
+      (btn as HTMLElement).style.borderColor = '#162544';
       btn.classList.add('active');
-      activeRegion = (btn as HTMLElement).dataset.region ?? 'All';
+      activeRegion = (btn as HTMLElement).dataset.r ?? 'All';
       filterCards();
     });
   });
 </script>
+
+<style>
+  @keyframes ff1 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-20px) rotate(3deg)} }
+  @keyframes ff2 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(15px) rotate(-2deg)} }
+  @keyframes ff3 { 0%,100%{transform:translateY(0) rotate(0deg)} 33%{transform:translateY(-10px) rotate(2deg)} 66%{transform:translateY(12px) rotate(-3deg)} }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  @media (max-width:1100px) { #regionsGrid { grid-template-columns: repeat(2,1fr) !important; } }
+  @media (max-width:640px) { #regionsGrid { grid-template-columns: repeat(2,1fr) !important; } #countriesGrid { grid-template-columns: repeat(3,1fr) !important; } [style*="grid-template-columns:repeat(4,1fr)"] { grid-template-columns: repeat(2,1fr) !important; } }
+  @media (max-width:400px) { #countriesGrid { grid-template-columns: repeat(2,1fr) !important; } }
+</style>
