@@ -166,6 +166,69 @@ const allRegions = [...new Set(countries.map(c => c.region))].sort();
       <span class="ff" style="position:absolute;font-size:1.5rem;top:88%;right:30%;animation:ff3 10s ease-in-out infinite;opacity:0.2;">🇦🇪</span>
     </div>
 
+    <!-- Character — traveler with suitcase and map pin -->
+    <div class="hero-globe" style="position:absolute;right:5%;bottom:0;pointer-events:none;" aria-hidden="true">
+      <svg width="210" height="370" viewBox="0 0 210 370" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ground -->
+        <rect x="10" y="348" width="190" height="16" rx="8" fill="#c8e6a0" opacity="0.45"/>
+        <!-- Suitcase (rolling) -->
+        <rect x="128" y="260" width="58" height="80" rx="10" fill="#03def3"/>
+        <rect x="142" y="254" width="30" height="10" rx="4" fill="#0bafc0"/>
+        <line x1="157" y1="270" x2="157" y2="335" stroke="#0bafc0" stroke-width="3"/>
+        <line x1="138" y1="302" x2="176" y2="302" stroke="#0bafc0" stroke-width="3"/>
+        <!-- Suitcase wheels -->
+        <circle cx="143" cy="344" r="7" fill="#0d3d52"/>
+        <circle cx="171" cy="344" r="7" fill="#0d3d52"/>
+        <!-- Suitcase handle bar -->
+        <rect x="148" y="240" width="18" height="18" rx="5" fill="none" stroke="#0bafc0" stroke-width="3"/>
+        <!-- Legs -->
+        <rect x="60" y="240" width="28" height="108" rx="12" fill="#374151"/>
+        <rect x="92" y="245" width="28" height="103" rx="12" fill="#2d3748"/>
+        <!-- Feet -->
+        <ellipse cx="74" cy="350" rx="18" ry="8" fill="#1a1a2e"/>
+        <ellipse cx="106" cy="350" rx="18" ry="8" fill="#1a1a2e"/>
+        <!-- Body (orange jacket) -->
+        <rect x="44" y="148" width="112" height="102" rx="18" fill="#FF5F00"/>
+        <!-- Backpack hint (darker patch on back) -->
+        <rect x="94" y="155" width="60" height="88" rx="12" fill="rgba(0,0,0,0.15)"/>
+        <!-- Left arm — raising passport/document up -->
+        <path d="M44 162 Q12 148 10 120" stroke="#FF5F00" stroke-width="20" stroke-linecap="round" fill="none"/>
+        <circle cx="10" cy="116" r="12" fill="#c68642"/>
+        <!-- Right arm — pulling suitcase handle -->
+        <path d="M156 165 Q180 190 175 220" stroke="#FF5F00" stroke-width="20" stroke-linecap="round" fill="none"/>
+        <circle cx="174" cy="224" r="12" fill="#c68642"/>
+        <!-- Neck -->
+        <rect x="86" y="135" width="28" height="18" rx="7" fill="#c68642"/>
+        <!-- Head -->
+        <circle cx="100" cy="105" r="44" fill="#c68642"/>
+        <!-- Hair (medium wavy) -->
+        <path d="M56 92 Q60 54 100 51 Q140 54 144 92 Q138 66 100 63 Q62 66 56 92Z" fill="#3d1f00"/>
+        <ellipse cx="56" cy="88" rx="10" ry="18" fill="#3d1f00"/>
+        <ellipse cx="144" cy="88" rx="10" ry="18" fill="#3d1f00"/>
+        <!-- Eyes -->
+        <ellipse cx="86" cy="102" rx="6" ry="6.5" fill="white"/>
+        <ellipse cx="114" cy="102" rx="6" ry="6.5" fill="white"/>
+        <circle cx="87" cy="103" r="3.5" fill="#1a0d00"/>
+        <circle cx="115" cy="103" r="3.5" fill="#1a0d00"/>
+        <circle cx="88.5" cy="101.5" r="1.2" fill="white"/>
+        <circle cx="116.5" cy="101.5" r="1.2" fill="white"/>
+        <!-- Smile (excited) -->
+        <path d="M86 118 Q100 130 114 118" stroke="#a0552a" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <!-- Passport in raised hand -->
+        <rect x="0" y="96" width="20" height="28" rx="4" fill="#1e3a6e"/>
+        <rect x="2" y="99" width="16" height="22" rx="2" fill="#2a4f8a"/>
+        <text x="10" y="114" font-size="8" text-anchor="middle" font-family="sans-serif" fill="white" font-weight="700">WW</text>
+        <!-- Floating map pins -->
+        <path d="M22 46 Q22 28 32 22 Q42 16 52 22 Q62 28 62 46 Q62 60 37 78 Q12 60 22 46Z" fill="#FF5F00"/>
+        <circle cx="37" cy="46" r="10" fill="white" opacity="0.9"/>
+        <circle cx="37" cy="46" r="6" fill="#FF5F00"/>
+        <!-- Second pin -->
+        <path d="M150 25 Q150 13 158 8 Q166 3 174 8 Q182 13 182 25 Q182 36 162 48 Q142 36 150 25Z" fill="#03def3" opacity="0.85"/>
+        <circle cx="162" cy="25" r="7" fill="white" opacity="0.9"/>
+        <circle cx="162" cy="25" r="4" fill="#03def3"/>
+      </svg>
+    </div>
+
     <div style="max-width:680px;margin:0 auto;text-align:center;position:relative;z-index:2;width:100%;">
       <span style="display:inline-block;background:rgba(3,222,243,0.15);border:1px solid rgba(3,222,243,0.3);color:#03def3;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;padding:0.35rem 1rem;border-radius:9999px;margin-bottom:1.5rem;">✈️ 195+ Destinations Available</span>
 
@@ -177,7 +240,7 @@ const allRegions = [...new Set(countries.map(c => c.region))].sort();
       <p style="color:rgba(255,255,255,0.65);font-size:1rem;margin:0 0 2.5rem;line-height:1.6;">Instant eSIM data for every destination. Buy before you fly — no physical SIM needed.</p>
 
       <!-- Search -->
-      <div style="position:relative;max-width:520px;margin:0 auto;">
+      <div style="position:relative;max-width:520px;margin:0 auto 1.5rem;">
         <div style="background:white;border-radius:1rem;padding:0.4rem 0.4rem 0.4rem 1.1rem;display:flex;align-items:center;gap:0.75rem;box-shadow:0 16px 48px rgba(0,0,0,0.3);">
           <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2.2" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.2-5.2m0 0A7.5 7.5 0 105.2 15.8 7.5 7.5 0 0015.8 15.8z"/></svg>
           <input id="destSearch" type="text" placeholder="Search any country, region, or city..." autocomplete="off"
@@ -185,22 +248,36 @@ const allRegions = [...new Set(countries.map(c => c.region))].sort();
           <button onclick="filterCards()" style="background:linear-gradient(135deg,#162544,#1e3a6e);color:white;font-weight:700;padding:0.65rem 1.5rem;border-radius:0.75rem;border:none;cursor:pointer;font-size:0.85rem;white-space:nowrap;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Search</button>
         </div>
       </div>
+
+      <!-- Popular searches pills -->
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;align-items:center;">
+        <span style="font-size:0.72rem;color:rgba(255,255,255,0.45);font-weight:600;">Popular:</span>
+        {['Japan','USA','Europe','Thailand','UAE'].map(term => (
+          <button
+            onclick={`document.getElementById('destSearch').value='${term}';filterCards();document.getElementById('allCountries').scrollIntoView({behavior:'smooth',block:'start'})`}
+            style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.85);font-size:0.75rem;font-weight:600;padding:0.3rem 0.8rem;border-radius:9999px;cursor:pointer;transition:all 0.2s;"
+            onmouseover="this.style.background='rgba(3,222,243,0.2)';this.style.borderColor='rgba(3,222,243,0.5)';this.style.color='#03def3'"
+            onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(255,255,255,0.85)'">
+            {term}
+          </button>
+        ))}
+      </div>
     </div>
   </section>
 
   <!-- Stats Bar -->
-  <section style="background:white;border-bottom:1px solid #f3f4f6;padding:0;">
+  <section style="background:linear-gradient(135deg,#0f1f3d,#162544);border-bottom:1px solid rgba(3,222,243,0.15);padding:0;">
     <div style="max-width:80rem;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);">
       {[
-        { icon:'🌍', value:'195+', label:'Countries' },
-        { icon:'🗺️', value:'8', label:'Regional Plans' },
-        { icon:'💰', value:'$3.50', label:'Plans from' },
-        { icon:'⚡', value:'<2 min', label:'Instant Setup' },
+        { icon:'🌍', value:'195+', label:'Countries', color:'#03def3' },
+        { icon:'🗺️', value:'8', label:'Regional Plans', color:'#FF5F00' },
+        { icon:'💰', value:'$3.50', label:'Plans from', color:'#03def3' },
+        { icon:'⚡', value:'<2 min', label:'Instant Setup', color:'#FF5F00' },
       ].map((s, i) => (
-        <div style={`padding:1.25rem 2rem;text-align:center;${i > 0 ? 'border-left:1px solid #f3f4f6;' : ''}`}>
-          <div style="font-size:1.4rem;margin-bottom:0.25rem;">{s.icon}</div>
-          <div style="font-size:1.35rem;font-weight:900;color:#162544;line-height:1;">{s.value}</div>
-          <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.15rem;font-weight:500;">{s.label}</div>
+        <div style={`padding:1.5rem 2rem;text-align:center;${i > 0 ? 'border-left:1px solid rgba(255,255,255,0.08);' : ''}`}>
+          <div style="font-size:1.4rem;margin-bottom:0.3rem;">{s.icon}</div>
+          <div style={`font-size:1.45rem;font-weight:900;color:${s.color};line-height:1;`}>{s.value}</div>
+          <div style="font-size:0.72rem;color:rgba(255,255,255,0.5);margin-top:0.2rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;">{s.label}</div>
         </div>
       ))}
     </div>
@@ -219,29 +296,34 @@ const allRegions = [...new Set(countries.map(c => c.region))].sort();
         <a href="/europe" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;font-weight:700;color:#162544;text-decoration:none;border:1.5px solid #e5e7eb;padding:0.6rem 1.25rem;border-radius:9999px;transition:all 0.2s;" onmouseover="this.style.borderColor='#03def3';this.style.color='#03def3'" onmouseout="this.style.borderColor='#e5e7eb';this.style.color='#162544'">Most popular: Europe →</a>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;" id="regionsGrid">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.25rem;" id="regionsGrid">
         {regions.map(r => (
           <a href={`/${r.slug}`}
              style={`background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;overflow:hidden;text-decoration:none;transition:all 0.25s;display:flex;flex-direction:column;box-shadow:0 1px 4px rgba(0,0,0,0.05);`}
              onmouseover={`this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(0,0,0,0.12)';this.style.borderColor='${r.color}'`}
              onmouseout="this.style.transform='';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)';this.style.borderColor='#f0f0f0'">
 
-            <!-- Color header strip -->
-            <div style={`background:${r.bg};padding:1.5rem;text-align:center;border-bottom:1px solid rgba(0,0,0,0.05);`}>
-              <span style="font-size:2.75rem;display:block;margin-bottom:0.5rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1));">{r.flag}</span>
-              <h3 style={`font-size:1rem;font-weight:800;color:${r.color};margin:0;`}>{r.name}</h3>
-              <span style={`display:inline-block;margin-top:0.3rem;background:${r.color};color:white;font-size:0.65rem;font-weight:700;padding:0.15rem 0.55rem;border-radius:9999px;`}>{r.count} countries</span>
+            <!-- Gradient color header strip -->
+            <div style={`background:linear-gradient(135deg,${r.color}22,${r.color}10);padding:1.75rem 1.5rem 1.25rem;border-bottom:1px solid ${r.color}20;position:relative;overflow:hidden;`}>
+              <div style={`position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:${r.color};opacity:0.08;border-radius:50%;`}></div>
+              <div style="display:flex;align-items:center;gap:0.875rem;">
+                <span style="font-size:2.5rem;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1));">{r.flag}</span>
+                <div>
+                  <h3 style={`font-size:1.15rem;font-weight:900;color:${r.color};margin:0 0 0.2rem;letter-spacing:-0.3px;`}>{r.name}</h3>
+                  <span style={`display:inline-block;background:${r.color};color:white;font-size:0.62rem;font-weight:700;padding:0.12rem 0.55rem;border-radius:9999px;`}>{r.count} countries</span>
+                </div>
+              </div>
             </div>
 
             <!-- Card body -->
             <div style="padding:1.25rem;flex:1;display:flex;flex-direction:column;gap:0.75rem;">
               <p style="font-size:0.775rem;color:#6b7280;margin:0;line-height:1.4;">{r.desc}</p>
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;">
-                <div>
-                  <span style="font-size:0.65rem;color:#9ca3af;font-weight:600;">FROM</span>
-                  <span style="font-size:1.1rem;font-weight:900;color:#162544;margin-left:0.3rem;">${r.from}</span>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:0.75rem;border-top:1px solid #f3f4f6;">
+                <div style="display:flex;align-items:baseline;gap:0.25rem;">
+                  <span style="font-size:0.65rem;color:#9ca3af;font-weight:600;text-transform:uppercase;">From</span>
+                  <span style={`font-size:1.35rem;font-weight:900;color:${r.color};`}>${r.from}</span>
                 </div>
-                <span style={`font-size:0.75rem;font-weight:700;color:${r.color};display:flex;align-items:center;gap:0.2rem;`}>View Plans →</span>
+                <span style={`font-size:0.78rem;font-weight:700;color:${r.color};display:flex;align-items:center;gap:0.2rem;background:${r.color}12;padding:0.3rem 0.75rem;border-radius:9999px;`}>View Plans →</span>
               </div>
             </div>
           </a>
@@ -250,8 +332,36 @@ const allRegions = [...new Set(countries.map(c => c.region))].sort();
     </div>
   </section>
 
+  <!-- Why WoWo SIM Banner -->
+  <section style="padding:3.5rem 2rem;background:white;border-top:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0;">
+    <div style="max-width:80rem;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:2rem;">
+        <h2 style="font-size:1.6rem;font-weight:900;color:#162544;margin:0;letter-spacing:-0.4px;">Why WoWo SIM?</h2>
+        <p style="color:#6b7280;font-size:0.875rem;margin:0.4rem 0 0;">Everything you need. Nothing you don't.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;" id="whyGrid">
+        {[
+          { emoji:'⚡', title:'Instant Activation', desc:'QR code delivered in under 2 minutes', color:'#f59e0b', bg:'#fffbeb' },
+          { emoji:'🛡️', title:'No Expiry Surprises', desc:'Validity starts when you first connect', color:'#10b981', bg:'#ecfdf5' },
+          { emoji:'💬', title:'24/7 Support', desc:'Real humans, not bots. Always available.', color:'#3b82f6', bg:'#eff6ff' },
+        ].map(item => (
+          <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:2rem 1.75rem;display:flex;align-items:flex-start;gap:1.25rem;transition:box-shadow 0.2s;"
+               onmouseover="this.style.boxShadow='0 8px 30px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
+            <div style={`width:48px;height:48px;border-radius:1rem;background:${item.bg};display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;border:1.5px solid ${item.color}22;`}>
+              {item.emoji}
+            </div>
+            <div>
+              <h3 style={`font-size:1rem;font-weight:800;color:#162544;margin:0 0 0.35rem;`}>{item.title}</h3>
+              <p style="font-size:0.82rem;color:#6b7280;margin:0;line-height:1.5;">{item.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <!-- All Countries Section -->
-  <section style="padding:4rem 2rem 5rem;background:white;" id="allCountries">
+  <section style="padding:4rem 2rem 5rem;background:#f9fafb;" id="allCountries">
     <div style="max-width:80rem;margin:0 auto;">
 
       <div style="text-align:center;margin-bottom:2.5rem;">
@@ -275,16 +385,24 @@ const allRegions = [...new Set(countries.map(c => c.region))].sort();
       </div>
 
       <!-- Countries Grid -->
-      <div id="countriesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.875rem;">
-        {countries.map((c, i) => (
-          <a href={`/${c.slug}`} data-region={c.region}
-             style={`background:white;border:1.5px solid #f0f0f0;border-radius:1.1rem;padding:1.1rem 0.75rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:0.5rem;transition:all 0.22s;box-shadow:0 1px 3px rgba(0,0,0,0.04);text-align:center;animation:fadeIn 0.3s ${i*0.01}s both;`}
-             onmouseover="this.style.borderColor='#03def3';this.style.background='#f0fdff';this.style.boxShadow='0 6px 20px rgba(3,222,243,0.15)';this.style.transform='translateY(-2px)';this.querySelector('.see-plans').style.opacity='1'" onmouseout="this.style.borderColor='#f0f0f0';this.style.background='white';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.04)';this.style.transform='';this.querySelector('.see-plans').style.opacity='0'">
-            <span style="font-size:2rem;line-height:1;">{c.flag}</span>
-            <span style="font-size:0.78rem;font-weight:700;color:#162544;line-height:1.3;">{c.name}</span>
-            <span class="see-plans" style="font-size:0.65rem;font-weight:700;color:#03def3;opacity:0;transition:opacity 0.2s;">See Plans →</span>
-          </a>
-        ))}
+      <div id="countriesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0.875rem;">
+        {countries.map((c, i) => {
+          const popularSlugs = ['united-states','united-kingdom','japan','australia','france','germany'];
+          const isPopular = popularSlugs.includes(c.slug);
+          return (
+            <a href={`/${c.slug}`} data-region={c.region}
+               style={`background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:1.25rem 0.875rem;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:0.5rem;transition:all 0.22s;box-shadow:0 1px 3px rgba(0,0,0,0.04);text-align:center;animation:fadeIn 0.3s ${i*0.01}s both;position:relative;overflow:hidden;`}
+               onmouseover="this.style.borderColor='#03def3';this.style.background='#f0fdff';this.style.boxShadow='0 6px 20px rgba(3,222,243,0.15)';this.style.transform='translateY(-2px)';this.querySelector('.see-plans').style.opacity='1';this.querySelector('.arrow-badge').style.opacity='1'" onmouseout="this.style.borderColor='#f0f0f0';this.style.background='white';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.04)';this.style.transform='';this.querySelector('.see-plans').style.opacity='0';this.querySelector('.arrow-badge').style.opacity='0'">
+              {isPopular && (
+                <span style="position:absolute;top:0.5rem;right:0.5rem;background:linear-gradient(135deg,#162544,#1e3a6e);color:white;font-size:0.55rem;font-weight:800;padding:0.12rem 0.45rem;border-radius:9999px;text-transform:uppercase;letter-spacing:0.05em;">Popular</span>
+              )}
+              <span style="font-size:2.25rem;line-height:1;">{c.flag}</span>
+              <span style="font-size:0.8rem;font-weight:700;color:#162544;line-height:1.3;">{c.name}</span>
+              <span class="see-plans" style="font-size:0.65rem;font-weight:700;color:#03def3;opacity:0;transition:opacity 0.2s;">See Plans →</span>
+              <span class="arrow-badge" style="position:absolute;bottom:0.5rem;right:0.5rem;background:#03def3;color:#162544;font-size:0.6rem;font-weight:900;width:18px;height:18px;border-radius:9999px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;">→</span>
+            </a>
+          );
+        })}
       </div>
 
       <p id="noResults" style="display:none;text-align:center;padding:3rem;color:#9ca3af;font-size:0.9rem;">
@@ -345,7 +463,8 @@ const allRegions = [...new Set(countries.map(c => c.region))].sort();
   @keyframes ff2 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(15px) rotate(-2deg)} }
   @keyframes ff3 { 0%,100%{transform:translateY(0) rotate(0deg)} 33%{transform:translateY(-10px) rotate(2deg)} 66%{transform:translateY(12px) rotate(-3deg)} }
   @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-  @media (max-width:1100px) { #regionsGrid { grid-template-columns: repeat(2,1fr) !important; } }
-  @media (max-width:640px) { #regionsGrid { grid-template-columns: repeat(2,1fr) !important; } #countriesGrid { grid-template-columns: repeat(3,1fr) !important; } [style*="grid-template-columns:repeat(4,1fr)"] { grid-template-columns: repeat(2,1fr) !important; } }
+  .hero-globe { display: block; }
+  @media (max-width:1024px) { .hero-globe { display: none; } }
+  @media (max-width:640px) { #regionsGrid { grid-template-columns: repeat(2,1fr) !important; } #countriesGrid { grid-template-columns: repeat(3,1fr) !important; } #whyGrid { grid-template-columns: 1fr !important; } [style*="grid-template-columns:repeat(4,1fr)"] { grid-template-columns: repeat(2,1fr) !important; } }
   @media (max-width:400px) { #countriesGrid { grid-template-columns: repeat(2,1fr) !important; } }
 </style>

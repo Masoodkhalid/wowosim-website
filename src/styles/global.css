@@ -244,6 +244,10 @@ a { text-decoration: none; }
 .animate-pulse-ring { animation: pulse-ring 2s ease-in-out infinite; }
 .animate-spin-slow { animation: spin 25s linear infinite; }
 
+/* ─── Page hero illustrated characters ─── */
+.page-hero-char { display: block; }
+@media (max-width: 1024px) { .page-hero-char { display: none; } }
+
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

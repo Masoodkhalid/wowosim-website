@@ -162,9 +162,55 @@ const totalFaqs = allFaqs.reduce((sum, cat) => sum + cat.items.length, 0);
 <Base title="FAQs — Frequently Asked Questions | WoWo SIM" description="Get answers to the most common questions about WoWo SIM eSIM plans, activation, coverage, devices, billing, and more.">
 
   <!-- Hero -->
-  <section style="background:linear-gradient(135deg,#162544,#0d1b36);padding:4rem 2rem;text-align:center;position:relative;overflow:hidden;">
+  <section style="background:linear-gradient(135deg,#162544,#0d1b36);padding:4rem 2rem;text-align:center;position:relative;overflow:hidden;min-height:320px;display:flex;align-items:center;">
     <div style="position:absolute;top:-80px;right:-80px;width:300px;height:300px;background:rgba(3,222,243,0.05);border-radius:9999px;filter:blur(60px);"></div>
-    <div style="max-width:600px;margin:0 auto;position:relative;z-index:1;">
+    <!-- Character — thoughtful person with question marks -->
+    <div class="page-hero-char" style="position:absolute;right:5%;bottom:0;pointer-events:none;opacity:0.9;" aria-hidden="true">
+      <svg width="185" height="300" viewBox="0 0 185 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ground -->
+        <rect x="12" y="278" width="160" height="14" rx="7" fill="#c8e6a0" opacity="0.5"/>
+        <!-- Legs -->
+        <rect x="57" y="205" width="26" height="75" rx="10" fill="#1e2d45"/>
+        <rect x="87" y="210" width="26" height="70" rx="10" fill="#1a2740"/>
+        <!-- Feet -->
+        <ellipse cx="70" cy="283" rx="16" ry="7" fill="#374151"/>
+        <ellipse cx="100" cy="283" rx="16" ry="7" fill="#374151"/>
+        <!-- Body (teal) -->
+        <rect x="42" y="126" width="100" height="87" rx="16" fill="#42BFCA"/>
+        <!-- Left arm — hand on chin thinking -->
+        <path d="M42 140 Q14 155 16 178" stroke="#42BFCA" stroke-width="18" stroke-linecap="round" fill="none"/>
+        <circle cx="16" cy="181" r="10" fill="#8b5e3c"/>
+        <!-- Right arm — relaxed at side -->
+        <path d="M142 140 Q165 158 163 178" stroke="#42BFCA" stroke-width="18" stroke-linecap="round" fill="none"/>
+        <circle cx="163" cy="181" r="10" fill="#8b5e3c"/>
+        <!-- Neck -->
+        <rect x="79" y="116" width="22" height="15" rx="6" fill="#8b5e3c"/>
+        <!-- Head -->
+        <circle cx="90" cy="90" r="38" fill="#8b5e3c"/>
+        <!-- Hair (natural curly/afro style) -->
+        <ellipse cx="90" cy="62" rx="35" ry="22" fill="#1a0d00"/>
+        <ellipse cx="56" cy="80" rx="12" ry="20" fill="#1a0d00"/>
+        <ellipse cx="124" cy="80" rx="12" ry="20" fill="#1a0d00"/>
+        <ellipse cx="90" cy="55" rx="26" ry="14" fill="#231008"/>
+        <!-- Eyes -->
+        <ellipse cx="77" cy="88" rx="5.5" ry="6" fill="white"/>
+        <ellipse cx="103" cy="88" rx="5.5" ry="6" fill="white"/>
+        <circle cx="78" cy="89" r="3.2" fill="#1a0d00"/>
+        <circle cx="104" cy="89" r="3.2" fill="#1a0d00"/>
+        <circle cx="79.5" cy="87.5" r="1.1" fill="white"/>
+        <circle cx="105.5" cy="87.5" r="1.1" fill="white"/>
+        <!-- Smile/thinking expression -->
+        <path d="M78 104 Q90 110 102 104" stroke="#7a4f2e" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <!-- Floating ? bubbles -->
+        <circle cx="145" cy="55" r="18" fill="rgba(255,255,255,0.12)" stroke="rgba(3,222,243,0.5)" stroke-width="1.5"/>
+        <text x="145" y="62" font-size="18" text-anchor="middle" font-family="sans-serif" fill="#03def3" font-weight="900">?</text>
+        <circle cx="30" cy="48" r="13" fill="rgba(255,255,255,0.1)" stroke="rgba(255,95,0,0.4)" stroke-width="1.5"/>
+        <text x="30" y="54" font-size="14" text-anchor="middle" font-family="sans-serif" fill="#FF5F00" font-weight="900">?</text>
+        <circle cx="155" cy="100" r="10" fill="rgba(255,255,255,0.08)" stroke="rgba(3,222,243,0.4)" stroke-width="1"/>
+        <text x="155" y="105" font-size="11" text-anchor="middle" font-family="sans-serif" fill="#03def3" font-weight="900">?</text>
+      </svg>
+    </div>
+    <div style="max-width:600px;margin:0 auto;position:relative;z-index:1;width:100%;">
       <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.75rem;">Support</span>
       <h1 style="font-size:2.75rem;font-weight:900;color:white;margin:0 0 0.75rem;letter-spacing:-0.5px;">Frequently Asked Questions</h1>
       <p style="color:#9ca3af;font-size:1rem;margin:0 0 2rem;">Everything you need to know about WoWo SIM eSIMs. {totalFaqs} answers across {allFaqs.length} categories.</p>
