@@ -311,31 +311,48 @@ const { iccid } = Astro.params;
       el('cardSpeed').textContent = data.speed ?? '4G LTE';
 
       // Plan detail grid
-      el('planDetailName').textContent    = data.plan_name ?? country;
-      el('planDetailNetwork').textContent = data.network ?? '4G LTE / 5G';
-      el('planDetailCoverage').textContent= data.coverage ?? country;
-      el('planDetailHotspot').textContent = data.hotspot != null ? (data.hotspot ? 'Yes' : 'No') : 'Yes';
-      el('planDetailType').textContent    = 'Data Only';
-      el('planDetailRenew').textContent   = data.auto_renew ? 'Yes' : 'No';
+      el('planDetailName').textContent     = data.plan_name ?? country;
+      el('planDetailNetwork').textContent  = data.network ?? '4G LTE / 5G';
+      el('planDetailCoverage').textContent = data.coverage ?? country;
+      el('planDetailHotspot').textContent  = data.hotspot != null ? (data.hotspot ? 'Yes' : 'No') : 'Yes';
+      el('planDetailType').textContent     = 'Data Only';
+      el('planDetailRenew').textContent    = data.auto_renew ? 'Yes' : 'No';
 
-      // Data usage ring
-      const total = data.total_bytes ?? 0;
-      const used  = data.used_bytes  ?? 0;
+      // Plan status badge in details (ACTIVE plan)
+      if (data.plan_status) {
+        const isActive = data.plan_status === 'ACTIVE';
+        el('planDetailNetwork').parentElement.style.borderColor = isActive ? '#dcfce7' : '#fee2e2';
+      }
+
+      // Data usage — using real DB fields: data_quota_bytes, data_bytes_remaining
+      const total     = data.total_bytes     ?? 0;
+      const remaining = data.remaining_bytes ?? 0;
+      const used      = data.used_bytes      ?? 0;
+
+      el('usageCard').style.display = 'block';
+
       if (total > 0) {
         const pct = Math.min(100, Math.round((used / total) * 100));
-        const circumference = 2 * Math.PI * 45; // 282.7
-        const offset = circumference * (1 - pct / 100);
+        const circumference = 2 * Math.PI * 45; // 282.74
         const ringColor = pct > 80 ? '#ef4444' : pct > 60 ? '#f59e0b' : '#03def3';
 
-        el('usageCard').style.display = 'block';
-        el('usageRing').style.strokeDashoffset = offset;
+        el('usageRing').style.strokeDashoffset = circumference * (1 - pct / 100);
         el('usageRing').style.stroke = ringColor;
         el('usagePct').textContent = pct + '%';
         el('usedLabel').textContent = fmtBytes(used);
-        el('remainLabel').textContent = fmtBytes(total - used);
+        el('remainLabel').textContent = fmtBytes(remaining);
         el('totalLabel').textContent = fmtBytes(total);
         el('usageBar').style.width = pct + '%';
         el('usageBar').style.background = ringColor;
+      } else {
+        // No byte data yet — show quota total only
+        el('usageRing').style.strokeDashoffset = 282.74;
+        el('usageRing').style.stroke = '#e5e7eb';
+        el('usagePct').textContent = '0%';
+        el('usedLabel').textContent = '0 MB';
+        el('remainLabel').textContent = data.quota ?? '—';
+        el('totalLabel').textContent = data.quota ?? '—';
+        el('usageBar').style.width = '0%';
       }
 
       // QR Code

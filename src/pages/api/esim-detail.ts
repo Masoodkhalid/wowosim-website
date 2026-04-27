@@ -13,29 +13,24 @@ export const GET: APIRoute = async ({ request, cookies }) => {
 
   let esim: any = null;
 
-  // Try singular endpoint first (confirmed to exist)
-  for (const ep of [`/esim/${iccid}`, `/esims/${iccid}`, `/esims?iccid=${iccid}`, `/esims?q[iccid_eq]=${iccid}`]) {
-    try {
-      const res = await portalFetch(ep, {}, jwt);
-      if (res.ok) {
-        const d = await res.json();
-        const candidate = d.esim ?? d.data ?? (Array.isArray(d) ? d.find((e: any) => e.iccid === iccid) ?? d[0] : null) ?? d;
-        if (candidate && typeof candidate === 'object' && Object.keys(candidate).length > 2) {
-          esim = candidate;
-          break;
-        }
-      }
-    } catch {}
-  }
+  // Primary: /esim/{iccid} — confirmed working endpoint
+  try {
+    const res = await portalFetch(`/esim/${iccid}`, {}, jwt);
+    if (res.ok) {
+      const d = await res.json();
+      // Portal wraps in { esim: {...} } or returns flat
+      esim = d.esim ?? d;
+    }
+  } catch {}
 
-  // If still nothing, try fetching the whole list and matching
-  if (!esim) {
+  // Fallback: scan the /esims list
+  if (!esim || Object.keys(esim).length < 2) {
     try {
       const res = await portalFetch('/esims', {}, jwt);
       if (res.ok) {
         const d = await res.json();
         const list: any[] = d.esims ?? d.data ?? (Array.isArray(d) ? d : []);
-        esim = list.find((e: any) => e.iccid === iccid || e.eid === iccid) ?? null;
+        esim = list.find((e: any) => String(e.iccid) === String(iccid)) ?? null;
       }
     } catch {}
   }
@@ -44,53 +39,77 @@ export const GET: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: 'eSIM not found', iccid }), { status: 404 });
   }
 
-  // Normalize fields to a consistent shape the frontend can rely on
+  // ── data_plans — real field name from DB ──
+  const plans: any[] = esim.data_plans ?? esim.plans ?? esim.bundles ?? esim.packages ?? [];
+
+  // ── Aggregate bytes across all data_plans ──
+  // DB fields: data_quota_bytes, data_bytes_remaining
+  // used = data_quota_bytes - data_bytes_remaining
+  let totalBytes = 0;
+  let remainingBytes = 0;
+
+  for (const p of plans) {
+    const quota     = p.data_quota_bytes     ?? p.quota_bytes     ?? p.total_bytes  ?? 0;
+    const remaining = p.data_bytes_remaining ?? p.bytes_remaining ?? p.remaining    ?? quota; // default remaining=quota if unused
+    totalBytes    += quota;
+    remainingBytes += remaining;
+  }
+
+  const usedBytes = Math.max(0, totalBytes - remainingBytes);
+
+  // ── Quota / validity from first active plan or vendor fields ──
+  const activePlan = plans.find((p: any) => p.network_status === 'ACTIVE') ?? plans[0] ?? null;
+
+  const quotaGB: number | null = activePlan
+    ? (activePlan.vendor_quota ?? (activePlan.data_quota_bytes ? activePlan.data_quota_bytes / 1_073_741_824 : null))
+    : (esim.quota ?? esim.data_gb ?? null);
+
+  const validity = activePlan
+    ? (activePlan.vendor_valadity ?? activePlan.validity ?? activePlan.duration_days ?? null)
+    : (esim.valadity ?? esim.validity ?? esim.duration_days ?? null);
+
+  const quotaDisplay = quotaGB != null ? `${Number(quotaGB).toFixed(quotaGB % 1 === 0 ? 0 : 1)} GB` : null;
+
+  // ── QR / manual code ──
   const qrUrl = esim.qr_code_url ?? esim.qr_code ?? esim.qrcode ?? esim.qr_url
-             ?? esim.lpa_code ?? esim.lpa_string ?? esim.qr_image ?? esim.qr
-             ?? esim.activation_qr ?? null;
+             ?? esim.lpa_code ?? esim.lpa ?? esim.qr ?? null;
 
   const manualCode = esim.manual_code ?? esim.activation_code ?? esim.lpa
-                  ?? esim.sm_dp_address ?? esim.smdp ?? esim.smdp_address
-                  ?? esim.lpa_string ?? null;
+                  ?? esim.sm_dp_address ?? esim.smdp ?? null;
 
-  const rawQuota = esim.quota ?? esim.data ?? esim.data_gb ?? esim.total_data;
-  const quota = rawQuota != null ? (typeof rawQuota === 'number' ? `${rawQuota} GB` : String(rawQuota)) : null;
+  // ── Country / network ──
+  const country = esim.country ?? esim.country_name ?? esim.name ?? null;
+  const network = esim.network ?? esim.carrier ?? esim.network_type ?? null;
+  const speed   = esim.speed   ?? esim.network_speed ?? null;
+  const state   = esim.state   ?? esim.status ?? 'UNKNOWN';
 
-  const validity = esim.valadity ?? esim.validity ?? esim.duration ?? esim.duration_days ?? esim.days ?? null;
-
-  // Data usage
-  const plans: any[] = esim.plans ?? esim.bundles ?? esim.packages ?? esim.subscriptions ?? [];
-  const totalBytes = plans.reduce((s: number, p: any) => s + (p.data_quota_bytes ?? p.data_bytes ?? p.total_bytes ?? 0), 0);
-  const usedBytes  = plans.reduce((s: number, p: any) => s + (p.data_usage_bytes ?? p.used_bytes ?? p.usage_bytes ?? 0), 0);
-
-  // Top-level usage fields (some portals put usage here)
-  const topTotalBytes = esim.data_quota_bytes ?? esim.total_bytes ?? esim.data_bytes ?? 0;
-  const topUsedBytes  = esim.data_usage_bytes ?? esim.used_bytes  ?? esim.usage_bytes ?? 0;
-
-  const effectiveTotalBytes = totalBytes > 0 ? totalBytes : topTotalBytes;
-  const effectiveUsedBytes  = usedBytes  > 0 ? usedBytes  : topUsedBytes;
+  // ── Plan details ──
+  const planName = activePlan?.vendor_plan_name ?? esim.plan_name ?? esim.name ?? null;
+  const planStatus = activePlan?.network_status ?? null;  // "ACTIVE" | "INACTIVE"
 
   return new Response(JSON.stringify({
-    // raw fields for debugging
-    _raw: esim,
-    // normalized
-    iccid:       esim.iccid ?? iccid,
-    state:       esim.state ?? esim.status ?? 'UNKNOWN',
-    country:     esim.country ?? esim.country_name ?? esim.name ?? null,
-    network:     esim.network ?? esim.carrier ?? esim.network_type ?? null,
-    speed:       esim.speed ?? esim.network_speed ?? null,
-    quota,
+    _raw: { esim, plans },   // keep for debugging
+    iccid:        String(esim.iccid ?? iccid),
+    state,
+    country,
+    network,
+    speed,
+    quota:        quotaDisplay,
+    quota_gb:     quotaGB,
     validity,
-    qr_url:      qrUrl,
-    manual_code: manualCode,
-    matching_id: esim.confirmation_code ?? esim.matching_id ?? null,
-    plan_name:   esim.plan_name ?? esim.name ?? null,
-    coverage:    esim.coverage ?? esim.country ?? null,
-    hotspot:     esim.hotspot ?? null,
-    auto_renew:  esim.auto_renew ?? false,
+    qr_url:       qrUrl,
+    manual_code:  manualCode,
+    matching_id:  esim.confirmation_code ?? esim.matching_id ?? null,
+    plan_name:    planName,
+    plan_status:  planStatus,
+    coverage:     esim.coverage ?? country,
+    hotspot:      esim.hotspot ?? null,
+    auto_renew:   esim.auto_renew ?? false,
     plans,
-    total_bytes: effectiveTotalBytes,
-    used_bytes:  effectiveUsedBytes,
+    // byte-level usage
+    total_bytes:     totalBytes,
+    used_bytes:      usedBytes,
+    remaining_bytes: remainingBytes,
   }), {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
