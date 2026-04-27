@@ -245,8 +245,10 @@ const loggedIn = isLoggedIn(Astro.cookies);
         msg.style.display = 'block';
         msg.style.background = '#fee2e2';
         msg.style.color = '#dc2626';
-        msg.textContent = data.error ?? 'Payment could not be initiated. Please try again.';
-        console.error('[WoWo] No redirect URL in checkout response. Full response:', data);
+        const errText = data.error ?? 'Payment could not be initiated. Please try again or contact support.';
+        msg.textContent = errText;
+        console.error('[WoWo] Checkout failed. Error:', errText);
+        console.error('[WoWo] Full portal debug response:', JSON.stringify(data.debug ?? data, null, 2));
       }
     } catch (e) {
       msg.style.display = 'block';

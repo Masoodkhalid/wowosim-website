@@ -2,6 +2,16 @@ import type { APIRoute } from 'astro';
 import { portalFetch } from '../../lib/api';
 import { getJwt } from '../../lib/auth';
 
+function extractRedirectUrl(data: any): string | null {
+  if (!data || typeof data !== 'object') return null;
+  const url =
+    data.redirect_url   ?? data.url            ?? data.checkout_url ??
+    data.payment_url    ?? data.stripe_url      ?? data.session_url  ??
+    data.payment_link   ?? data.link           ?? data.hosted_url   ??
+    data.invoice_url    ?? data.checkout_link  ?? null;
+  return url && typeof url === 'string' && url.startsWith('http') ? url : null;
+}
+
 export const POST: APIRoute = async ({ request, cookies }) => {
   const jwt = getJwt(cookies);
   if (!jwt) {
@@ -11,65 +21,83 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const body = await request.json();
   const cartItems: any[] = body.line_items ?? [];
 
-  // Map cart items to what portal likely expects
+  if (cartItems.length === 0) {
+    return new Response(JSON.stringify({ error: 'Your cart is empty.' }), { status: 400 });
+  }
+
+  // Build line items — try both field name conventions the portal might expect
   const line_items = cartItems.map((item: any) => ({
-    plan_id:   item.id ?? item.system_id,
+    plan_id:   item.id ?? item.plan_id ?? item.system_id,
     system_id: item.system_id ?? item.id,
     quantity:  item.quantity ?? 1,
-    price_usd: item.price_usd ?? item.price,
-    name:      item.name,
+    price_usd: item.price_usd ?? item.price ?? 0,
+    name:      item.name ?? '',
   }));
 
-  // Try multiple checkout endpoint patterns
-  const endpoints = [
-    { path: '/checkout',         body: { line_items } },
-    { path: '/orders',           body: { line_items } },
-    { path: '/stripe/checkout',  body: { line_items } },
-    { path: '/payments',         body: { line_items } },
-    { path: '/checkout_session', body: { line_items } },
+  const items = cartItems.map((item: any) => ({
+    id:        item.id ?? item.plan_id ?? item.system_id,
+    quantity:  item.quantity ?? 1,
+    price:     item.price_usd ?? item.price ?? 0,
+    name:      item.name ?? '',
+  }));
+
+  // Try every realistic endpoint + payload combination
+  const attempts = [
+    { path: '/checkout',          payload: { line_items } },
+    { path: '/checkout',          payload: { items } },
+    { path: '/orders',            payload: { line_items } },
+    { path: '/orders',            payload: { items } },
+    { path: '/stripe/checkout',   payload: { line_items } },
+    { path: '/checkout_session',  payload: { line_items } },
+    { path: '/payments',          payload: { line_items } },
+    { path: '/stripe/session',    payload: { line_items } },
   ];
 
   const debugLog: Record<string, any> = {};
 
-  for (const ep of endpoints) {
+  for (const { path, payload } of attempts) {
+    const key = `${path}|${JSON.stringify(Object.keys(payload))}`;
+    if (debugLog[key]) continue; // skip duplicate combinations
+
     try {
-      const res = await portalFetch(ep.path, {
+      const res = await portalFetch(path, {
         method: 'POST',
-        body: JSON.stringify(ep.body),
+        body: JSON.stringify(payload),
       }, jwt);
 
       const text = await res.text();
       let data: any = {};
       try { data = JSON.parse(text); } catch { data = { raw: text }; }
 
-      debugLog[ep.path] = { status: res.status, body: data };
+      debugLog[key] = { status: res.status, body: data };
 
-      if (res.ok && typeof data === 'object') {
-        // Check all common redirect URL field names
-        const redirectUrl = data.redirect_url ?? data.url ?? data.checkout_url
-          ?? data.payment_url ?? data.stripe_url ?? data.session_url
-          ?? data.payment_link ?? data.link ?? null;
-
-        if (redirectUrl && typeof redirectUrl === 'string' && redirectUrl.startsWith('http')) {
+      if (res.ok) {
+        const redirectUrl = extractRedirectUrl(data);
+        if (redirectUrl) {
           return new Response(JSON.stringify({ redirect_url: redirectUrl }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
           });
         }
-
-        // Got 200 but no redirect URL — portal may need different format
-        if (res.status === 200) {
-          return new Response(JSON.stringify({
-            error: 'Payment gateway did not return a checkout URL.',
-            debug: data,
-          }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-        }
+        // Got 200 but no URL — stop trying, return this response for debug
+        return new Response(JSON.stringify({
+          error: `Payment gateway responded but did not return a checkout URL. Portal said: ${data.message ?? data.error ?? JSON.stringify(data).slice(0, 200)}`,
+          debug: { path, response: data },
+        }), { status: 502, headers: { 'Content-Type': 'application/json' } });
       }
-    } catch {}
+
+      // 401 = auth failed — stop immediately
+      if (res.status === 401 || res.status === 403) {
+        return new Response(JSON.stringify({
+          error: 'Session expired. Please log out and log back in.',
+          debug: debugLog,
+        }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+      }
+    } catch { /* network error on this attempt — try next */ }
   }
 
   return new Response(JSON.stringify({
-    error: 'Could not connect to payment gateway. Please try again.',
+    error: 'Could not connect to payment gateway. Please try again or contact support.',
     debug: debugLog,
   }), { status: 502, headers: { 'Content-Type': 'application/json' } });
 };

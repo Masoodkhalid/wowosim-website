@@ -230,7 +230,7 @@ const { iccid } = Astro.params;
             <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:1.75rem;">
               <h3 style="font-size:0.95rem;font-weight:800;color:#162544;margin:0 0 1rem;">Quick Actions</h3>
               <div style="display:flex;flex-direction:column;gap:0.6rem;">
-                <a href="/" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:linear-gradient(135deg,#162544,#1e3a6e);color:white;border-radius:0.875rem;text-decoration:none;font-size:0.825rem;font-weight:700;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                <a id="topupBtn" href="/destinations" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:linear-gradient(135deg,#162544,#1e3a6e);color:white;border-radius:0.875rem;text-decoration:none;font-size:0.825rem;font-weight:700;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                   Buy Top-Up Plan
                 </a>
@@ -320,9 +320,20 @@ const { iccid } = Astro.params;
       el('statusLabel').textContent = s.label;
 
       // Country
-      const country = data.country ?? 'eSIM Plan';
+      const country = data.country ?? data.coverage ?? 'eSIM Plan';
       el('cardCountry').textContent = country;
       el('breadcrumbName').textContent = country;
+
+      // ── Update "Buy Top-Up Plan" button to go to the eSIM's country page ──
+      const topupBtn = document.getElementById('topupBtn');
+      if (topupBtn && country && country !== 'eSIM Plan') {
+        const slug = country.toLowerCase().trim()
+          .replace(/\s+/g, '-')
+          .replace(/[^a-z0-9-]/g, '')
+          .replace(/-+/g, '-')
+          .replace(/^-|-$/g, '');
+        if (slug) topupBtn.setAttribute('href', '/' + slug);
+      }
 
       // Card stats
       el('cardQuota').textContent = data.quota ?? '—';
@@ -374,6 +385,48 @@ const { iccid } = Astro.params;
         el('usageBar').style.width = '0%';
       }
 
+      // Individual plans breakdown (base + top-ups)
+      const planRows = data.plan_rows ?? [];
+      if (planRows.length > 0) {
+        const container = document.createElement('div');
+        container.style.cssText = 'margin-top:1.25rem;display:flex;flex-direction:column;gap:0.6rem;';
+        container.innerHTML = '<p style="font-size:0.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.5rem;">Plan Breakdown</p>';
+        planRows.forEach((plan, idx) => {
+          const qBytes = plan.quota_bytes ?? 0;
+          const rBytes = plan.remaining_bytes ?? qBytes;
+          const uBytes = Math.max(0, qBytes - rBytes);
+          const pct = qBytes > 0 ? Math.min(100, Math.round((uBytes / qBytes) * 100)) : 0;
+          const quotaStr = plan.quota_gb ? plan.quota_gb + ' GB' : (qBytes ? (qBytes/1073741824).toFixed(1)+' GB' : '—');
+          const remStr = rBytes >= 1073741824 ? (rBytes/1073741824).toFixed(1)+' GB' : Math.round(rBytes/1048576)+' MB';
+          const st = (plan.status ?? '').toUpperCase();
+          const stColor = st==='ACTIVE'?'#22c55e':st==='EXPIRED'||st==='INACTIVE'?'#ef4444':'#f59e0b';
+          const stBg = st==='ACTIVE'?'#f0fdf4':st==='EXPIRED'||st==='INACTIVE'?'#fff5f5':'#fffbeb';
+          const label = idx === 0 ? 'Base Plan' : `Top-up #${idx}`;
+          const card = document.createElement('div');
+          card.style.cssText = `background:#f8fafc;border:1.5px solid #f0f0f0;border-radius:0.875rem;padding:0.875rem 1rem;`;
+          card.innerHTML = `
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <span style="background:${idx===0?'#162544':'#03def3'};color:white;font-size:0.6rem;font-weight:800;padding:0.15rem 0.5rem;border-radius:9999px;">${label}</span>
+                <span style="font-size:0.78rem;font-weight:700;color:#162544;">${quotaStr}</span>
+                ${plan.validity_days ? `<span style="font-size:0.7rem;color:#9ca3af;">· ${plan.validity_days} days</span>` : ''}
+              </div>
+              <span style="background:${stBg};color:${stColor};font-size:0.65rem;font-weight:800;padding:0.15rem 0.55rem;border-radius:9999px;border:1px solid ${stColor}33;">${st||'—'}</span>
+            </div>
+            <div style="background:#e5e7eb;border-radius:9999px;height:4px;overflow:hidden;margin-bottom:0.35rem;">
+              <div style="background:${idx===0?'#162544':'#03def3'};width:${pct}%;height:100%;border-radius:9999px;transition:width 0.8s ease;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:0.7rem;color:#9ca3af;">${pct}% used</span>
+              <span style="font-size:0.7rem;font-weight:600;color:#22c55e;">${remStr} remaining</span>
+            </div>`;
+          container.appendChild(card);
+        });
+        // Insert after the usage bar
+        const usageCard = document.getElementById('usageCard');
+        if (usageCard) usageCard.appendChild(container);
+      }
+
       // QR Code
       if (data.qr_url) {
         el('qrImageWrap').style.display = 'block';
@@ -403,7 +456,6 @@ const { iccid } = Astro.params;
       }
 
       // ── Plan status badge + dates on usage card ──
-      const planRows = data.plan_rows ?? [];
       const firstPlan = planRows[0] ?? null;
       if (firstPlan) {
         const pStatus = (firstPlan.status ?? '').toUpperCase();
