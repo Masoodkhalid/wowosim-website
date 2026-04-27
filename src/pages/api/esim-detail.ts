@@ -4,114 +4,113 @@ import { getJwt } from '../../lib/auth';
 
 export const GET: APIRoute = async ({ request, cookies }) => {
   const jwt = getJwt(cookies);
-  if (!jwt) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-  }
+  if (!jwt) return new Response(JSON.stringify({ error: 'Not logged in' }), { status: 401 });
 
-  const url = new URL(request.url);
+  const url  = new URL(request.url);
   const iccid = url.searchParams.get('iccid') ?? '';
 
-  let esim: any = null;
-
-  // Primary: /esim/{iccid} — confirmed working endpoint
+  // ── Step 1: /esims list — KNOWN to work, has quota/valadity/state/country ──
+  let listEsim: any = null;
   try {
-    const res = await portalFetch(`/esim/${iccid}`, {}, jwt);
-    if (res.ok) {
-      const d = await res.json();
-      // Portal wraps in { esim: {...} } or returns flat
-      esim = d.esim ?? d;
+    const r = await portalFetch('/esims', {}, jwt);
+    if (r.ok) {
+      const d = await r.json();
+      const list: any[] = d.esims ?? d.data ?? (Array.isArray(d) ? d : []);
+      listEsim = list.find((e: any) => String(e.iccid) === String(iccid)) ?? null;
     }
   } catch {}
 
-  // Fallback: scan the /esims list
-  if (!esim || Object.keys(esim).length < 2) {
-    try {
-      const res = await portalFetch('/esims', {}, jwt);
-      if (res.ok) {
-        const d = await res.json();
-        const list: any[] = d.esims ?? d.data ?? (Array.isArray(d) ? d : []);
-        esim = list.find((e: any) => String(e.iccid) === String(iccid)) ?? null;
-      }
-    } catch {}
+  // ── Step 2: /esim/{iccid} — for QR code + data_plans ──
+  let detailEsim: any = null;
+  try {
+    const r = await portalFetch(`/esim/${iccid}`, {}, jwt);
+    if (r.ok) {
+      const d = await r.json();
+      const candidate = d.esim ?? d;
+      if (candidate && !candidate.error) detailEsim = candidate;
+    }
+  } catch {}
+
+  // Merge: list fields first (reliable), detail fields on top
+  const esim: any = { ...(listEsim ?? {}), ...(detailEsim ?? {}) };
+
+  if (!listEsim && !detailEsim) {
+    return new Response(JSON.stringify({
+      error: 'eSIM not found. Make sure you are logged in.',
+      iccid,
+    }), { status: 404 });
   }
 
-  if (!esim) {
-    return new Response(JSON.stringify({ error: 'eSIM not found', iccid }), { status: 404 });
-  }
+  // ── data_plans from detail endpoint ──
+  const plans: any[] = esim.data_plans ?? esim.plans ?? esim.bundles ?? [];
 
-  // ── data_plans — real field name from DB ──
-  const plans: any[] = esim.data_plans ?? esim.plans ?? esim.bundles ?? esim.packages ?? [];
-
-  // ── Aggregate bytes across all data_plans ──
-  // DB fields: data_quota_bytes, data_bytes_remaining
-  // used = data_quota_bytes - data_bytes_remaining
-  let totalBytes = 0;
-  let remainingBytes = 0;
-
+  // Aggregate bytes: data_quota_bytes, data_bytes_remaining (real DB fields)
+  let totalBytes = 0, remainingBytes = 0;
   for (const p of plans) {
-    const quota     = p.data_quota_bytes     ?? p.quota_bytes     ?? p.total_bytes  ?? 0;
-    const remaining = p.data_bytes_remaining ?? p.bytes_remaining ?? p.remaining    ?? quota; // default remaining=quota if unused
-    totalBytes    += quota;
-    remainingBytes += remaining;
+    const q = Number(p.data_quota_bytes ?? 0);
+    const rem = Number(p.data_bytes_remaining ?? q); // default = full quota (unused)
+    totalBytes     += q;
+    remainingBytes += rem;
   }
-
   const usedBytes = Math.max(0, totalBytes - remainingBytes);
 
-  // ── Quota / validity from first active plan or vendor fields ──
-  const activePlan = plans.find((p: any) => p.network_status === 'ACTIVE') ?? plans[0] ?? null;
+  // Active plan
+  const activePlan = plans.find((p: any) => (p.network_status ?? p.status) === 'ACTIVE') ?? plans[0] ?? null;
 
-  const quotaGB: number | null = activePlan
-    ? (activePlan.vendor_quota ?? (activePlan.data_quota_bytes ? activePlan.data_quota_bytes / 1_073_741_824 : null))
-    : (esim.quota ?? esim.data_gb ?? null);
+  // Quota: vendor_quota (GB) from active plan, fallback to esim.quota from list
+  const quotaGB: number =
+    Number(activePlan?.vendor_quota) ||
+    Number(esim.quota) ||
+    (totalBytes > 0 ? totalBytes / 1_073_741_824 : 0);
 
-  const validity = activePlan
-    ? (activePlan.vendor_valadity ?? activePlan.validity ?? activePlan.duration_days ?? null)
-    : (esim.valadity ?? esim.validity ?? esim.duration_days ?? null);
+  // Validity: vendor_valadity from plan, fallback to esim.valadity from list
+  const validity: number =
+    Number(activePlan?.vendor_valadity) ||
+    Number(esim.valadity ?? esim.validity) || 0;
 
-  const quotaDisplay = quotaGB != null ? `${Number(quotaGB).toFixed(quotaGB % 1 === 0 ? 0 : 1)} GB` : null;
+  const quotaDisplay = quotaGB > 0 ? `${quotaGB % 1 === 0 ? quotaGB : quotaGB.toFixed(1)} GB` : null;
 
-  // ── QR / manual code ──
-  const qrUrl = esim.qr_code_url ?? esim.qr_code ?? esim.qrcode ?? esim.qr_url
-             ?? esim.lpa_code ?? esim.lpa ?? esim.qr ?? null;
+  // State — list has: ENABLED, RELEASED, DISABLED, deleted
+  const state = String(esim.state ?? esim.status ?? 'UNKNOWN').toUpperCase();
 
-  const manualCode = esim.manual_code ?? esim.activation_code ?? esim.lpa
-                  ?? esim.sm_dp_address ?? esim.smdp ?? null;
+  // QR + manual codes
+  const qrUrl          = esim.qr_code_url ?? esim.qr_code ?? esim.qrcode ?? esim.qr ?? null;
+  const activationCode = esim.activation_code ?? esim.manual_code ?? esim.lpa ?? null;
+  const smDpAddress    = esim.sm_dp_plus_address ?? esim.sm_dp_address ?? esim.smdp ?? null;
 
-  // ── Country / network ──
-  const country = esim.country ?? esim.country_name ?? esim.name ?? null;
-  const network = esim.network ?? esim.carrier ?? esim.network_type ?? null;
-  const speed   = esim.speed   ?? esim.network_speed ?? null;
-  const state   = esim.state   ?? esim.status ?? 'UNKNOWN';
-
-  // ── Plan details ──
-  const planName = activePlan?.vendor_plan_name ?? esim.plan_name ?? esim.name ?? null;
-  const planStatus = activePlan?.network_status ?? null;  // "ACTIVE" | "INACTIVE"
+  // Plan rows for Data Plans section
+  const planRows = plans.map((p: any) => ({
+    id:              p.id,
+    name:            p.vendor_plan_name ?? p.name ?? 'Data Plan',
+    status:          String(p.network_status ?? p.status ?? '').toUpperCase(),
+    country:         p.countries_enabled ?? p.country ?? esim.country ?? null,
+    quota_bytes:     Number(p.data_quota_bytes ?? 0),
+    remaining_bytes: Number(p.data_bytes_remaining ?? p.data_quota_bytes ?? 0),
+    quota_gb:        Number(p.vendor_quota) || null,
+    validity_days:   Number(p.vendor_valadity ?? p.validity) || null,
+    start_time:      p.start_time ?? p.date_activated ?? null,
+    end_time:        p.end_time ?? null,
+    price:           p.vendor_price ?? null,
+  }));
 
   return new Response(JSON.stringify({
-    _raw: { esim, plans },   // keep for debugging
-    iccid:        String(esim.iccid ?? iccid),
+    iccid:           String(esim.iccid ?? iccid),
     state,
-    country,
-    network,
-    speed,
-    quota:        quotaDisplay,
-    quota_gb:     quotaGB,
+    country:         esim.country ?? esim.country_name ?? esim.name ?? null,
+    network:         esim.network ?? esim.carrier ?? null,
+    speed:           esim.speed ?? null,
+    quota:           quotaDisplay,
+    quota_gb:        quotaGB,
     validity,
-    qr_url:       qrUrl,
-    manual_code:  manualCode,
-    matching_id:  esim.confirmation_code ?? esim.matching_id ?? null,
-    plan_name:    planName,
-    plan_status:  planStatus,
-    coverage:     esim.coverage ?? country,
-    hotspot:      esim.hotspot ?? null,
-    auto_renew:   esim.auto_renew ?? false,
-    plans,
-    // byte-level usage
+    qr_url:          qrUrl,
+    activation_code: activationCode,
+    sm_dp_address:   smDpAddress,
+    plan_name:       activePlan?.vendor_plan_name ?? esim.plan_name ?? null,
+    coverage:        esim.coverage ?? esim.country ?? null,
+    hotspot:         esim.hotspot ?? null,
+    plan_rows:       planRows,
     total_bytes:     totalBytes,
     used_bytes:      usedBytes,
     remaining_bytes: remainingBytes,
-  }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 };

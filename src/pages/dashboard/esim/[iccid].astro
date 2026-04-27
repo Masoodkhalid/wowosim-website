@@ -163,19 +163,32 @@ const { iccid } = Astro.params;
                   </div>
                 ))}
               </div>
-              <!-- Manual code (shown client-side if available) -->
+              <!-- Manual Activation (shown client-side) -->
               <div id="manualCodeBlock" style="display:none;margin-top:1.25rem;padding:1.25rem;background:#f0fdff;border:1.5px solid #c7f5fc;border-radius:1rem;">
-                <p style="font-size:0.75rem;font-weight:700;color:#162544;margin:0 0 0.75rem;">📋 Manual Installation (if QR scan fails)</p>
-                <div>
-                  <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.2rem;">SM-DP+ Address / Activation Code</p>
-                  <code id="manualCodeText" style="font-size:0.75rem;color:#162544;background:white;padding:0.4rem 0.75rem;border-radius:0.5rem;display:block;word-break:break-all;border:1px solid #e5e7eb;"></code>
-                </div>
-                <div id="matchingIdBlock" style="display:none;margin-top:0.5rem;">
-                  <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.2rem;">Confirmation Code</p>
-                  <code id="matchingIdText" style="font-size:0.75rem;color:#162544;background:white;padding:0.4rem 0.75rem;border-radius:0.5rem;display:block;border:1px solid #e5e7eb;"></code>
+                <p style="font-size:0.8rem;font-weight:700;color:#162544;margin:0 0 0.875rem;">📋 Manual Activation</p>
+                <p style="font-size:0.75rem;color:#6b7280;margin:0 0 0.875rem;line-height:1.5;">If you can't scan the QR code, manually add a new data plan to your device with the Activation Code below.</p>
+                <div style="display:flex;flex-direction:column;gap:0.6rem;">
+                  <div>
+                    <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.2rem;">Activation Code</p>
+                    <code id="manualCodeText" style="font-size:0.75rem;color:#162544;background:white;padding:0.4rem 0.75rem;border-radius:0.5rem;display:block;word-break:break-all;border:1px solid #e5e7eb;"></code>
+                  </div>
+                  <div id="smDpBlock" style="display:none;">
+                    <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.2rem;">SM-DP+ Address</p>
+                    <code id="smDpText" style="font-size:0.75rem;color:#162544;background:white;padding:0.4rem 0.75rem;border-radius:0.5rem;display:block;word-break:break-all;border:1px solid #e5e7eb;"></code>
+                  </div>
+                  <div id="matchingIdBlock" style="display:none;">
+                    <p style="font-size:0.68rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 0.2rem;">Confirmation Code</p>
+                    <code id="matchingIdText" style="font-size:0.75rem;color:#162544;background:white;padding:0.4rem 0.75rem;border-radius:0.5rem;display:block;border:1px solid #e5e7eb;"></code>
+                  </div>
                 </div>
               </div>
             </div>
+
+          <!-- Data Plans Section (like original site) -->
+          <div id="dataPlansSection" style="display:none;">
+            <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1rem;">Data Plans</h3>
+            <div id="dataPlansContainer" style="display:flex;flex-direction:column;gap:1rem;"></div>
+          </div>
 
           </div>
 
@@ -264,10 +277,11 @@ const { iccid } = Astro.params;
     ENABLED:  { label:'Active',              color:'#166534', bg:'#dcfce7', dot:'#22c55e' },
     RELEASED: { label:'Awaiting Activation', color:'#92400e', bg:'#fef3c7', dot:'#f59e0b' },
     DISABLED: { label:'Inactive',            color:'#991b1b', bg:'#fee2e2', dot:'#ef4444' },
-    deleted:  { label:'Expired',             color:'#991b1b', bg:'#fee2e2', dot:'#ef4444' },
+    DELETED:  { label:'Expired',             color:'#991b1b', bg:'#fee2e2', dot:'#ef4444' },
     ACTIVE:   { label:'Active',              color:'#166534', bg:'#dcfce7', dot:'#22c55e' },
     INACTIVE: { label:'Inactive',            color:'#991b1b', bg:'#fee2e2', dot:'#ef4444' },
-    EXPIRED:  { label:'Expired',             color:'#991b1b', bg:'#fee2e2', dot:'#ef4444' },
+    EXPIRED:  { label:'Expired',             color:'#6b7280', bg:'#f3f4f6', dot:'#9ca3af' },
+    UNKNOWN:  { label:'Unknown',             color:'#92400e', bg:'#fef3c7', dot:'#f59e0b' },
   };
 
   function fmtBytes(b) {
@@ -365,16 +379,108 @@ const { iccid } = Astro.params;
         el('qrPlaceholderText').textContent = 'QR code will appear here.\nCheck your purchase email.';
       }
 
-      // Manual code
-      if (data.manual_code) {
+      // QR Manual / Activation code
+      if (data.activation_code || data.manual_code) {
+        // Side panel
         el('qrManualBlock').style.display = 'block';
-        el('qrManualText').textContent = data.manual_code;
+        el('qrManualText').textContent = data.activation_code ?? data.manual_code;
+        // Left column manual block
         el('manualCodeBlock').style.display = 'block';
-        el('manualCodeText').textContent = data.manual_code;
+        el('manualCodeText').textContent = data.activation_code ?? data.manual_code;
+        if (data.sm_dp_address) {
+          el('smDpBlock').style.display = 'block';
+          el('smDpText').textContent = data.sm_dp_address;
+        }
         if (data.matching_id) {
           el('matchingIdBlock').style.display = 'block';
           el('matchingIdText').textContent = data.matching_id;
         }
+      }
+
+      // ── Data Plans cards (like original site) ──
+      const planRows = data.plan_rows ?? [];
+      if (planRows.length > 0) {
+        el('dataPlansSection').style.display = 'block';
+        el('dataPlansContainer').innerHTML = planRows.map(plan => {
+          const remBytes  = plan.remaining_bytes ?? plan.quota_bytes ?? 0;
+          const quotaBytes = plan.quota_bytes ?? 0;
+          const remMB = (remBytes / 1_048_576).toFixed(2);
+          const remGB = (remBytes / 1_073_741_824).toFixed(2);
+          const remDisplay = remBytes >= 1_073_741_824 ? remGB + ' GB' : remMB + ' MB';
+          const quotaDisplay = plan.quota_gb ? plan.quota_gb + 'GB' : (quotaBytes ? (quotaBytes/1_073_741_824).toFixed(1)+'GB' : '—');
+          const pct = quotaBytes > 0 ? Math.min(100, Math.round(((quotaBytes - remBytes) / quotaBytes) * 100)) : 0;
+          const planStatus = (plan.status ?? '').toUpperCase();
+          const sColor = planStatus === 'ACTIVE' ? '#22c55e' : planStatus === 'EXPIRED' || planStatus === 'INACTIVE' ? '#ef4444' : '#f59e0b';
+          const sBg    = planStatus === 'ACTIVE' ? '#dcfce7' : planStatus === 'EXPIRED' || planStatus === 'INACTIVE' ? '#fee2e2' : '#fef3c7';
+          const sText  = planStatus === 'ACTIVE' ? 'ACTIVE'  : planStatus === 'EXPIRED' ? 'EXPIRED' : planStatus || 'UNKNOWN';
+
+          const fmtDate = (d) => { if (!d) return '—'; try { return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\//g,'-'); } catch { return d; } };
+
+          // Donut arc
+          const r = 40, cx = 50, cy = 50, circ = 2 * Math.PI * r;
+          const usedOffset = circ * (pct / 100);
+          const gradId = 'grad_' + plan.id;
+
+          return `
+            <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:1.5rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap;">
+              <!-- Donut -->
+              <div style="position:relative;width:100px;height:100px;flex-shrink:0;">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#42BFCA"/>
+                      <stop offset="100%" stop-color="#FF5F00"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="#f0f0f0" stroke-width="10"/>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="url(#${gradId})" stroke-width="10"
+                    stroke-linecap="round"
+                    stroke-dasharray="${circ}"
+                    stroke-dashoffset="${circ - usedOffset}"
+                    transform="rotate(-90 50 50)"/>
+                </svg>
+                <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                  <span style="font-size:1.1rem;font-weight:900;color:#162544;line-height:1;">${quotaDisplay}</span>
+                  <span style="font-size:0.58rem;color:#9ca3af;font-weight:600;margin-top:0.1rem;">TOTAL DATA</span>
+                </div>
+              </div>
+              <!-- Details grid -->
+              <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;min-width:0;">
+                <div>
+                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Country</p>
+                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${plan.country ?? '—'}</p>
+                </div>
+                <div>
+                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Activation Date</p>
+                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${fmtDate(plan.start_time)}</p>
+                </div>
+                <div>
+                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Data Quota</p>
+                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${quotaDisplay}</p>
+                </div>
+                <div>
+                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Plan ID</p>
+                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${plan.name?.replace(/[^A-Z0-9]/gi,'').slice(0,8) ?? plan.id ?? '—'}</p>
+                </div>
+                <div>
+                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Expiration</p>
+                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${fmtDate(plan.end_time)}</p>
+                </div>
+                <div>
+                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Data Remaining*</p>
+                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${remDisplay}</p>
+                </div>
+                <div style="grid-column:3;margin-top:-1.5rem;">
+                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Status</p>
+                  <span style="display:inline-block;padding:0.2rem 0.65rem;border-radius:0.4rem;font-size:0.72rem;font-weight:800;background:${sBg};color:${sColor};border:1px solid ${sColor}33;">${sText}</span>
+                </div>
+                <div>
+                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Validity</p>
+                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${plan.validity_days ? plan.validity_days + ' Day(s)' : '—'}</p>
+                </div>
+              </div>
+            </div>`;
+        }).join('');
       }
 
       // Show content
