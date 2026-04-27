@@ -90,7 +90,18 @@ const { iccid } = Astro.params;
 
             <!-- Data Usage Ring -->
             <div id="usageCard" style="display:none;background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:2rem;">
-              <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1.5rem;">Data Usage</h3>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
+                <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0;">Data Usage</h3>
+                <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+                  <span id="planStatusBadge" style="display:none;padding:0.2rem 0.75rem;border-radius:9999px;font-size:0.72rem;font-weight:800;"></span>
+                  <span style="font-size:0.75rem;color:#9ca3af;">
+                    Purchased: <strong id="purchaseDateLabel" style="color:#162544;">—</strong>
+                  </span>
+                  <span style="font-size:0.75rem;color:#9ca3af;">
+                    Activated: <strong id="activeDateLabel" style="color:#162544;">—</strong>
+                  </span>
+                </div>
+              </div>
               <div style="display:flex;align-items:center;gap:2rem;">
                 <div style="position:relative;width:110px;height:110px;flex-shrink:0;">
                   <svg width="110" height="110" viewBox="0 0 110 110">
@@ -183,12 +194,6 @@ const { iccid } = Astro.params;
                 </div>
               </div>
             </div>
-
-          <!-- Data Plans Section (like original site) -->
-          <div id="dataPlansSection" style="display:none;">
-            <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1rem;">Data Plans</h3>
-            <div id="dataPlansContainer" style="display:flex;flex-direction:column;gap:1rem;"></div>
-          </div>
 
           </div>
 
@@ -397,90 +402,30 @@ const { iccid } = Astro.params;
         }
       }
 
-      // ── Data Plans cards (like original site) ──
+      // ── Plan status badge + dates on usage card ──
       const planRows = data.plan_rows ?? [];
-      if (planRows.length > 0) {
-        el('dataPlansSection').style.display = 'block';
-        el('dataPlansContainer').innerHTML = planRows.map(plan => {
-          const remBytes  = plan.remaining_bytes ?? plan.quota_bytes ?? 0;
-          const quotaBytes = plan.quota_bytes ?? 0;
-          const remMB = (remBytes / 1_048_576).toFixed(2);
-          const remGB = (remBytes / 1_073_741_824).toFixed(2);
-          const remDisplay = remBytes >= 1_073_741_824 ? remGB + ' GB' : remMB + ' MB';
-          const quotaDisplay = plan.quota_gb ? plan.quota_gb + 'GB' : (quotaBytes ? (quotaBytes/1_073_741_824).toFixed(1)+'GB' : '—');
-          const pct = quotaBytes > 0 ? Math.min(100, Math.round(((quotaBytes - remBytes) / quotaBytes) * 100)) : 0;
-          const planStatus = (plan.status ?? '').toUpperCase();
-          const sColor = planStatus === 'ACTIVE' ? '#22c55e' : planStatus === 'EXPIRED' || planStatus === 'INACTIVE' ? '#ef4444' : '#f59e0b';
-          const sBg    = planStatus === 'ACTIVE' ? '#dcfce7' : planStatus === 'EXPIRED' || planStatus === 'INACTIVE' ? '#fee2e2' : '#fef3c7';
-          const sText  = planStatus === 'ACTIVE' ? 'ACTIVE'  : planStatus === 'EXPIRED' ? 'EXPIRED' : planStatus || 'UNKNOWN';
-
-          const fmtDate = (d) => { if (!d) return '—'; try { return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\//g,'-'); } catch { return d; } };
-
-          // Donut arc
-          const r = 40, cx = 50, cy = 50, circ = 2 * Math.PI * r;
-          const usedOffset = circ * (pct / 100);
-          const gradId = 'grad_' + plan.id;
-
-          return `
-            <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:1.5rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap;">
-              <!-- Donut -->
-              <div style="position:relative;width:100px;height:100px;flex-shrink:0;">
-                <svg width="100" height="100" viewBox="0 0 100 100">
-                  <defs>
-                    <linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stop-color="#42BFCA"/>
-                      <stop offset="100%" stop-color="#FF5F00"/>
-                    </linearGradient>
-                  </defs>
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="#f0f0f0" stroke-width="10"/>
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="url(#${gradId})" stroke-width="10"
-                    stroke-linecap="round"
-                    stroke-dasharray="${circ}"
-                    stroke-dashoffset="${circ - usedOffset}"
-                    transform="rotate(-90 50 50)"/>
-                </svg>
-                <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-                  <span style="font-size:1.1rem;font-weight:900;color:#162544;line-height:1;">${quotaDisplay}</span>
-                  <span style="font-size:0.58rem;color:#9ca3af;font-weight:600;margin-top:0.1rem;">TOTAL DATA</span>
-                </div>
-              </div>
-              <!-- Details grid -->
-              <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;min-width:0;">
-                <div>
-                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Country</p>
-                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${plan.country ?? '—'}</p>
-                </div>
-                <div>
-                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Activation Date</p>
-                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${fmtDate(plan.start_time)}</p>
-                </div>
-                <div>
-                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Data Quota</p>
-                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${quotaDisplay}</p>
-                </div>
-                <div>
-                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Plan ID</p>
-                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${plan.name?.replace(/[^A-Z0-9]/gi,'').slice(0,8) ?? plan.id ?? '—'}</p>
-                </div>
-                <div>
-                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Expiration</p>
-                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${fmtDate(plan.end_time)}</p>
-                </div>
-                <div>
-                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Data Remaining*</p>
-                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${remDisplay}</p>
-                </div>
-                <div style="grid-column:3;margin-top:-1.5rem;">
-                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Status</p>
-                  <span style="display:inline-block;padding:0.2rem 0.65rem;border-radius:0.4rem;font-size:0.72rem;font-weight:800;background:${sBg};color:${sColor};border:1px solid ${sColor}33;">${sText}</span>
-                </div>
-                <div>
-                  <p style="font-size:0.62rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.2rem;">Validity</p>
-                  <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0;">${plan.validity_days ? plan.validity_days + ' Day(s)' : '—'}</p>
-                </div>
-              </div>
-            </div>`;
-        }).join('');
+      const firstPlan = planRows[0] ?? null;
+      if (firstPlan) {
+        const pStatus = (firstPlan.status ?? '').toUpperCase();
+        const badge = el('planStatusBadge');
+        if (badge) {
+          badge.style.display = 'inline-block';
+          if (pStatus === 'ACTIVE') {
+            badge.style.background = '#dcfce7'; badge.style.color = '#166534'; badge.style.border = '1px solid #22c55e44';
+            badge.textContent = '● Active';
+          } else if (pStatus === 'EXPIRED' || pStatus === 'INACTIVE') {
+            badge.style.background = '#fee2e2'; badge.style.color = '#991b1b'; badge.style.border = '1px solid #ef444444';
+            badge.textContent = '● Expired';
+          } else {
+            badge.style.background = '#fef3c7'; badge.style.color = '#92400e'; badge.style.border = '1px solid #f59e0b44';
+            badge.textContent = '● ' + (pStatus || 'Unknown');
+          }
+        }
+        const fmtDate = (d) => { if (!d) return '—'; try { return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric'}); } catch { return '—'; } };
+        const purchaseEl = el('purchaseDateLabel');
+        const activeEl   = el('activeDateLabel');
+        if (purchaseEl) purchaseEl.textContent = fmtDate(firstPlan.created_at ?? firstPlan.start_time);
+        if (activeEl)   activeEl.textContent   = fmtDate(firstPlan.start_time ?? firstPlan.date_activated);
       }
 
       // Show content

@@ -89,6 +89,7 @@ export const GET: APIRoute = async ({ request, cookies }) => {
     quota_gb:        Number(p.vendor_quota) || null,
     validity_days:   Number(p.vendor_valadity ?? p.validity) || null,
     start_time:      p.start_time ?? p.date_activated ?? null,
+    created_at:      p.created_at ?? null,
     end_time:        p.end_time ?? null,
     price:           p.vendor_price ?? null,
   }));
