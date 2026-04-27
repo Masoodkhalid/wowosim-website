@@ -25,10 +25,16 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: 'Your cart is empty.' }), { status: 400 });
   }
 
-  // Build line items — try both field name conventions the portal might expect
+  // ── Raw items (passed straight through, matching the working PHP checkout) ──
+  // PHP: json_encode(["line_items" => json_decode(stripslashes($_COOKIE['wordpress_cart']))])
+  // Cart items already contain: id, system_id, name, country, flag, quota, valadity, price_usd, price, quantity
+  const rawLineItems = cartItems;
+
+  // ── Mapped variants in case the portal uses different field names ──
   const line_items = cartItems.map((item: any) => ({
     plan_id:   item.id ?? item.plan_id ?? item.system_id,
     system_id: item.system_id ?? item.id,
+    id:        item.id ?? item.plan_id ?? item.system_id,
     quantity:  item.quantity ?? 1,
     price_usd: item.price_usd ?? item.price ?? 0,
     name:      item.name ?? '',
@@ -41,16 +47,20 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     name:      item.name ?? '',
   }));
 
-  // Try every realistic endpoint + payload combination
+  // Try every realistic endpoint + payload combination.
+  // FIRST: raw items (exactly as PHP does it) — most likely to work.
   const attempts = [
+    { path: '/checkout',          payload: { line_items: rawLineItems } },  // ← matches PHP exactly
     { path: '/checkout',          payload: { line_items } },
     { path: '/checkout',          payload: { items } },
+    { path: '/orders',            payload: { line_items: rawLineItems } },
     { path: '/orders',            payload: { line_items } },
     { path: '/orders',            payload: { items } },
+    { path: '/stripe/checkout',   payload: { line_items: rawLineItems } },
     { path: '/stripe/checkout',   payload: { line_items } },
-    { path: '/checkout_session',  payload: { line_items } },
-    { path: '/payments',          payload: { line_items } },
-    { path: '/stripe/session',    payload: { line_items } },
+    { path: '/checkout_session',  payload: { line_items: rawLineItems } },
+    { path: '/payments',          payload: { line_items: rawLineItems } },
+    { path: '/stripe/session',    payload: { line_items: rawLineItems } },
   ];
 
   const debugLog: Record<string, any> = {};

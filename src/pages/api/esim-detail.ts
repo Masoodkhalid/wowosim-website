@@ -78,16 +78,19 @@ export const GET: APIRoute = async ({ request, cookies }) => {
   const activationCode = esim.activation_code ?? esim.manual_code ?? esim.lpa ?? null;
   const smDpAddress    = esim.sm_dp_plus_address ?? esim.sm_dp_address ?? esim.smdp ?? null;
 
-  // Plan rows for Data Plans section
+  // Plan rows for Data Plans section + topup eligibility check
   const planRows = plans.map((p: any) => ({
     id:              p.id,
     name:            p.vendor_plan_name ?? p.name ?? 'Data Plan',
+    // network_status raw string (PHP checks: != 'NOT_ACTIVE')
+    network_status:  String(p.network_status ?? p.status ?? ''),
     status:          String(p.network_status ?? p.status ?? '').toUpperCase(),
     country:         p.countries_enabled ?? p.country ?? esim.country ?? null,
     quota_bytes:     Number(p.data_quota_bytes ?? 0),
     remaining_bytes: Number(p.data_bytes_remaining ?? p.data_quota_bytes ?? 0),
     quota_gb:        Number(p.vendor_quota) || null,
-    validity_days:   Number(p.vendor_valadity ?? p.validity) || null,
+    // vendor_valadity raw (PHP checks: != 1)
+    validity_days:   p.vendor_valadity != null ? Number(p.vendor_valadity) : (Number(p.validity) || null),
     start_time:      p.start_time ?? p.date_activated ?? null,
     created_at:      p.created_at ?? null,
     end_time:        p.end_time ?? null,

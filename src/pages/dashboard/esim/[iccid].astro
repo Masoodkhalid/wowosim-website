@@ -230,7 +230,7 @@ const { iccid } = Astro.params;
             <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.5rem;padding:1.75rem;">
               <h3 style="font-size:0.95rem;font-weight:800;color:#162544;margin:0 0 1rem;">Quick Actions</h3>
               <div style="display:flex;flex-direction:column;gap:0.6rem;">
-                <a id="topupBtn" href="/destinations" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:linear-gradient(135deg,#162544,#1e3a6e);color:white;border-radius:0.875rem;text-decoration:none;font-size:0.825rem;font-weight:700;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                <a id="topupBtn" href="/destinations" style="display:none;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:linear-gradient(135deg,#162544,#1e3a6e);color:white;border-radius:0.875rem;text-decoration:none;font-size:0.825rem;font-weight:700;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                   Buy Top-Up Plan
                 </a>
@@ -324,15 +324,34 @@ const { iccid } = Astro.params;
       el('cardCountry').textContent = country;
       el('breadcrumbName').textContent = country;
 
-      // ── Update "Buy Top-Up Plan" button to go to the eSIM's country page ──
-      const topupBtn = document.getElementById('topupBtn');
-      if (topupBtn && country && country !== 'eSIM Plan') {
-        const slug = country.toLowerCase().trim()
-          .replace(/\s+/g, '-')
-          .replace(/[^a-z0-9-]/g, '')
-          .replace(/-+/g, '-')
-          .replace(/^-|-$/g, '');
-        if (slug) topupBtn.setAttribute('href', '/' + slug);
+      // ── Topup eligibility (mirrors PHP portal logic) ──
+      // Show "Buy Top-Up Plan" only when at least one plan satisfies:
+      //   end_time > now UTC  AND  network_status != 'NOT_ACTIVE'  AND  vendor_valadity != 1
+      const topupBtn = document.getElementById('topupBtn') as HTMLAnchorElement | null;
+      if (topupBtn) {
+        const planRows: any[] = data.plan_rows ?? [];
+        const nowUtc = new Date();
+        const canTopup = planRows.some(plan => {
+          const endTime = plan.end_time ? new Date(plan.end_time) : null;
+          const notExpired   = endTime ? endTime > nowUtc : false;
+          const isActive     = (plan.status ?? '').toUpperCase() !== 'NOT_ACTIVE';
+          const notTrial     = plan.validity_days !== 1;  // vendor_valadity != 1
+          return notExpired && isActive && notTrial;
+        });
+
+        if (canTopup) {
+          // Set href to the eSIM's country page
+          if (country && country !== 'eSIM Plan') {
+            const slug = country.toLowerCase().trim()
+              .replace(/\s+/g, '-')
+              .replace(/[^a-z0-9-]/g, '')
+              .replace(/-+/g, '-')
+              .replace(/^-|-$/g, '');
+            if (slug) topupBtn.setAttribute('href', '/' + slug);
+          }
+          topupBtn.style.display = 'flex';
+        }
+        // If !canTopup, button stays hidden (display:none set in HTML)
       }
 
       // Card stats
