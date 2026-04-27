@@ -1,57 +1,532 @@
 ---
-const benefits = [
-  {
-    icon: `<svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
-    title: 'No Roaming Charges',
-    desc: 'Pay a fixed price for your data. No surprise bills when you get home. What you see is what you pay.',
-  },
-  {
-    icon: `<svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>`,
-    title: 'Keep Your Number',
-    desc: 'Your physical SIM stays active for calls and SMS. Use eSIM purely for fast data while traveling.',
-  },
-  {
-    icon: `<svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>`,
-    title: 'Easy Installation',
-    desc: 'Scan a QR code in your phone settings. The whole process takes under 2 minutes, no tech skills needed.',
-  },
-  {
-    icon: `<svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>`,
-    title: 'Reliable Internet',
-    desc: 'Connect to top local networks in every country. Fast 4G LTE and 5G speeds wherever you go.',
-  },
-  {
-    icon: `<svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`,
-    title: '24/7 Support',
-    desc: 'Our support team is available around the clock via live chat. We\'re here whenever you need help.',
-  },
-  {
-    icon: `<svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#03def3" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>`,
-    title: 'Global Coverage',
-    desc: 'One account covers 195+ countries. Buy plans for your destinations before you even leave home.',
-  },
-];
+// Benefits.astro — Airalo-style full-width feature carousel with illustrated characters
 ---
 
-<section style="padding:4rem 2rem;background:#f9fafb;">
-  <div style="max-width:80rem;margin:0 auto;">
-    <div style="text-align:center;margin-bottom:2.5rem;">
-      <span style="color:#03def3;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;">Why WoWo SIM</span>
-      <h2 style="font-size:2rem;font-weight:900;color:#162544;margin:0.5rem 0 0.5rem;letter-spacing:-0.5px;">Travel Smarter with eSIM</h2>
-      <p style="color:#9ca3af;font-size:0.9rem;max-width:480px;margin:0 auto;">Everything you need to stay connected, nothing you don't.</p>
+<section style="padding:5rem 0 4.5rem;background:linear-gradient(180deg,#f8faff 0%,#ffffff 100%);overflow:hidden;">
+
+  <!-- Section header -->
+  <div style="text-align:center;margin-bottom:3.5rem;padding:0 2rem;">
+    <span style="display:inline-block;background:rgba(3,222,243,0.1);border:1px solid rgba(3,222,243,0.25);color:#03def3;font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em;padding:0.3rem 1rem;border-radius:9999px;margin-bottom:1rem;">Why WoWo SIM</span>
+    <h2 style="font-size:2.6rem;font-weight:900;color:#162544;margin:0 0 0.75rem;letter-spacing:-1px;">Travel Smarter with eSIM</h2>
+    <p style="color:#9ca3af;font-size:1rem;max-width:460px;margin:0 auto;line-height:1.6;">Everything you need to stay connected, nothing you don't.</p>
+  </div>
+
+  <!-- Slider container -->
+  <div style="position:relative;max-width:82rem;margin:0 auto;padding:0 3.5rem;">
+    <div id="bOuter" style="overflow:hidden;border-radius:2rem;box-shadow:0 20px 60px rgba(22,37,68,0.08);">
+      <div id="bTrack" style="display:flex;transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);will-change:transform;">
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- SLIDE 1 — No Roaming Charges           -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="bSlide" style="min-width:100%;display:grid;grid-template-columns:1fr 1fr;">
+          <!-- Left: illustrated panel -->
+          <div style="background:linear-gradient(145deg,#0f1f3d 0%,#162544 60%,#1a2d50 100%);display:flex;align-items:center;justify-content:center;padding:3rem 2rem;min-height:400px;position:relative;overflow:hidden;">
+            <!-- Background decorations -->
+            <div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:rgba(255,95,0,0.08);border-radius:50%;"></div>
+            <div style="position:absolute;bottom:-30px;left:-30px;width:140px;height:140px;background:rgba(3,222,243,0.06);border-radius:50%;"></div>
+            <!-- Character: person throwing away bill, holding phone with WoWo -->
+            <svg width="260" height="300" viewBox="0 0 260 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1;">
+              <!-- Crossed-out bill (top left) -->
+              <rect x="8" y="30" width="70" height="44" rx="8" fill="#fef3c7" opacity="0.9" transform="rotate(-12 43 52)"/>
+              <text x="28" y="58" fill="#d97706" font-size="16" font-weight="800" font-family="system-ui" transform="rotate(-12 43 52)">$$$</text>
+              <line x1="4" y1="26" x2="82" y2="78" stroke="#ef4444" stroke-width="3.5" stroke-linecap="round" opacity="0.9"/>
+              <line x1="82" y1="26" x2="4" y2="78" stroke="#ef4444" stroke-width="3.5" stroke-linecap="round" opacity="0.9"/>
+              <!-- WoWo price tag (top right) -->
+              <rect x="168" y="22" width="82" height="46" rx="10" fill="#FF5F00" opacity="0.95"/>
+              <text x="209" y="42" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="system-ui">FROM ONLY</text>
+              <text x="209" y="60" text-anchor="middle" fill="white" font-size="16" font-weight="900" font-family="system-ui">$3.50</text>
+              <!-- Shadow -->
+              <ellipse cx="130" cy="292" rx="60" ry="10" fill="rgba(0,0,0,0.2)"/>
+              <!-- Legs -->
+              <path d="M110 218 Q106 255 102 280" stroke="#162544" stroke-width="26" stroke-linecap="round" fill="none"/>
+              <path d="M150 218 Q154 255 158 280" stroke="#1e3a6e" stroke-width="26" stroke-linecap="round" fill="none"/>
+              <!-- Shoes -->
+              <ellipse cx="104" cy="280" rx="22" ry="9" fill="#0f172a"/>
+              <ellipse cx="156" cy="280" rx="22" ry="9" fill="#0f172a"/>
+              <!-- Left arm (tossing bill away — drawn before body) -->
+              <path d="M98 148 Q72 130 58 108" stroke="#FF5F00" stroke-width="22" stroke-linecap="round" fill="none"/>
+              <path d="M58 108 Q50 92 46 76" stroke="#f4c99e" stroke-width="18" stroke-linecap="round" fill="none"/>
+              <circle cx="46" cy="68" r="16" fill="#f4c99e"/>
+              <!-- Right arm (holding phone) -->
+              <path d="M162 150 Q188 138 198 118" stroke="#FF5F00" stroke-width="22" stroke-linecap="round" fill="none"/>
+              <!-- Phone -->
+              <rect x="192" y="96" width="30" height="50" rx="7" fill="#0f172a"/>
+              <rect x="196" y="102" width="22" height="38" rx="5" fill="#1e3a6e"/>
+              <rect x="196" y="102" width="22" height="14" rx="4" fill="#162544"/>
+              <text x="207" y="113" text-anchor="middle" fill="#03def3" font-size="5.5" font-weight="800" font-family="system-ui">WoWo</text>
+              <circle cx="207" cy="126" r="5" fill="rgba(34,197,94,0.25)"/>
+              <path d="M204 126 L206 128 L211 123" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <!-- Body -->
+              <rect x="96" y="142" width="68" height="82" rx="24" fill="#FF5F00"/>
+              <rect x="96" y="142" width="68" height="30" rx="24" fill="rgba(255,255,255,0.1)"/>
+              <path d="M118 144 L130 158 L142 144" fill="white" opacity="0.6"/>
+              <!-- Neck -->
+              <rect x="120" y="125" width="20" height="22" rx="8" fill="#f4c99e"/>
+              <!-- Head -->
+              <circle cx="130" cy="100" r="36" fill="#f4c99e"/>
+              <!-- Hair -->
+              <path d="M96 84 Q98 58 130 52 Q162 58 164 84" fill="#2d1810"/>
+              <!-- Eyes (happy) -->
+              <circle cx="118" cy="97" r="7" fill="white"/>
+              <circle cx="142" cy="97" r="7" fill="white"/>
+              <circle cx="120" cy="99" r="4.5" fill="#1a0a05"/>
+              <circle cx="144" cy="99" r="4.5" fill="#1a0a05"/>
+              <circle cx="121" cy="97" r="2" fill="white"/>
+              <circle cx="145" cy="97" r="2" fill="white"/>
+              <!-- Big smile -->
+              <path d="M116 111 Q130 124 144 111" fill="#c06040"/>
+              <path d="M120 113 Q130 121 140 113" fill="white"/>
+              <!-- Blush -->
+              <ellipse cx="108" cy="104" rx="10" ry="6.5" fill="#ff8c6b" opacity="0.22"/>
+              <ellipse cx="152" cy="104" rx="10" ry="6.5" fill="#ff8c6b" opacity="0.22"/>
+            </svg>
+          </div>
+          <!-- Right: text -->
+          <div style="background:white;display:flex;flex-direction:column;justify-content:center;padding:3.5rem 3rem;">
+            <span style="display:inline-block;background:#fff7ed;color:#FF5F00;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;padding:0.25rem 0.75rem;border-radius:9999px;margin-bottom:1.25rem;width:fit-content;">Save Money</span>
+            <h3 style="font-size:2.4rem;font-weight:900;color:#162544;margin:0 0 1rem;line-height:1.1;letter-spacing:-1px;">No Roaming<br/>Charges</h3>
+            <p style="color:#6b7280;font-size:1rem;line-height:1.7;margin:0 0 2rem;">Pay a fixed price for your data. No surprise bills when you get home. What you see is what you pay — always.</p>
+            <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+              <a href="/destinations" style="display:inline-flex;align-items:center;gap:0.5rem;background:#FF5F00;color:white;font-weight:700;font-size:0.875rem;padding:0.7rem 1.5rem;border-radius:9999px;text-decoration:none;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Find Plans →</a>
+              <span style="font-size:0.8rem;color:#9ca3af;">From $3.50/day</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- SLIDE 2 — Keep Your Number             -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="bSlide" style="min-width:100%;display:grid;grid-template-columns:1fr 1fr;">
+          <div style="background:linear-gradient(145deg,#03def3 0%,#0ea5e9 50%,#42BFCA 100%);display:flex;align-items:center;justify-content:center;padding:3rem 2rem;min-height:400px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:rgba(255,255,255,0.06);border-radius:50%;"></div>
+            <div style="position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;background:rgba(22,37,68,0.08);border-radius:50%;"></div>
+            <!-- Two phone cards floating -->
+            <svg width="260" height="300" viewBox="0 0 260 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1;">
+              <!-- Physical SIM card (left) -->
+              <rect x="22" y="50" width="56" height="42" rx="8" fill="white" opacity="0.9"/>
+              <rect x="28" y="56" width="20" height="16" rx="3" fill="#d4af37"/>
+              <text x="50" y="84" text-anchor="middle" fill="#374151" font-size="6.5" font-weight="700" font-family="system-ui">SIM</text>
+              <text x="50" y="74" text-anchor="middle" fill="#9ca3af" font-size="5" font-family="system-ui">PHYSICAL</text>
+              <!-- eSIM card (right) -->
+              <rect x="182" y="44" width="56" height="46" rx="8" fill="#162544" opacity="0.95"/>
+              <text x="210" y="64" text-anchor="middle" fill="#03def3" font-size="8" font-weight="800" font-family="system-ui">eSIM</text>
+              <rect x="192" y="70" width="36" height="3" rx="1.5" fill="rgba(3,222,243,0.4)"/>
+              <rect x="192" y="76" width="24" height="3" rx="1.5" fill="rgba(3,222,243,0.25)"/>
+              <rect x="192" y="82" width="30" height="3" rx="1.5" fill="rgba(3,222,243,0.3)"/>
+              <!-- Plus sign between cards -->
+              <text x="130" y="76" text-anchor="middle" fill="white" font-size="22" font-weight="900" font-family="system-ui" opacity="0.8">+</text>
+              <!-- Shadow -->
+              <ellipse cx="130" cy="292" rx="58" ry="10" fill="rgba(0,0,0,0.15)"/>
+              <!-- Legs -->
+              <path d="M112 218 Q108 255 104 280" stroke="#0369a1" stroke-width="26" stroke-linecap="round" fill="none"/>
+              <path d="M148 218 Q152 255 156 280" stroke="#0284c7" stroke-width="26" stroke-linecap="round" fill="none"/>
+              <ellipse cx="106" cy="280" rx="22" ry="9" fill="#0f172a"/>
+              <ellipse cx="154" cy="280" rx="22" ry="9" fill="#0f172a"/>
+              <!-- Left arm (phone to ear) -->
+              <path d="M100 150 Q74 135 62 115" stroke="#42BFCA" stroke-width="22" stroke-linecap="round" fill="none"/>
+              <path d="M62 115 Q55 100 52 86" stroke="#f4c99e" stroke-width="18" stroke-linecap="round" fill="none"/>
+              <!-- Phone at ear -->
+              <rect x="40" y="66" width="24" height="40" rx="6" fill="#0f172a"/>
+              <rect x="44" y="70" width="16" height="32" rx="4" fill="#1e3a6e"/>
+              <!-- Right arm (down) -->
+              <path d="M160 150 Q182 142 188 130" stroke="#42BFCA" stroke-width="22" stroke-linecap="round" fill="none"/>
+              <circle cx="190" cy="122" r="14" fill="#f4c99e"/>
+              <!-- Body: teal jacket -->
+              <rect x="98" y="142" width="64" height="82" rx="22" fill="#0284c7"/>
+              <rect x="98" y="142" width="64" height="28" rx="22" fill="rgba(255,255,255,0.12)"/>
+              <path d="M118 144 L130 158 L142 144" fill="white" opacity="0.55"/>
+              <rect x="120" y="125" width="20" height="22" rx="8" fill="#f4c99e"/>
+              <circle cx="130" cy="100" r="36" fill="#f4c99e"/>
+              <path d="M96 84 Q98 58 130 52 Q162 58 164 84" fill="#1a0a05"/>
+              <path d="M96 78 Q92 60 98 46" stroke="#1a0a05" stroke-width="7" stroke-linecap="round" fill="none"/>
+              <circle cx="118" cy="97" r="7" fill="white"/>
+              <circle cx="142" cy="97" r="7" fill="white"/>
+              <circle cx="120" cy="99" r="4.5" fill="#1a0a05"/>
+              <circle cx="144" cy="99" r="4.5" fill="#1a0a05"/>
+              <circle cx="121" cy="97" r="2" fill="white"/>
+              <circle cx="145" cy="97" r="2" fill="white"/>
+              <path d="M118 111 Q130 122 142 111" stroke="#c06040" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <ellipse cx="108" cy="104" rx="10" ry="6.5" fill="#ff8c6b" opacity="0.2"/>
+              <ellipse cx="152" cy="104" rx="10" ry="6.5" fill="#ff8c6b" opacity="0.2"/>
+            </svg>
+          </div>
+          <div style="background:white;display:flex;flex-direction:column;justify-content:center;padding:3.5rem 3rem;">
+            <span style="display:inline-block;background:#f0fdff;color:#0284c7;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;padding:0.25rem 0.75rem;border-radius:9999px;margin-bottom:1.25rem;width:fit-content;">Stay Connected</span>
+            <h3 style="font-size:2.4rem;font-weight:900;color:#162544;margin:0 0 1rem;line-height:1.1;letter-spacing:-1px;">Keep Your<br/>Number</h3>
+            <p style="color:#6b7280;font-size:1rem;line-height:1.7;margin:0 0 2rem;">Your physical SIM stays active for calls and SMS. Use eSIM purely for fast data while traveling — no SIM swap needed.</p>
+            <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+              <a href="/faqs" style="display:inline-flex;align-items:center;gap:0.5rem;background:#162544;color:white;font-weight:700;font-size:0.875rem;padding:0.7rem 1.5rem;border-radius:9999px;text-decoration:none;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">How It Works →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- SLIDE 3 — Easy Installation            -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="bSlide" style="min-width:100%;display:grid;grid-template-columns:1fr 1fr;">
+          <div style="background:linear-gradient(145deg,#42BFCA 0%,#03def3 60%,#0ea5e9 100%);display:flex;align-items:center;justify-content:center;padding:3rem 2rem;min-height:400px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:30px;left:30px;width:80px;height:80px;background:rgba(255,255,255,0.08);border-radius:1rem;transform:rotate(15deg);"></div>
+            <div style="position:absolute;bottom:30px;right:30px;width:60px;height:60px;background:rgba(255,255,255,0.06);border-radius:50%;"></div>
+            <svg width="260" height="300" viewBox="0 0 260 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1;">
+              <!-- QR code card floating top -->
+              <rect x="70" y="22" width="120" height="68" rx="12" fill="white" opacity="0.96"/>
+              <text x="130" y="42" text-anchor="middle" fill="#162544" font-size="8" font-weight="700" font-family="system-ui">SCAN QR CODE</text>
+              <!-- QR pattern -->
+              <rect x="80" y="48" width="14" height="14" rx="2" fill="#162544"/>
+              <rect x="82" y="50" width="10" height="10" rx="1" fill="white"/>
+              <rect x="84" y="52" width="6" height="6" rx="0.5" fill="#162544"/>
+              <rect x="106" y="48" width="14" height="14" rx="2" fill="#162544"/>
+              <rect x="108" y="50" width="10" height="10" rx="1" fill="white"/>
+              <rect x="110" y="52" width="6" height="6" rx="0.5" fill="#162544"/>
+              <rect x="80" y="72" width="14" height="14" rx="2" fill="#162544"/>
+              <rect x="82" y="74" width="10" height="10" rx="1" fill="white"/>
+              <rect x="84" y="76" width="6" height="6" rx="0.5" fill="#162544"/>
+              <rect x="96" y="50" width="5" height="5" rx="0.5" fill="#162544"/>
+              <rect x="96" y="58" width="5" height="5" rx="0.5" fill="#162544"/>
+              <rect x="96" y="66" width="5" height="5" rx="0.5" fill="#162544"/>
+              <rect x="96" y="74" width="5" height="5" rx="0.5" fill="#162544"/>
+              <rect x="126" y="56" width="5" height="5" rx="0.5" fill="#162544"/>
+              <rect x="126" y="64" width="5" height="5" rx="0.5" fill="#162544"/>
+              <rect x="126" y="72" width="5" height="5" rx="0.5" fill="#162544"/>
+              <!-- Checkmark badge -->
+              <circle cx="175" cy="36" r="14" fill="#22c55e"/>
+              <path d="M168 36 L173 41 L182 30" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <!-- Shadow -->
+              <ellipse cx="130" cy="292" rx="58" ry="10" fill="rgba(0,0,0,0.15)"/>
+              <!-- Legs -->
+              <path d="M112 218 Q108 255 104 280" stroke="#0369a1" stroke-width="26" stroke-linecap="round" fill="none"/>
+              <path d="M148 218 Q152 255 156 280" stroke="#0284c7" stroke-width="26" stroke-linecap="round" fill="none"/>
+              <ellipse cx="106" cy="280" rx="22" ry="9" fill="#0f172a"/>
+              <ellipse cx="154" cy="280" rx="22" ry="9" fill="#0f172a"/>
+              <!-- Both arms holding phone up -->
+              <path d="M100 152 Q78 140 68 120" stroke="#162544" stroke-width="22" stroke-linecap="round" fill="none"/>
+              <path d="M68 120 Q62 106 60 94" stroke="#8b5e3c" stroke-width="18" stroke-linecap="round" fill="none"/>
+              <path d="M160 152 Q182 140 192 120" stroke="#162544" stroke-width="22" stroke-linecap="round" fill="none"/>
+              <path d="M192 120 Q198 106 200 94" stroke="#8b5e3c" stroke-width="18" stroke-linecap="round" fill="none"/>
+              <!-- Phone held up (big) -->
+              <rect x="88" y="155" width="84" height="58" rx="10" fill="#0f172a" transform="rotate(-90 130 184)"/>
+              <!-- Body: navy -->
+              <rect x="100" y="142" width="60" height="80" rx="22" fill="#162544"/>
+              <rect x="100" y="142" width="60" height="26" rx="22" fill="rgba(255,255,255,0.1)"/>
+              <rect x="120" y="125" width="20" height="22" rx="8" fill="#8b5e3c"/>
+              <circle cx="130" cy="100" r="36" fill="#8b5e3c"/>
+              <path d="M96 82 Q98 56 130 50 Q162 56 164 82" fill="#1a0a05"/>
+              <path d="M96 82 Q92 110 97 130 Q100 145 108 152" stroke="#1a0a05" stroke-width="10" stroke-linecap="round" fill="none"/>
+              <path d="M164 82 Q168 110 163 130 Q160 145 152 152" stroke="#1a0a05" stroke-width="10" stroke-linecap="round" fill="none"/>
+              <circle cx="118" cy="97" r="7" fill="white"/>
+              <circle cx="142" cy="97" r="7" fill="white"/>
+              <circle cx="120" cy="99" r="4.5" fill="#1a0a05"/>
+              <circle cx="144" cy="99" r="4.5" fill="#1a0a05"/>
+              <circle cx="121" cy="97" r="2" fill="white"/>
+              <circle cx="145" cy="97" r="2" fill="white"/>
+              <path d="M118 113 Q130 126 142 113" fill="#7a3a25"/>
+              <path d="M122 115 Q130 122 138 115" fill="white"/>
+              <ellipse cx="108" cy="104" rx="10" ry="6.5" fill="#ff8c6b" opacity="0.22"/>
+              <ellipse cx="152" cy="104" rx="10" ry="6.5" fill="#ff8c6b" opacity="0.22"/>
+            </svg>
+          </div>
+          <div style="background:white;display:flex;flex-direction:column;justify-content:center;padding:3.5rem 3rem;">
+            <span style="display:inline-block;background:#f0fdff;color:#0369a1;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;padding:0.25rem 0.75rem;border-radius:9999px;margin-bottom:1.25rem;width:fit-content;">Quick Setup</span>
+            <h3 style="font-size:2.4rem;font-weight:900;color:#162544;margin:0 0 1rem;line-height:1.1;letter-spacing:-1px;">Easy<br/>Installation</h3>
+            <p style="color:#6b7280;font-size:1rem;line-height:1.7;margin:0 0 1.5rem;">Scan a QR code in your phone settings. The whole process takes under 2 minutes, no tech skills needed.</p>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:2rem;">
+              {['1. Add plan to cart & checkout','2. Check email for QR code','3. Scan in Phone Settings → Add eSIM'].map(step => (
+                <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.85rem;color:#374151;">
+                  <span style="color:#22c55e;font-weight:700;">✓</span>{step}
+                </div>
+              ))}
+            </div>
+            <a href="/help-center" style="display:inline-flex;align-items:center;gap:0.5rem;background:#03def3;color:#162544;font-weight:700;font-size:0.875rem;padding:0.7rem 1.5rem;border-radius:9999px;text-decoration:none;width:fit-content;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">See Install Guide →</a>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- SLIDE 4 — Reliable Internet            -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="bSlide" style="min-width:100%;display:grid;grid-template-columns:1fr 1fr;">
+          <div style="background:linear-gradient(145deg,#162544 0%,#1e3a6e 60%,#162544 100%);display:flex;align-items:center;justify-content:center;padding:3rem 2rem;min-height:400px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;border:2px solid rgba(3,222,243,0.1);border-radius:50%;pointer-events:none;"></div>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:220px;height:220px;border:1.5px solid rgba(3,222,243,0.08);border-radius:50%;pointer-events:none;"></div>
+            <svg width="260" height="300" viewBox="0 0 260 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1;">
+              <!-- WiFi / signal arcs above head -->
+              <path d="M74 68 Q130 20 186 68" stroke="#03def3" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.9"/>
+              <path d="M90 82 Q130 46 170 82" stroke="#03def3" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.7"/>
+              <path d="M106 96 Q130 72 154 96" stroke="#03def3" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.55"/>
+              <circle cx="130" cy="104" r="5" fill="#03def3"/>
+              <!-- Signal strength bars (side) -->
+              <rect x="210" y="130" width="10" height="8" rx="2" fill="#03def3" opacity="0.4"/>
+              <rect x="224" y="122" width="10" height="16" rx="2" fill="#03def3" opacity="0.6"/>
+              <rect x="238" y="113" width="10" height="25" rx="2" fill="#03def3" opacity="0.85"/>
+              <text x="243" y="148" text-anchor="middle" fill="#03def3" font-size="7" font-weight="700" font-family="system-ui">5G</text>
+              <!-- Shadow -->
+              <ellipse cx="130" cy="292" rx="58" ry="10" fill="rgba(0,0,0,0.2)"/>
+              <!-- Legs -->
+              <path d="M112 218 Q108 255 104 280" stroke="#374151" stroke-width="26" stroke-linecap="round" fill="none"/>
+              <path d="M148 218 Q152 255 156 280" stroke="#4b5563" stroke-width="26" stroke-linecap="round" fill="none"/>
+              <ellipse cx="106" cy="280" rx="22" ry="9" fill="#03def3"/>
+              <ellipse cx="154" cy="280" rx="22" ry="9" fill="#03def3"/>
+              <!-- Arms -->
+              <path d="M100 148 Q78 140 72 128" stroke="#1e3a6e" stroke-width="22" stroke-linecap="round" fill="none"/>
+              <circle cx="70" cy="120" r="14" fill="#f4c99e"/>
+              <path d="M160 148 Q182 140 188 128" stroke="#1e3a6e" stroke-width="22" stroke-linecap="round" fill="none"/>
+              <circle cx="190" cy="120" r="14" fill="#f4c99e"/>
+              <!-- Body: navy hoodie -->
+              <rect x="98" y="140" width="64" height="84" rx="22" fill="#1e3a6e"/>
+              <rect x="98" y="140" width="64" height="26" rx="22" fill="rgba(3,222,243,0.12)"/>
+              <text x="130" y="176" text-anchor="middle" fill="#03def3" font-size="8" font-weight="800" font-family="system-ui">WoWo</text>
+              <rect x="118" y="124" width="24" height="20" rx="8" fill="#f4c99e"/>
+              <circle cx="130" cy="100" r="36" fill="#f4c99e"/>
+              <path d="M96 84 Q98 58 130 52 Q162 58 164 84" fill="#4a2c0a"/>
+              <circle cx="118" cy="97" r="7" fill="white"/>
+              <circle cx="142" cy="97" r="7" fill="white"/>
+              <circle cx="120" cy="99" r="4.5" fill="#1a0a05"/>
+              <circle cx="144" cy="99" r="4.5" fill="#1a0a05"/>
+              <circle cx="121" cy="97" r="2" fill="white"/>
+              <circle cx="145" cy="97" r="2" fill="white"/>
+              <path d="M118 111 Q130 123 142 111" stroke="#c06040" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <ellipse cx="108" cy="104" rx="10" ry="6.5" fill="#ff8c6b" opacity="0.2"/>
+              <ellipse cx="152" cy="104" rx="10" ry="6.5" fill="#ff8c6b" opacity="0.2"/>
+            </svg>
+          </div>
+          <div style="background:white;display:flex;flex-direction:column;justify-content:center;padding:3.5rem 3rem;">
+            <span style="display:inline-block;background:#f0fdff;color:#03def3;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;padding:0.25rem 0.75rem;border-radius:9999px;margin-bottom:1.25rem;width:fit-content;border:1px solid rgba(3,222,243,0.2);">Fast Data</span>
+            <h3 style="font-size:2.4rem;font-weight:900;color:#162544;margin:0 0 1rem;line-height:1.1;letter-spacing:-1px;">Reliable<br/>Internet</h3>
+            <p style="color:#6b7280;font-size:1rem;line-height:1.7;margin:0 0 1.5rem;">Connect to top local networks in every country. Fast 4G LTE and 5G speeds wherever you go — no compromises.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:2rem;">
+              {[['4G LTE','All countries'],['5G Ready','Select markets'],['99.9%','Uptime SLA'],['Local Networks','No throttling']].map(([v,l]) => (
+                <div style="background:#f8faff;border:1px solid #e5e7eb;border-radius:0.75rem;padding:0.75rem;">
+                  <p style="font-size:1rem;font-weight:900;color:#162544;margin:0;">{v}</p>
+                  <p style="font-size:0.72rem;color:#9ca3af;margin:0;">{l}</p>
+                </div>
+              ))}
+            </div>
+            <a href="/destinations" style="display:inline-flex;align-items:center;gap:0.5rem;background:#162544;color:white;font-weight:700;font-size:0.875rem;padding:0.7rem 1.5rem;border-radius:9999px;text-decoration:none;width:fit-content;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Check Coverage →</a>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- SLIDE 5 — 24/7 Support                 -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="bSlide" style="min-width:100%;display:grid;grid-template-columns:1fr 1fr;">
+          <div style="background:linear-gradient(145deg,#FF5F00 0%,#e55200 60%,#FF5F00 100%);display:flex;align-items:center;justify-content:center;padding:3rem 2rem;min-height:400px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:-40px;left:-40px;width:160px;height:160px;background:rgba(255,255,255,0.06);border-radius:50%;"></div>
+            <svg width="260" height="300" viewBox="0 0 260 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1;">
+              <!-- Chat bubbles -->
+              <rect x="158" y="28" width="88" height="44" rx="12" fill="white" opacity="0.95"/>
+              <path d="M170 72 L162 82 L178 72" fill="white" opacity="0.95"/>
+              <text x="202" y="48" text-anchor="middle" fill="#FF5F00" font-size="8.5" font-weight="800" font-family="system-ui">Here to</text>
+              <text x="202" y="62" text-anchor="middle" fill="#FF5F00" font-size="8.5" font-weight="800" font-family="system-ui">help! 😊</text>
+              <!-- Small chat bubble left -->
+              <rect x="14" y="60" width="72" height="34" rx="10" fill="white" opacity="0.8"/>
+              <path d="M66 94 L72 104 L58 94" fill="white" opacity="0.8"/>
+              <text x="50" y="80" text-anchor="middle" fill="#374151" font-size="8" font-weight="600" font-family="system-ui">Need help</text>
+              <text x="50" y="90" text-anchor="middle" fill="#374151" font-size="8" font-weight="600" font-family="system-ui">with eSIM?</text>
+              <!-- Clock / 24h badge -->
+              <circle cx="28" cy="148" r="22" fill="white" opacity="0.95"/>
+              <text x="28" y="144" text-anchor="middle" fill="#FF5F00" font-size="8" font-weight="900" font-family="system-ui">24/7</text>
+              <text x="28" y="156" text-anchor="middle" fill="#9ca3af" font-size="6" font-family="system-ui">SUPPORT</text>
+              <!-- Shadow -->
+              <ellipse cx="130" cy="292" rx="58" ry="10" fill="rgba(0,0,0,0.15)"/>
+              <!-- Legs -->
+              <path d="M112 218 Q108 252 104 280" stroke="#c0392b" stroke-width="26" stroke-linecap="round" fill="none"/>
+              <path d="M148 218 Q152 252 156 280" stroke="#e74c3c" stroke-width="26" stroke-linecap="round" fill="none"/>
+              <ellipse cx="106" cy="280" rx="22" ry="9" fill="#0f172a"/>
+              <ellipse cx="154" cy="280" rx="22" ry="9" fill="#0f172a"/>
+              <!-- Left arm (on desk, casual) -->
+              <path d="M100 150 Q76 148 68 148" stroke="#FF5F00" stroke-width="22" stroke-linecap="round" fill="none"/>
+              <circle cx="60" cy="148" r="14" fill="#f4c99e"/>
+              <!-- Right arm -->
+              <path d="M160 150 Q184 148 192 148" stroke="#FF5F00" stroke-width="22" stroke-linecap="round" fill="none"/>
+              <circle cx="200" cy="148" r="14" fill="#f4c99e"/>
+              <!-- Body: orange shirt -->
+              <rect x="98" y="140" width="64" height="84" rx="22" fill="#e55200"/>
+              <rect x="98" y="140" width="64" height="26" rx="22" fill="rgba(255,255,255,0.12)"/>
+              <!-- Headset -->
+              <path d="M96 94 Q92 76 96 60" stroke="#162544" stroke-width="5" stroke-linecap="round" fill="none"/>
+              <circle cx="96" cy="58" r="8" fill="#162544"/>
+              <circle cx="96" cy="58" r="5" fill="#03def3"/>
+              <path d="M164 94 Q168 76 164 60" stroke="#162544" stroke-width="5" stroke-linecap="round" fill="none"/>
+              <circle cx="164" cy="58" r="8" fill="#162544"/>
+              <circle cx="164" cy="58" r="5" fill="#03def3"/>
+              <path d="M96 58 Q130 40 164 58" stroke="#162544" stroke-width="4" stroke-linecap="round" fill="none"/>
+              <!-- Neck -->
+              <rect x="120" y="124" width="20" height="22" rx="8" fill="#f4c99e"/>
+              <!-- Head -->
+              <circle cx="130" cy="100" r="36" fill="#f4c99e"/>
+              <path d="M96 84 Q98 58 130 52 Q162 58 164 84" fill="#2d1810"/>
+              <circle cx="118" cy="97" r="7" fill="white"/>
+              <circle cx="142" cy="97" r="7" fill="white"/>
+              <circle cx="120" cy="99" r="4.5" fill="#1a0a05"/>
+              <circle cx="144" cy="99" r="4.5" fill="#1a0a05"/>
+              <circle cx="121" cy="97" r="2" fill="white"/>
+              <circle cx="145" cy="97" r="2" fill="white"/>
+              <path d="M118 111 Q130 124 142 111" fill="#c06040"/>
+              <path d="M122 113 Q130 120 138 113" fill="white"/>
+              <ellipse cx="108" cy="104" rx="10" ry="6.5" fill="#ff8c6b" opacity="0.22"/>
+              <ellipse cx="152" cy="104" rx="10" ry="6.5" fill="#ff8c6b" opacity="0.22"/>
+            </svg>
+          </div>
+          <div style="background:white;display:flex;flex-direction:column;justify-content:center;padding:3.5rem 3rem;">
+            <span style="display:inline-block;background:#fff7ed;color:#FF5F00;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;padding:0.25rem 0.75rem;border-radius:9999px;margin-bottom:1.25rem;width:fit-content;">Always Available</span>
+            <h3 style="font-size:2.4rem;font-weight:900;color:#162544;margin:0 0 1rem;line-height:1.1;letter-spacing:-1px;">24/7<br/>Support</h3>
+            <p style="color:#6b7280;font-size:1rem;line-height:1.7;margin:0 0 1.5rem;">Our support team is available around the clock via live chat and WhatsApp. We're here whenever you need help — before, during, or after your trip.</p>
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+              <a href="/contact" style="display:inline-flex;align-items:center;gap:0.5rem;background:#FF5F00;color:white;font-weight:700;font-size:0.875rem;padding:0.7rem 1.5rem;border-radius:9999px;text-decoration:none;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Contact Us →</a>
+              <a href="https://wa.me/17135146210" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.5rem;background:#25D366;color:white;font-weight:700;font-size:0.875rem;padding:0.7rem 1.5rem;border-radius:9999px;text-decoration:none;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">WhatsApp →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- SLIDE 6 — Global Coverage              -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="bSlide" style="min-width:100%;display:grid;grid-template-columns:1fr 1fr;">
+          <div style="background:linear-gradient(145deg,#0f1f3d 0%,#162544 50%,#1a2d50 100%);display:flex;align-items:center;justify-content:center;padding:3rem 2rem;min-height:400px;position:relative;overflow:hidden;">
+            <!-- Floating flag bubbles -->
+            <span style="position:absolute;top:30px;left:28px;font-size:1.8rem;opacity:0.8;">🇯🇵</span>
+            <span style="position:absolute;top:44px;right:32px;font-size:1.6rem;opacity:0.75;">🇺🇸</span>
+            <span style="position:absolute;top:130px;left:14px;font-size:1.4rem;opacity:0.7;">🇫🇷</span>
+            <span style="position:absolute;top:150px;right:16px;font-size:1.5rem;opacity:0.72;">🇬🇧</span>
+            <span style="position:absolute;bottom:120px;left:24px;font-size:1.6rem;opacity:0.75;">🇦🇪</span>
+            <span style="position:absolute;bottom:110px;right:24px;font-size:1.4rem;opacity:0.7;">🇰🇷</span>
+            <svg width="260" height="300" viewBox="0 0 260 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1;">
+              <!-- Globe beneath character -->
+              <ellipse cx="130" cy="255" rx="72" ry="24" fill="rgba(3,222,243,0.12)" stroke="rgba(3,222,243,0.2)" stroke-width="1.5"/>
+              <ellipse cx="130" cy="255" rx="56" ry="18" fill="rgba(3,222,243,0.08)"/>
+              <!-- 195+ badge -->
+              <rect x="168" y="30" width="76" height="46" rx="12" fill="#03def3" opacity="0.95"/>
+              <text x="206" y="50" text-anchor="middle" fill="#162544" font-size="14" font-weight="900" font-family="system-ui">195+</text>
+              <text x="206" y="66" text-anchor="middle" fill="#162544" font-size="8" font-weight="700" font-family="system-ui">COUNTRIES</text>
+              <!-- Shadow -->
+              <ellipse cx="130" cy="292" rx="55" ry="10" fill="rgba(0,0,0,0.18)"/>
+              <!-- Legs (standing on globe) -->
+              <path d="M112 215 Q108 238 106 258" stroke="#1e3a6e" stroke-width="26" stroke-linecap="round" fill="none"/>
+              <path d="M148 215 Q152 238 154 258" stroke="#162544" stroke-width="26" stroke-linecap="round" fill="none"/>
+              <ellipse cx="108" cy="258" rx="22" ry="9" fill="#0f172a"/>
+              <ellipse cx="152" cy="258" rx="22" ry="9" fill="#0f172a"/>
+              <!-- Left arm waving -->
+              <path d="M100 148 Q76 128 62 104" stroke="#42BFCA" stroke-width="22" stroke-linecap="round" fill="none"/>
+              <path d="M62 104 Q54 88 50 72" stroke="#f4c99e" stroke-width="18" stroke-linecap="round" fill="none"/>
+              <circle cx="50" cy="62" r="16" fill="#f4c99e"/>
+              <rect x="36" y="44" width="11" height="25" rx="5.5" fill="#f4c99e"/>
+              <rect x="49" y="40" width="11" height="27" rx="5.5" fill="#f4c99e"/>
+              <rect x="62" y="43" width="11" height="23" rx="5.5" fill="#f4c99e"/>
+              <!-- Right arm down -->
+              <path d="M160 148 Q182 140 190 130" stroke="#42BFCA" stroke-width="22" stroke-linecap="round" fill="none"/>
+              <circle cx="193" cy="122" r="14" fill="#f4c99e"/>
+              <!-- Body: teal jacket -->
+              <rect x="98" y="140" width="64" height="80" rx="22" fill="#42BFCA"/>
+              <rect x="98" y="140" width="64" height="26" rx="22" fill="rgba(255,255,255,0.12)"/>
+              <path d="M118 142 L130 156 L142 142" fill="white" opacity="0.55"/>
+              <rect x="120" y="124" width="20" height="20" rx="8" fill="#8b5e3c"/>
+              <circle cx="130" cy="100" r="36" fill="#8b5e3c"/>
+              <path d="M96 84 Q98 58 130 52 Q162 58 164 84" fill="#1a0a05"/>
+              <path d="M96 84 Q92 108 98 128 Q101 140 108 146" stroke="#1a0a05" stroke-width="10" stroke-linecap="round" fill="none"/>
+              <path d="M164 84 Q168 108 162 128 Q159 140 152 146" stroke="#1a0a05" stroke-width="10" stroke-linecap="round" fill="none"/>
+              <circle cx="118" cy="97" r="7" fill="white"/>
+              <circle cx="142" cy="97" r="7" fill="white"/>
+              <circle cx="120" cy="99" r="4.5" fill="#1a0a05"/>
+              <circle cx="144" cy="99" r="4.5" fill="#1a0a05"/>
+              <circle cx="121" cy="97" r="2" fill="white"/>
+              <circle cx="145" cy="97" r="2" fill="white"/>
+              <path d="M118 113 Q130 126 142 113" fill="#7a3a25"/>
+              <path d="M122 115 Q130 122 138 115" fill="white"/>
+              <ellipse cx="108" cy="104" rx="10" ry="6.5" fill="#ff8c6b" opacity="0.22"/>
+              <ellipse cx="152" cy="104" rx="10" ry="6.5" fill="#ff8c6b" opacity="0.22"/>
+              <circle cx="307" cy="105" r="4.5" fill="#FFD700" opacity="0"/>
+            </svg>
+          </div>
+          <div style="background:white;display:flex;flex-direction:column;justify-content:center;padding:3.5rem 3rem;">
+            <span style="display:inline-block;background:#f0fdff;color:#03def3;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;padding:0.25rem 0.75rem;border-radius:9999px;margin-bottom:1.25rem;width:fit-content;border:1px solid rgba(3,222,243,0.2);">Worldwide</span>
+            <h3 style="font-size:2.4rem;font-weight:900;color:#162544;margin:0 0 1rem;line-height:1.1;letter-spacing:-1px;">Global<br/>Coverage</h3>
+            <p style="color:#6b7280;font-size:1rem;line-height:1.7;margin:0 0 1.5rem;">One account covers 195+ countries. Buy plans for your destinations before you even leave home — regional or local, we've got you.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:2rem;">
+              {['🇯🇵 Japan','🇺🇸 USA','🇫🇷 Europe','🇦🇪 UAE','🇹🇭 Thailand','🇦🇺 Australia','+ 189 more'].map(f => (
+                <span style="background:#f8faff;border:1px solid #e5e7eb;color:#374151;font-size:0.75rem;font-weight:600;padding:0.25rem 0.65rem;border-radius:9999px;">{f}</span>
+              ))}
+            </div>
+            <a href="/destinations" style="display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,#03def3,#0ea5e9);color:#162544;font-weight:700;font-size:0.875rem;padding:0.7rem 1.5rem;border-radius:9999px;text-decoration:none;width:fit-content;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">All Destinations →</a>
+          </div>
+        </div>
+
+      </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;">
-      {benefits.map(b => (
-        <div style="background:white;border-radius:1.25rem;padding:1.75rem;border:1.5px solid #f0f0f0;box-shadow:0 1px 4px rgba(0,0,0,0.05);transition:all 0.25s;"
-             onmouseover="this.style.borderColor='#03def3';this.style.boxShadow='0 8px 28px rgba(3,222,243,0.12)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#f0f0f0';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)';this.style.transform=''">
-          <div style="width:52px;height:52px;background:#f0fdff;border-radius:0.875rem;display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;">
-            <Fragment set:html={b.icon} />
-          </div>
-          <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 0.5rem;">{b.title}</h3>
-          <p style="font-size:0.85rem;color:#6b7280;line-height:1.6;margin:0;">{b.desc}</p>
-        </div>
-      ))}
-    </div>
+    <!-- Prev / Next arrows -->
+    <button id="bPrev" style="position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:white;border:1.5px solid #e5e7eb;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.1);transition:all 0.2s;z-index:10;" onmouseover="this.style.borderColor='#03def3';this.style.boxShadow='0 4px 20px rgba(3,222,243,0.2)'" onmouseout="this.style.borderColor='#e5e7eb';this.style.boxShadow='0 4px 14px rgba(0,0,0,0.1)'">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#162544" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <button id="bNext" style="position:absolute;right:-8px;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:white;border:1.5px solid #e5e7eb;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.1);transition:all 0.2s;z-index:10;" onmouseover="this.style.borderColor='#03def3';this.style.boxShadow='0 4px 20px rgba(3,222,243,0.2)'" onmouseout="this.style.borderColor='#e5e7eb';this.style.boxShadow='0 4px 14px rgba(0,0,0,0.1)'">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#162544" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </button>
+
+    <!-- Navigation dots -->
+    <div id="bDots" style="display:flex;justify-content:center;gap:0.5rem;margin-top:2.25rem;"></div>
   </div>
 </section>
+
+<script>
+(function() {
+  const track   = document.getElementById('bTrack');
+  const dotsEl  = document.getElementById('bDots');
+  const prevBtn = document.getElementById('bPrev');
+  const nextBtn = document.getElementById('bNext');
+  if (!track) return;
+
+  const slides = track.querySelectorAll('.bSlide');
+  const total  = slides.length;
+  let cur = 0;
+  let timer: ReturnType<typeof setInterval>;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.style.cssText = `width:${i===0?'28px':'10px'};height:10px;border-radius:9999px;border:none;cursor:pointer;transition:all 0.3s;background:${i===0?'#162544':'#d1d5db'};padding:0;`;
+    d.setAttribute('aria-label', `Go to slide ${i+1}`);
+    d.addEventListener('click', () => goTo(i));
+    dotsEl?.appendChild(d);
+  });
+
+  function goTo(n: number) {
+    cur = (n + total) % total;
+    track.style.transform = `translateX(-${cur * 100}%)`;
+    dotsEl?.querySelectorAll('button').forEach((d, i) => {
+      (d as HTMLElement).style.width    = i === cur ? '28px' : '10px';
+      (d as HTMLElement).style.background = i === cur ? '#162544' : '#d1d5db';
+    });
+    resetTimer();
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(() => goTo(cur + 1), 5000);
+  }
+
+  prevBtn?.addEventListener('click', () => goTo(cur - 1));
+  nextBtn?.addEventListener('click', () => goTo(cur + 1));
+
+  // Touch / swipe
+  let touchStartX = 0;
+  track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend',   e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) goTo(diff > 0 ? cur + 1 : cur - 1);
+  });
+
+  // Pause on hover
+  const outer = document.getElementById('bOuter');
+  outer?.addEventListener('mouseenter', () => clearInterval(timer));
+  outer?.addEventListener('mouseleave', resetTimer);
+
+  resetTimer();
+})();
+</script>
+
+<style>
+  @media (max-width: 768px) {
+    .bSlide { grid-template-columns: 1fr !important; }
+    .bSlide > div:first-child { min-height: 280px !important; }
+    #bPrev, #bNext { display: none !important; }
+  }
+</style>
