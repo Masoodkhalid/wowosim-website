@@ -80,12 +80,21 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         }
         // 200 but no URL — show exactly what the portal said
         return new Response(JSON.stringify({
-          error: `Portal responded 200 but returned no payment URL. Full response: ${JSON.stringify(data)}`,
+          error: `Portal 200 but no payment URL. Response: ${JSON.stringify(data)}`,
           debug: debugLog,
         }), { status: 502, headers: { 'Content-Type': 'application/json' } });
       }
 
-      // Non-200 and non-auth — log and try next path
+      // Non-200: surface the error body prominently and stop (don't try next path for 422)
+      if (res.status === 422) {
+        return new Response(JSON.stringify({
+          error: `Portal validation error (422): ${JSON.stringify(data)}`,
+          payload_sent: payload,
+          debug: debugLog,
+        }), { status: 502, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      // Other non-200 — log and try next path
     } catch (e: any) {
       debugLog[path] = { error: e?.message ?? String(e) };
       console.error(`[WoWo portal] ${path} threw:`, e?.message);
