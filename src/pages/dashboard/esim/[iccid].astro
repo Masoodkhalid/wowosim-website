@@ -331,23 +331,24 @@ const { iccid } = Astro.params;
       el('cardCountry').textContent = country;
       el('breadcrumbName').textContent = country;
 
+      // Single declaration used by both topup logic and plan breakdown below
+      const planRows = data.plan_rows ?? [];
+
       // ── Topup eligibility (mirrors PHP portal logic) ──
       // Show "Buy Top-Up Plan" only when at least one plan satisfies:
       //   end_time > now UTC  AND  network_status != 'NOT_ACTIVE'  AND  vendor_valadity != 1
-      const topupBtn = document.getElementById('topupBtn') as HTMLAnchorElement | null;
+      const topupBtn = document.getElementById('topupBtn');
       if (topupBtn) {
-        const planRows: any[] = data.plan_rows ?? [];
         const nowUtc = new Date();
-        const canTopup = planRows.some(plan => {
+        const canTopup = planRows.some(function(plan) {
           const endTime = plan.end_time ? new Date(plan.end_time) : null;
-          const notExpired   = endTime ? endTime > nowUtc : false;
-          const isActive     = (plan.status ?? '').toUpperCase() !== 'NOT_ACTIVE';
-          const notTrial     = plan.validity_days !== 1;  // vendor_valadity != 1
+          const notExpired = endTime ? endTime > nowUtc : false;
+          const isActive   = (plan.status || '').toUpperCase() !== 'NOT_ACTIVE';
+          const notTrial   = plan.validity_days !== 1;
           return notExpired && isActive && notTrial;
         });
 
         if (canTopup) {
-          // Set href to the eSIM's country page
           if (country && country !== 'eSIM Plan') {
             const slug = country.toLowerCase().trim()
               .replace(/\s+/g, '-')
@@ -358,7 +359,6 @@ const { iccid } = Astro.params;
           }
           topupBtn.style.display = 'flex';
         }
-        // If !canTopup, button stays hidden (display:none set in HTML)
       }
 
       // Card stats
@@ -412,7 +412,6 @@ const { iccid } = Astro.params;
       }
 
       // Individual plans breakdown (base + top-ups)
-      const planRows = data.plan_rows ?? [];
       if (planRows.length > 0) {
         const container = document.createElement('div');
         container.style.cssText = 'margin-top:1.25rem;display:flex;flex-direction:column;gap:0.6rem;';
