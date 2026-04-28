@@ -214,6 +214,17 @@ const loggedIn = isLoggedIn(Astro.cookies);
     const msg = document.getElementById('checkoutMsg') as HTMLElement;
     const origHtml = btn.innerHTML;
 
+    // Portal Stripe account minimum is ~$10 — warn before attempting
+    const cart = getCart();
+    const cartTotal = cart.reduce((sum: number, i: any) => sum + parseFloat(String(i.price_usd ?? i.price ?? 0)) * (i.quantity ?? 1), 0);
+    if (cartTotal < 10) {
+      msg.style.display = 'block';
+      msg.style.background = '#fff7ed';
+      msg.style.color = '#c2410c';
+      msg.textContent = `Minimum order is $10.00. Your cart total is $${cartTotal.toFixed(2)}. Please add more plans or choose a larger plan.`;
+      return;
+    }
+
     btn.disabled = true;
     btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 0.8s linear infinite;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Redirecting to payment…`;
     msg.style.display = 'none';
