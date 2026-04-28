@@ -298,8 +298,15 @@ const { iccid } = Astro.params;
   function el(id) { return document.getElementById(id); }
 
   async function loadEsim() {
+    // 15-second client-side abort so the page never hangs forever
+    const ctrl = new AbortController();
+    const clientTimeout = setTimeout(() => ctrl.abort(), 15_000);
+
     try {
-      const res = await fetch(`/api/esim-detail?iccid=${encodeURIComponent(iccid)}`);
+      const res = await fetch(`/api/esim-detail?iccid=${encodeURIComponent(iccid)}`, {
+        signal: ctrl.signal,
+      });
+      clearTimeout(clientTimeout);
       const data = await res.json();
 
       console.log('[WoWo] eSIM detail response:', data);

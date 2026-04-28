@@ -9,35 +9,42 @@ export const GET: APIRoute = async ({ request, cookies }) => {
   const url  = new URL(request.url);
   const iccid = url.searchParams.get('iccid') ?? '';
 
-  // ── Step 1: /esims list — KNOWN to work, has quota/valadity/state/country ──
+  // ── Fire both portal calls in parallel (12-second timeout each) ──
+  const [listResult, detailResult] = await Promise.allSettled([
+    portalFetch('/esims', {}, jwt),
+    portalFetch(`/esim/${iccid}`, {}, jwt),
+  ]);
+
+  // Step 1: extract from /esims list
   let listEsim: any = null;
-  try {
-    const r = await portalFetch('/esims', {}, jwt);
-    if (r.ok) {
-      const d = await r.json();
+  if (listResult.status === 'fulfilled' && listResult.value.ok) {
+    try {
+      const d = await listResult.value.json();
       const list: any[] = d.esims ?? d.data ?? (Array.isArray(d) ? d : []);
       listEsim = list.find((e: any) => String(e.iccid) === String(iccid)) ?? null;
-    }
-  } catch {}
+    } catch {}
+  }
 
-  // ── Step 2: /esim/{iccid} — for QR code + data_plans ──
+  // Step 2: extract from /esim/{iccid}
   let detailEsim: any = null;
-  try {
-    const r = await portalFetch(`/esim/${iccid}`, {}, jwt);
-    if (r.ok) {
-      const d = await r.json();
+  if (detailResult.status === 'fulfilled' && detailResult.value.ok) {
+    try {
+      const d = await detailResult.value.json();
       const candidate = d.esim ?? d;
-      if (candidate && !candidate.error) detailEsim = candidate;
-    }
-  } catch {}
+      if (candidate && typeof candidate === 'object' && !candidate.error) detailEsim = candidate;
+    } catch {}
+  }
 
-  // Merge: list fields first (reliable), detail fields on top
+  // Merge: list fields first (reliable), detail fields fill in extras
   const esim: any = { ...(listEsim ?? {}), ...(detailEsim ?? {}) };
 
   if (!listEsim && !detailEsim) {
+    const listErr = listResult.status === 'rejected' ? String(listResult.reason) : 'no match';
+    const detErr  = detailResult.status === 'rejected' ? String(detailResult.reason) : 'no match';
     return new Response(JSON.stringify({
-      error: 'eSIM not found. Make sure you are logged in.',
+      error: 'eSIM not found. Make sure you are logged in and this eSIM belongs to your account.',
       iccid,
+      _debug: { listErr, detErr },
     }), { status: 404 });
   }
 
