@@ -36,12 +36,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: 'Your cart is empty.' }), { status: 400 });
   }
 
+  // Log raw cart items to debug price field
+  console.log('[WoWo] Raw cart items:', JSON.stringify(cartItems));
+
   // Transform cart items to the exact format the portal passes to Stripe:
   // { amount (cents), currency, quantity, description, metadata: { vendor_plan_id, generate_esim, esim_iccid } }
   const payload = {
     line_items: cartItems.map((item: any) => {
-      const amountCents = Math.round(parseFloat(item.price_usd ?? item.price ?? 0) * 100);
+      const rawPrice    = item.price_usd ?? item.price ?? item.price_regular ?? 0;
+      const amountCents = Math.round(parseFloat(String(rawPrice)) * 100);
       const isTopup     = !!item.is_topup;
+      console.log(`[WoWo] Item "${item.name}": price_usd=${item.price_usd} price=${item.price} → rawPrice=${rawPrice} → cents=${amountCents}`);
       return {
         amount:      amountCents,
         currency:    'usd',
@@ -55,6 +60,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       };
     }),
   };
+  console.log('[WoWo] Payload to portal:', JSON.stringify(payload));
 
   const paths = [
     '/payment-intent',
