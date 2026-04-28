@@ -2,44 +2,31 @@ import type { APIRoute } from 'astro';
 import { portalFetch } from '../../lib/api';
 import { getJwt } from '../../lib/auth';
 
-/** Extract a Stripe-hosted redirect URL from any portal response shape */
-function extractRedirectUrl(data: any): string | null {
+/** Pull a payment redirect URL out of any portal response shape */
+function extractUrl(data: any): string | null {
   if (!data || typeof data !== 'object') return null;
   const url =
-    data.redirect_url   ?? data.url            ?? data.checkout_url ??
-    data.payment_url    ?? data.stripe_url      ?? data.session_url  ??
-    data.payment_link   ?? data.link           ?? data.hosted_url   ??
-    data.invoice_url    ?? data.checkout_link  ?? null;
+    data.url             ??
+    data.redirect_url    ??
+    data.checkout_url    ??
+    data.payment_url     ??
+    data.stripe_url      ??
+    data.payment_link    ??
+    data.link            ??
+    data.hosted_url      ??
+    data.session_url     ??
+    data.invoice_url     ??
+    data.checkout_link   ?? null;
   return url && typeof url === 'string' && url.startsWith('http') ? url : null;
-}
-
-/** Extract a Stripe PaymentIntent client_secret from any portal response shape */
-function extractClientSecret(data: any): string | null {
-  if (!data || typeof data !== 'object') return null;
-  const cs =
-    data.client_secret              ??
-    data.payment_intent_client_secret ??
-    data.payment_intent?.client_secret ??
-    data.stripe?.client_secret      ??
-    data.stripe_client_secret       ?? null;
-  return cs && typeof cs === 'string' && cs.includes('_secret_') ? cs : null;
-}
-
-/** Extract the Stripe publishable key if the portal returns it */
-function extractPublishableKey(data: any): string | null {
-  if (!data || typeof data !== 'object') return null;
-  const key =
-    data.publishable_key ??
-    data.stripe_key      ??
-    data.public_key      ??
-    data.stripe?.publishable_key ?? null;
-  return key && typeof key === 'string' && key.startsWith('pk_') ? key : null;
 }
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   const jwt = getJwt(cookies);
   if (!jwt) {
-    return new Response(JSON.stringify({ error: 'Please sign in to complete your purchase.' }), { status: 401 });
+    return new Response(
+      JSON.stringify({ error: 'Please sign in to complete your purchase.' }),
+      { status: 401 }
+    );
   }
 
   const body = await request.json();
@@ -49,42 +36,22 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: 'Your cart is empty.' }), { status: 400 });
   }
 
-  // Raw items — matches working PHP checkout exactly
-  const rawLineItems = cartItems;
+  // Pass cart items exactly as the PHP portal code does:
+  // json_encode(["line_items" => json_decode(stripslashes($_COOKIE['wordpress_cart']))])
+  const payload = { line_items: cartItems };
 
-  // Mapped variants for portal field-name variations
-  const line_items = cartItems.map((item: any) => ({
-    plan_id:   item.id ?? item.plan_id ?? item.system_id,
-    system_id: item.system_id ?? item.id,
-    id:        item.id ?? item.plan_id ?? item.system_id,
-    quantity:  item.quantity ?? 1,
-    price_usd: item.price_usd ?? item.price ?? 0,
-    name:      item.name ?? '',
-    // topup fields (present only when buying a topup)
-    ...(item.topup_id ? { topup_id: item.topup_id } : {}),
-    ...(item.iccid    ? { iccid:    item.iccid    } : {}),
-  }));
-
-  // PaymentIntent path comes FIRST — portal confirmed to use this endpoint
-  const attempts = [
-    { path: '/payment_intent',       payload: { line_items: rawLineItems } },
-    { path: '/payment_intent',       payload: { line_items } },
-    { path: '/stripe/payment_intent',payload: { line_items: rawLineItems } },
-    { path: '/checkout',             payload: { line_items: rawLineItems } },  // PHP-matching
-    { path: '/checkout',             payload: { line_items } },
-    { path: '/orders',               payload: { line_items: rawLineItems } },
-    { path: '/orders',               payload: { line_items } },
-    { path: '/stripe/checkout',      payload: { line_items: rawLineItems } },
-    { path: '/checkout_session',     payload: { line_items: rawLineItems } },
-    { path: '/payments',             payload: { line_items: rawLineItems } },
+  // Endpoints to try — /payment_intent first (user-confirmed path), then /checkout fallback
+  const paths = [
+    '/payment_intent',
+    '/checkout',
+    '/orders',
+    '/stripe/payment_intent',
+    '/stripe/checkout',
   ];
 
   const debugLog: Record<string, any> = {};
 
-  for (const { path, payload } of attempts) {
-    const key = `${path}|${JSON.stringify(Object.keys(payload))}`;
-    if (debugLog[key]) continue;
-
+  for (const path of paths) {
     try {
       const res = await portalFetch(path, {
         method: 'POST',
@@ -95,32 +62,20 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       let data: any = {};
       try { data = JSON.parse(text); } catch { data = { raw: text }; }
 
-      debugLog[key] = { status: res.status, body: data };
+      debugLog[path] = { status: res.status, body: data };
 
       if (res.ok) {
-        // ── PaymentIntent flow: portal returns client_secret ──
-        const clientSecret = extractClientSecret(data);
-        if (clientSecret) {
-          const publishableKey = extractPublishableKey(data) ?? null;
-          return new Response(JSON.stringify({
-            client_secret:    clientSecret,
-            publishable_key:  publishableKey,
-            payment_intent_id: data.id ?? data.payment_intent_id ?? null,
-          }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-        }
-
-        // ── Checkout Session flow: portal returns a redirect URL ──
-        const redirectUrl = extractRedirectUrl(data);
-        if (redirectUrl) {
-          return new Response(JSON.stringify({ redirect_url: redirectUrl }), {
+        const url = extractUrl(data);
+        if (url) {
+          return new Response(JSON.stringify({ url }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
           });
         }
 
-        // Got 200 but neither — return for debug
+        // 200 but no URL — log what the portal actually said
         return new Response(JSON.stringify({
-          error: `Portal responded 200 but returned no checkout URL or client_secret. Response: ${data.message ?? data.error ?? JSON.stringify(data).slice(0, 300)}`,
+          error: `Portal responded but returned no payment URL. Response: ${data.message ?? data.error ?? JSON.stringify(data).slice(0, 300)}`,
           debug: { path, response: data },
         }), { status: 502, headers: { 'Content-Type': 'application/json' } });
       }
