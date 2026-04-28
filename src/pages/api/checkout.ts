@@ -36,14 +36,24 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: 'Your cart is empty.' }), { status: 400 });
   }
 
-  // Portal expects price in cents (Stripe smallest unit), our cart stores dollars.
-  // Convert: 5.50 → 550
+  // Transform cart items to the exact format the portal passes to Stripe:
+  // { amount (cents), currency, quantity, description, metadata: { vendor_plan_id, generate_esim, esim_iccid } }
   const payload = {
-    line_items: cartItems.map((item: any) => ({
-      ...item,
-      price:     Math.round(parseFloat(item.price_usd ?? item.price ?? 0) * 100),
-      price_usd: Math.round(parseFloat(item.price_usd ?? 0) * 100),
-    })),
+    line_items: cartItems.map((item: any) => {
+      const amountCents = Math.round(parseFloat(item.price_usd ?? item.price ?? 0) * 100);
+      const isTopup     = !!item.is_topup;
+      return {
+        amount:      amountCents,
+        currency:    'usd',
+        quantity:    item.quantity ?? 1,
+        description: item.name ?? item.description ?? 'WoWo SIM eSIM',
+        metadata: {
+          vendor_plan_id: isTopup ? (item.topup_id ?? item.system_id) : (item.system_id ?? item.id),
+          generate_esim:  isTopup ? 0 : 1,
+          esim_iccid:     isTopup ? (item.iccid ?? '') : '',
+        },
+      };
+    }),
   };
 
   const paths = [
