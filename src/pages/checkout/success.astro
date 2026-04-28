@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="Payment Successful — WoWo SIM" description="Your eSIM purchase is complete.">
+  <section style="min-height:calc(100vh - 140px);background:#f9fafb;display:flex;align-items:center;justify-content:center;padding:3rem 1rem;">
+    <div style="max-width:520px;width:100%;text-align:center;">
+
+      <!-- Animated check -->
+      <div style="width:80px;height:80px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;box-shadow:0 8px 30px rgba(34,197,94,0.2);">
+        <svg width="38" height="38" fill="none" viewBox="0 0 24 24" stroke="#16a34a" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+
+      <h1 style="font-size:2rem;font-weight:900;color:#162544;margin:0 0 0.75rem;letter-spacing:-0.5px;">Payment Successful!</h1>
+      <p style="color:#6b7280;font-size:1rem;margin:0 0 2rem;line-height:1.6;">Your eSIM is being activated. Check your email for the QR code — it usually arrives within 2 minutes.</p>
+
+      <div style="background:white;border-radius:1.25rem;border:1.5px solid #f0f0f0;padding:1.5rem;margin-bottom:2rem;text-align:left;">
+        <div style="display:flex;flex-direction:column;gap:0.875rem;">
+          {[
+            { icon: '📧', title: 'Check your email', desc: 'QR code sent to your registered email address' },
+            { icon: '📱', title: 'Scan & install', desc: 'Go to Settings → Mobile Data → Add eSIM and scan the QR code' },
+            { icon: '✈️', title: 'Travel ready', desc: 'Data activates automatically when you arrive at your destination' },
+          ].map(s => (
+            <div style="display:flex;gap:0.875rem;align-items:flex-start;">
+              <span style="font-size:1.25rem;flex-shrink:0;margin-top:0.1rem;">{s.icon}</span>
+              <div>
+                <p style="font-size:0.875rem;font-weight:700;color:#162544;margin:0 0 0.1rem;">{s.title}</p>
+                <p style="font-size:0.8rem;color:#9ca3af;margin:0;">{s.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+        <a href="/dashboard" class="btn-primary" style="font-size:0.9rem;padding:0.8rem 1.75rem;">View My eSIMs</a>
+        <a href="/" class="btn-outline" style="font-size:0.9rem;padding:0.8rem 1.75rem;">Back to Home</a>
+      </div>
+
+      <p style="font-size:0.75rem;color:#9ca3af;margin:1.5rem 0 0;">
+        Need help? <a href="/contact" style="color:#03def3;text-decoration:none;">Contact support</a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Confirm Stripe payment status from URL params
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get('redirect_status');
+  if (status && status !== 'succeeded') {
+    // Payment failed or was cancelled — redirect back to checkout
+    window.location.href = '/checkout?payment_failed=1';
+  }
+</script>

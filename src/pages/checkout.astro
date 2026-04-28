@@ -3,6 +3,8 @@ import Base from '../layouts/Base.astro';
 import { isLoggedIn } from '../lib/auth';
 
 const loggedIn = isLoggedIn(Astro.cookies);
+// Stripe publishable key — set PUBLIC_STRIPE_KEY in .env
+const stripeKey = import.meta.env.PUBLIC_STRIPE_KEY ?? '';
 ---
 
 <Base title="Checkout" description="Complete your WoWo SIM eSIM purchase securely.">
@@ -46,9 +48,11 @@ const loggedIn = isLoggedIn(Astro.cookies);
 
           <!-- Logged in: Payment options -->
           {loggedIn && (
-            <div class="card">
+            <div class="card" id="paymentCard">
               <h2 style="font-size:1.1rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">Payment Method</h2>
-              <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+              <!-- Step 1: Choose payment — shown initially -->
+              <div id="payChoose" style="display:flex;flex-direction:column;gap:0.75rem;">
                 <button id="payCardBtn" class="btn-primary" style="width:100%;justify-content:center;font-size:0.925rem;padding:0.9rem;border-radius:0.875rem;gap:0.6rem;">
                   <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
@@ -65,6 +69,30 @@ const loggedIn = isLoggedIn(Astro.cookies);
                   Pay with PayPal
                 </button>
               </div>
+
+              <!-- Step 2: Stripe Elements form — shown after client_secret is received -->
+              <div id="stripeFormWrap" style="display:none;">
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem;">
+                  <button id="stripeBack" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:0.8rem;padding:0;display:flex;align-items:center;gap:0.3rem;" type="button">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                    Back
+                  </button>
+                  <span style="font-size:0.9rem;font-weight:700;color:#162544;">Enter Card Details</span>
+                  <img src="https://js.stripe.com/v3/fingerprinted/img/visa-365725566f9578a9589553aa9296d178.svg" alt="Visa" style="height:20px;margin-left:auto;" />
+                  <img src="https://js.stripe.com/v3/fingerprinted/img/mastercard-4d8844094130711885b5e41b28c9848f.svg" alt="MC" style="height:20px;" />
+                </div>
+                <!-- Stripe mounts the payment element here -->
+                <div id="stripe-payment-element" style="margin-bottom:1.25rem;"></div>
+                <button id="stripeConfirmBtn" class="btn-primary" style="width:100%;justify-content:center;font-size:0.95rem;padding:0.9rem;border-radius:0.875rem;gap:0.5rem;" type="button">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                  Confirm Payment
+                </button>
+                <p style="font-size:0.7rem;color:#9ca3af;text-align:center;margin:0.75rem 0 0;display:flex;align-items:center;justify-content:center;gap:0.3rem;">
+                  <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                  Secured by Stripe
+                </p>
+              </div>
+
               <div id="checkoutMsg" style="display:none;margin-top:1rem;font-size:0.8rem;padding:0.75rem;border-radius:0.75rem;text-align:center;"></div>
             </div>
           )}
@@ -217,15 +245,70 @@ const loggedIn = isLoggedIn(Astro.cookies);
 
   renderCart();
 
-  // Pay with Card
-  document.getElementById('payCardBtn')?.addEventListener('click', async () => {
-    const btn = document.getElementById('payCardBtn') as HTMLButtonElement;
-    const msg = document.getElementById('checkoutMsg') as HTMLElement;
-    const origHtml = btn.innerHTML;
+  // ── Stripe publishable key (from server env, or from portal response) ──
+  const STRIPE_KEY_ENV = (import.meta as any).env?.PUBLIC_STRIPE_KEY ?? '';
+  let _stripeInstance: any = null;
+  let _stripeElements: any = null;
 
-    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 0.8s linear infinite;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Processing...`;
-    btn.disabled = true;
-    msg.style.display = 'none';
+  function showMsg(text: string, type: 'error' | 'info' | 'success' = 'error') {
+    const msg = document.getElementById('checkoutMsg') as HTMLElement;
+    if (!msg) return;
+    msg.style.display = 'block';
+    msg.style.background = type === 'error' ? '#fee2e2' : type === 'success' ? '#dcfce7' : '#dbeafe';
+    msg.style.color     = type === 'error' ? '#dc2626' : type === 'success' ? '#166534' : '#1d4ed8';
+    msg.textContent = text;
+  }
+  function hideMsg() {
+    const msg = document.getElementById('checkoutMsg') as HTMLElement;
+    if (msg) msg.style.display = 'none';
+  }
+  function setLoading(btnId: string, loading: boolean, origHtml = '') {
+    const btn = document.getElementById(btnId) as HTMLButtonElement;
+    if (!btn) return;
+    btn.disabled = loading;
+    if (loading) btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 0.8s linear infinite;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Processing…`;
+    else if (origHtml) btn.innerHTML = origHtml;
+  }
+
+  /** Load Stripe.js lazily, return Stripe instance */
+  async function loadStripe(publishableKey: string): Promise<any> {
+    if (_stripeInstance) return _stripeInstance;
+    if (!(window as any).Stripe) {
+      await new Promise<void>((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://js.stripe.com/v3/';
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error('Failed to load Stripe.js'));
+        document.head.appendChild(s);
+      });
+    }
+    _stripeInstance = (window as any).Stripe(publishableKey);
+    return _stripeInstance;
+  }
+
+  /** Show the Stripe Elements card form with the given client_secret */
+  async function mountStripeForm(clientSecret: string, publishableKey: string) {
+    try {
+      const stripe = await loadStripe(publishableKey);
+      _stripeElements = stripe.elements({ clientSecret, appearance: { theme: 'stripe', variables: { colorPrimary: '#162544', borderRadius: '8px' } } });
+      const payEl = _stripeElements.create('payment');
+      payEl.mount('#stripe-payment-element');
+
+      // Switch view: hide choose buttons, show form
+      (document.getElementById('payChoose') as HTMLElement).style.display = 'none';
+      (document.getElementById('stripeFormWrap') as HTMLElement).style.display = 'block';
+      hideMsg();
+    } catch (e: any) {
+      showMsg('Failed to load payment form. Please refresh and try again.');
+      console.error('[WoWo] Stripe Elements mount error:', e);
+    }
+  }
+
+  // ── Pay with Card button ──
+  document.getElementById('payCardBtn')?.addEventListener('click', async () => {
+    const origHtml = (document.getElementById('payCardBtn') as HTMLButtonElement)?.innerHTML ?? '';
+    setLoading('payCardBtn', true);
+    hideMsg();
 
     try {
       const res = await fetch('/api/checkout', {
@@ -234,41 +317,73 @@ const loggedIn = isLoggedIn(Astro.cookies);
         body: JSON.stringify({ line_items: getCart() }),
       });
       const data = await res.json();
-      console.log('[WoWo] Checkout API response:', JSON.stringify(data, null, 2));
+      console.log('[WoWo] Checkout response:', JSON.stringify(data, null, 2));
 
-      const redirectUrl = data.redirect_url ?? data.url ?? data.checkout_url
-        ?? data.payment_url ?? data.stripe_url ?? data.session_url ?? data.link ?? null;
+      // ── PaymentIntent flow (portal returns client_secret) ──
+      if (data.client_secret) {
+        const pubKey = data.publishable_key || STRIPE_KEY_ENV;
+        if (!pubKey || pubKey.startsWith('pk_live_REPLACE')) {
+          showMsg('Stripe is not configured yet. Please contact support.');
+          return;
+        }
+        await mountStripeForm(data.client_secret, pubKey);
+        return; // Don't re-enable button — form is now shown
+      }
 
+      // ── Checkout Session flow (portal returns redirect URL) ──
+      const redirectUrl = data.redirect_url ?? data.url ?? data.checkout_url ?? null;
       if (redirectUrl) {
         window.location.href = redirectUrl;
-      } else {
-        msg.style.display = 'block';
-        msg.style.background = '#fee2e2';
-        msg.style.color = '#dc2626';
-        const errText = data.error ?? 'Payment could not be initiated. Please try again or contact support.';
-        msg.textContent = errText;
-        console.error('[WoWo] Checkout failed. Error:', errText);
-        console.error('[WoWo] Full portal debug response:', JSON.stringify(data.debug ?? data, null, 2));
+        return;
       }
+
+      // Neither — show error
+      const errText = data.error ?? 'Payment could not be initiated. Please try again.';
+      showMsg(errText);
+      console.error('[WoWo] Checkout error:', errText);
+      console.error('[WoWo] Debug:', JSON.stringify(data.debug ?? data, null, 2));
     } catch (e) {
-      msg.style.display = 'block';
-      msg.style.background = '#fee2e2';
-      msg.style.color = '#dc2626';
-      msg.textContent = 'Network error. Please check your connection.';
+      showMsg('Network error. Please check your connection and try again.');
       console.error('[WoWo] Checkout network error:', e);
     } finally {
-      btn.innerHTML = origHtml;
-      btn.disabled = false;
+      setLoading('payCardBtn', false, origHtml);
     }
   });
 
-  // Pay with PayPal
+  // ── Stripe Elements confirm payment ──
+  document.getElementById('stripeConfirmBtn')?.addEventListener('click', async () => {
+    if (!_stripeInstance || !_stripeElements) return;
+    const origHtml = (document.getElementById('stripeConfirmBtn') as HTMLButtonElement)?.innerHTML ?? '';
+    setLoading('stripeConfirmBtn', true);
+    hideMsg();
+
+    const { error } = await _stripeInstance.confirmPayment({
+      elements: _stripeElements,
+      confirmParams: {
+        return_url: window.location.origin + '/checkout/success',
+      },
+    });
+
+    // If we reach here, payment failed or requires action
+    if (error) {
+      showMsg(error.message ?? 'Payment failed. Please check your card details.');
+      console.error('[WoWo] Stripe confirmPayment error:', error);
+    }
+    setLoading('stripeConfirmBtn', false, origHtml);
+  });
+
+  // ── Back button in Stripe form ──
+  document.getElementById('stripeBack')?.addEventListener('click', () => {
+    (document.getElementById('payChoose') as HTMLElement).style.display = 'flex';
+    (document.getElementById('stripeFormWrap') as HTMLElement).style.display = 'none';
+    (document.getElementById('stripe-payment-element') as HTMLElement).innerHTML = '';
+    _stripeElements = null;
+    hideMsg();
+  });
+
+  // ── Pay with PayPal ──
   document.getElementById('payPaypalBtn')?.addEventListener('click', () => {
-    const msg = document.getElementById('checkoutMsg') as HTMLElement;
-    msg.style.display = 'block';
-    msg.style.background = '#dbeafe';
-    msg.style.color = '#1d4ed8';
-    msg.textContent = 'PayPal integration coming soon. Please use card payment.';
+    showMsg('PayPal integration coming soon. Please use card payment.', 'info');
   });
 
   // Coupon apply
