@@ -40,10 +40,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   // json_encode(["line_items" => json_decode(stripslashes($_COOKIE['wordpress_cart']))])
   const payload = { line_items: cartItems };
 
-  // /checkout FIRST — confirmed working in PHP portal code
   const paths = [
+    '/payment-intent',
     '/checkout',
-    '/payment_intent',
     '/orders',
   ];
 
