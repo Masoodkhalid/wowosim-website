@@ -36,9 +36,15 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: 'Your cart is empty.' }), { status: 400 });
   }
 
-  // Matches the working PHP checkout exactly:
-  // json_encode(["line_items" => json_decode(stripslashes($_COOKIE['wordpress_cart']))])
-  const payload = { line_items: cartItems };
+  // Portal expects price in cents (Stripe smallest unit), our cart stores dollars.
+  // Convert: 5.50 → 550
+  const payload = {
+    line_items: cartItems.map((item: any) => ({
+      ...item,
+      price:     Math.round(parseFloat(item.price_usd ?? item.price ?? 0) * 100),
+      price_usd: Math.round(parseFloat(item.price_usd ?? 0) * 100),
+    })),
+  };
 
   const paths = [
     '/payment-intent',
