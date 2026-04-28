@@ -36,17 +36,15 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: 'Your cart is empty.' }), { status: 400 });
   }
 
-  // Pass cart items exactly as the PHP portal code does:
+  // Matches the working PHP checkout exactly:
   // json_encode(["line_items" => json_decode(stripslashes($_COOKIE['wordpress_cart']))])
   const payload = { line_items: cartItems };
 
-  // Endpoints to try — /payment_intent first (user-confirmed path), then /checkout fallback
+  // /checkout FIRST — confirmed working in PHP portal code
   const paths = [
-    '/payment_intent',
     '/checkout',
+    '/payment_intent',
     '/orders',
-    '/stripe/payment_intent',
-    '/stripe/checkout',
   ];
 
   const debugLog: Record<string, any> = {};
@@ -63,22 +61,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       try { data = JSON.parse(text); } catch { data = { raw: text }; }
 
       debugLog[path] = { status: res.status, body: data };
-
-      if (res.ok) {
-        const url = extractUrl(data);
-        if (url) {
-          return new Response(JSON.stringify({ url }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-          });
-        }
-
-        // 200 but no URL — log what the portal actually said
-        return new Response(JSON.stringify({
-          error: `Portal responded but returned no payment URL. Response: ${data.message ?? data.error ?? JSON.stringify(data).slice(0, 300)}`,
-          debug: { path, response: data },
-        }), { status: 502, headers: { 'Content-Type': 'application/json' } });
-      }
+      console.log(`[WoWo portal] ${path} → ${res.status}`, JSON.stringify(data).slice(0, 400));
 
       if (res.status === 401 || res.status === 403) {
         return new Response(JSON.stringify({
@@ -86,11 +69,32 @@ export const POST: APIRoute = async ({ request, cookies }) => {
           debug: debugLog,
         }), { status: 401, headers: { 'Content-Type': 'application/json' } });
       }
-    } catch { /* network error — try next */ }
+
+      if (res.ok) {
+        const url = extractUrl(data);
+        if (url) {
+          console.log(`[WoWo portal] Got payment URL from ${path}:`, url);
+          return new Response(JSON.stringify({ url }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+        // 200 but no URL — show exactly what the portal said
+        return new Response(JSON.stringify({
+          error: `Portal responded 200 but returned no payment URL. Full response: ${JSON.stringify(data)}`,
+          debug: debugLog,
+        }), { status: 502, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      // Non-200 and non-auth — log and try next path
+    } catch (e: any) {
+      debugLog[path] = { error: e?.message ?? String(e) };
+      console.error(`[WoWo portal] ${path} threw:`, e?.message);
+    }
   }
 
   return new Response(JSON.stringify({
-    error: 'Could not connect to payment gateway. Please try again or contact support.',
+    error: 'Payment gateway did not return a payment link. See debug for details.',
     debug: debugLog,
   }), { status: 502, headers: { 'Content-Type': 'application/json' } });
 };
