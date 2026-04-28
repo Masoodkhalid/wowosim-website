@@ -355,7 +355,8 @@ const { iccid } = Astro.params;
               .replace(/[^a-z0-9-]/g, '')
               .replace(/-+/g, '-')
               .replace(/^-|-$/g, '');
-            if (slug) topupBtn.setAttribute('href', '/' + slug);
+            // Pass iccid so the country page knows it's a topup purchase
+            if (slug) topupBtn.setAttribute('href', '/' + slug + '?iccid=' + encodeURIComponent(iccid));
           }
           topupBtn.style.display = 'flex';
         }
