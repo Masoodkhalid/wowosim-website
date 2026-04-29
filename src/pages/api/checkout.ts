@@ -36,31 +36,20 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: 'Your cart is empty.' }), { status: 400 });
   }
 
-  // Stripe Checkout Session format — confirmed from Rails console (Morocco $9.00 succeeded):
-  // price_data.unit_amount in cents, metadata under product_data
+  // Exact format from wordpress_cart cookie (confirmed working):
+  // { vendor_plan_id, plan_name, plan_price (dollars), plan_detail, quantity, esim_iccid }
   const payload = {
-    line_items: cartItems.map((item: any) => {
-      const unitAmount = Math.round(parseFloat(String(item.price_usd ?? item.price ?? 0)) * 100);
-      const isTopup    = !!item.is_topup;
-      return {
-        price_data: {
-          currency:     'usd',
-          unit_amount:  unitAmount,
-          product_data: {
-            name: item.name ?? 'WoWo SIM eSIM',
-            metadata: {
-              vendor_plan_id: isTopup ? (item.topup_id ?? item.system_id) : (item.system_id ?? item.id),
-              generate_esim:  isTopup ? 0 : 1,
-              esim_iccid:     isTopup ? (item.iccid ?? '') : '',
-            },
-          },
-        },
-        quantity: item.quantity ?? 1,
-      };
-    }),
+    line_items: cartItems.map((item: any) => ({
+      vendor_plan_id: item.vendor_plan_id ?? item.system_id ?? item.id,
+      plan_name:      item.plan_name ?? item.country ?? item.name ?? '',
+      plan_price:     parseFloat(String(item.plan_price ?? item.price_usd ?? item.price ?? 0)),
+      plan_detail:    item.plan_detail ?? item.name ?? '',
+      quantity:       item.quantity ?? 1,
+      esim_iccid:     item.esim_iccid ?? item.iccid ?? '',
+    })),
   };
 
-  const paths = ['/payment-intent'];
+  const paths = ['/checkout'];
 
   const debugLog: Record<string, any> = {};
 

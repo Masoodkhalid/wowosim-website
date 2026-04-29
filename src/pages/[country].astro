@@ -390,14 +390,15 @@ const faqs = [
                     </div>
                     <button class="add-to-cart btn-primary" style="font-size:0.82rem;padding:0.6rem 1rem;flex-shrink:0;"
                       data-plan={JSON.stringify({
-                        id: plan.id, system_id: plan.system_id,
-                        topup_id: plan.topup_id ?? null,
-                        name: plan.name ?? countryName + ' eSIM',
-                        country: plan.country ?? countryName,
-                        flag: plan.flag ?? flagUrl,
-                        quota: plan.quota, valadity: plan.valadity,
-                        price_usd: plan.price_usd, price: plan.price_usd,
-                        quantity: 1,
+                        vendor_plan_id: plan.system_id ?? plan.id,
+                        topup_id:       plan.topup_id ?? null,
+                        plan_name:      plan.country ?? countryName,
+                        plan_detail:    plan.name ?? (countryName + ' eSIM'),
+                        plan_price:     parseFloat(plan.price_usd) || 0,
+                        price_usd:      parseFloat(plan.price_usd) || 0,
+                        flag:           plan.flag ?? flagUrl,
+                        quota:          plan.quota, valadity: plan.valadity,
+                        quantity: 1, esim_iccid: '',
                       })}>
                       Buy Now
                     </button>
@@ -455,14 +456,15 @@ const faqs = [
               </div>
               <button class="add-to-cart btn-primary" style="font-size:0.82rem;padding:0.6rem 1rem;flex-shrink:0;"
                 data-plan={JSON.stringify({
-                  id: plan.id, system_id: plan.system_id,
-                  topup_id: plan.topup_id ?? null,
-                  name: plan.name ?? countryName + ' eSIM',
-                  country: plan.country ?? countryName,
-                  flag: plan.flag ?? flagUrl,
-                  quota: plan.quota, valadity: plan.valadity,
-                  price_usd: plan.price_usd, price: plan.price_usd,
-                  quantity: 1,
+                  vendor_plan_id: plan.system_id ?? plan.id,
+                  topup_id:       plan.topup_id ?? null,
+                  plan_name:      plan.country ?? countryName,
+                  plan_detail:    plan.name ?? (countryName + ' eSIM'),
+                  plan_price:     parseFloat(plan.price_usd) || 0,
+                  price_usd:      parseFloat(plan.price_usd) || 0,
+                  flag:           plan.flag ?? flagUrl,
+                  quota:          plan.quota, valadity: plan.valadity,
+                  quantity: 1, esim_iccid: '',
                 })}>
                 Buy Now
               </button>
@@ -683,13 +685,12 @@ const faqs = [
     btn.addEventListener('click', () => {
       const plan = JSON.parse((btn as HTMLElement).dataset.plan ?? '{}');
 
-      // ── If topup mode: use topup_id and inject iccid ──
+      // ── If topup mode: use topup_id as vendor_plan_id and inject esim_iccid ──
       if (_topupIccid && plan.topup_id) {
-        plan.topup_id = plan.topup_id;  // already set
-        plan.iccid    = _topupIccid;    // which eSIM to top up
-        plan.is_topup = true;
-        // Name it clearly in cart
-        plan.name = plan.name + ' (Top-Up)';
+        plan.vendor_plan_id = plan.topup_id;   // portal uses topup_id for topups
+        plan.esim_iccid     = _topupIccid;     // which eSIM to top up
+        plan.is_topup       = true;
+        plan.plan_detail    = plan.plan_detail + ' (Top-Up)';
       }
 
       let cart: any[] = [];
