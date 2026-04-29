@@ -98,6 +98,7 @@ const slugToName: Record<string, string> = {
   'europe':'Europe','asia-pacific':'Asia Pacific','north-america':'North America',
   'latin-america':'Latin America','middle-east':'Middle East','caribbean':'Caribbean',
   'caucasus-region':'Caucasus Region','global':'Global',
+  'asia-7':'Asia 7 Countries','asia-12':'Asia 12 Countries','asia-18':'Asia 18 Countries',
 };
 
 // Countries covered per region
@@ -117,6 +118,10 @@ const regionCountries: Record<string, string[]> = {
           'Dominican Republic','Puerto Rico','Aruba','Curaçao','Sint Maarten'],
   'CAU': ['Georgia','Armenia','Azerbaijan'],
   'GLOBAL': ['195+ countries worldwide'],
+  'ASIA_7':  ['Japan','South Korea','Singapore','Thailand','Malaysia','Hong Kong','Taiwan'],
+  'ASIA_12': ['Japan','South Korea','Singapore','Thailand','Malaysia','Hong Kong','Taiwan','Vietnam','Philippines','Indonesia','Cambodia','Macau'],
+  'ASIA_18': ['Japan','South Korea','Singapore','Thailand','Malaysia','Hong Kong','Taiwan','Vietnam','Philippines','Indonesia','Cambodia','Macau','India','Sri Lanka','Myanmar','Nepal','Bangladesh','Mongolia'],
+  'ASIA_20': ['Japan','South Korea','Singapore','Thailand','Malaysia','Hong Kong','Taiwan','Vietnam','Philippines','Indonesia','Cambodia','Macau','India','Sri Lanka','Myanmar','Nepal','Bangladesh','Mongolia','Australia','New Zealand'],
 };
 
 const iso3 = slugToIso3[country ?? ''];
@@ -159,7 +164,7 @@ if (plans.length > 0) {
 }
 
 const minPrice = plans.length > 0 ? Math.min(...plans.map((p:any) => parseFloat(p.price_usd) || 0)) : 0;
-const isRegion = ['EUR','ASIA','NAM','LAM','MDE','CAR','CAU','GLOBAL'].includes(iso3);
+const isRegion = ['EUR','ASIA','ASIA_7','ASIA_12','ASIA_18','ASIA_20','NAM','LAM','MDE','CAR','CAU','GLOBAL','EUROPE','LATAM','MENA','GULF','GLOBAL_120','GLOBAL_140'].includes(iso3);
 const coveredCountries = regionCountries[iso3] ?? [];
 
 // For regional plans: detect coverage tier from plan data

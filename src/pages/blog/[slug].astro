@@ -226,77 +226,225 @@ const relatedPosts = (post.related ?? []).map((s: string) => posts[s]).filter(Bo
 ---
 
 <Base title={`${post.title} | WoWo SIM Blog`} description={post.desc}>
-  <article>
 
-    <!-- Hero -->
-    <div style="background:linear-gradient(135deg,#162544,#0d1b36);padding:3rem 2rem;text-align:center;">
-      <div style="max-width:720px;margin:0 auto;">
-        <div style="font-size:4rem;margin-bottom:1rem;">{post.emoji}</div>
-        <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;color:#03def3;letter-spacing:0.08em;">{post.category}</span>
-        <h1 style="font-size:1.9rem;font-weight:900;color:white;margin:0.75rem 0 0.75rem;line-height:1.25;letter-spacing:-0.3px;">{post.title}</h1>
-        <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:0.78rem;color:#9ca3af;flex-wrap:wrap;">
-          <span>📅 {post.date}</span>
-          <span>⏱️ {post.readTime}</span>
-        </div>
+  <!-- Hero -->
+  <div style="background:linear-gradient(135deg,#0f1f3d,#162544,#1a2d50);padding:3.5rem 2rem 3rem;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(3,222,243,0.06) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;"></div>
+    <div style="position:absolute;top:-80px;right:-80px;width:320px;height:320px;background:rgba(3,222,243,0.05);border-radius:50%;filter:blur(60px);pointer-events:none;"></div>
+    <div style="max-width:760px;margin:0 auto;position:relative;z-index:1;">
+      <div style="font-size:3.5rem;margin-bottom:1rem;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.3));">{post.emoji}</div>
+      <span style="display:inline-block;background:rgba(3,222,243,0.15);border:1px solid rgba(3,222,243,0.3);color:#03def3;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:0.3rem 0.9rem;border-radius:9999px;margin-bottom:1rem;">{post.category}</span>
+      <h1 style="font-size:2.1rem;font-weight:900;color:white;margin:0 0 1rem;line-height:1.25;letter-spacing:-0.5px;">{post.title}</h1>
+      <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:0.78rem;color:#9ca3af;flex-wrap:wrap;">
+        <span style="display:flex;align-items:center;gap:0.3rem;">📅 {post.date}</span>
+        <span style="width:3px;height:3px;background:#4b5563;border-radius:50%;"></span>
+        <span style="display:flex;align-items:center;gap:0.3rem;">⏱️ {post.readTime}</span>
       </div>
     </div>
+  </div>
 
-    <!-- Breadcrumb -->
-    <div style="background:white;border-bottom:1px solid #f3f4f6;padding:0.75rem 2rem;">
-      <div style="max-width:720px;margin:0 auto;display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:#9ca3af;">
-        <a href="/" style="color:#9ca3af;text-decoration:none;" onmouseover="this.style.color='#03def3'" onmouseout="this.style.color='#9ca3af'">Home</a>
-        <span>›</span>
-        <a href="/blog" style="color:#9ca3af;text-decoration:none;" onmouseover="this.style.color='#03def3'" onmouseout="this.style.color='#9ca3af'">Blog</a>
-        <span>›</span>
-        <span style="color:#162544;">{post.title.slice(0, 40)}…</span>
-      </div>
+  <!-- Breadcrumb -->
+  <div style="background:white;border-bottom:1px solid #f3f4f6;padding:0.6rem 1.5rem;">
+    <div style="max-width:980px;margin:0 auto;display:flex;align-items:center;gap:0.5rem;font-size:0.73rem;color:#9ca3af;">
+      <a href="/" style="color:#9ca3af;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#03def3'" onmouseout="this.style.color='#9ca3af'">Home</a>
+      <span>›</span>
+      <a href="/blog" style="color:#9ca3af;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#03def3'" onmouseout="this.style.color='#9ca3af'">Blog</a>
+      <span>›</span>
+      <span style="color:#374151;font-weight:500;">{post.title.slice(0, 50)}{post.title.length > 50 ? '…' : ''}</span>
     </div>
+  </div>
 
-    <!-- Content -->
-    <div style="max-width:720px;margin:0 auto;padding:3rem 2rem;">
+  <!-- 2-column layout wrapper -->
+  <div style="background:#f9fafb;min-height:60vh;">
+    <div id="blog-layout" style="max-width:980px;margin:0 auto;padding:2.5rem 1.5rem;display:grid;grid-template-columns:240px 1fr;gap:2.5rem;align-items:start;">
 
-      <!-- Lead paragraph -->
-      <p style="font-size:1.05rem;color:#374151;line-height:1.8;margin:0 0 2.5rem;font-weight:400;">{post.desc}</p>
-
-      <!-- Sections -->
-      {post.sections.map((section: any) => (
-        <div style="margin-bottom:2.5rem;">
-          <h2 style="font-size:1.3rem;font-weight:800;color:#162544;margin:0 0 1rem;letter-spacing:-0.3px;padding-bottom:0.5rem;border-bottom:2px solid #f3f4f6;">{section.h}</h2>
-          <div style="color:#374151;font-size:0.95rem;line-height:1.8;white-space:pre-line;">{section.body}</div>
-        </div>
-      ))}
-
-      <!-- CTA box -->
-      <div style="background:linear-gradient(135deg,#162544,#0d1b36);border-radius:1.5rem;padding:2.25rem;margin:3rem 0;text-align:center;">
-        <h2 style="font-size:1.3rem;font-weight:800;color:white;margin:0 0 0.5rem;">Ready to travel connected?</h2>
-        <p style="color:#9ca3af;font-size:0.875rem;margin:0 0 1.5rem;">Get instant eSIM data from $3.50. Instant QR code delivery. No contracts.</p>
-        <a href={post.cta_dest} class="btn-primary" style="font-size:0.9rem;padding:0.8rem 1.75rem;">{post.cta_text} →</a>
-      </div>
-
-      <!-- Related posts -->
-      {relatedPosts.length > 0 && (
-        <div>
-          <h3 style="font-size:1rem;font-weight:800;color:#162544;margin:0 0 1.25rem;">Related Articles</h3>
-          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;">
-            {relatedPosts.map((rp: any) => (
-              <a href={`/blog/${post.related[relatedPosts.indexOf(rp)]}`}
-                 style="background:#f9fafb;border-radius:1rem;padding:1.25rem;text-decoration:none;border:1.5px solid #f0f0f0;transition:all 0.2s;"
-                 onmouseover="this.style.borderColor='#03def3';this.style.background='#f0fdff'" onmouseout="this.style.borderColor='#f0f0f0';this.style.background='#f9fafb'">
-                <span style="font-size:1.5rem;display:block;margin-bottom:0.5rem;">{rp.emoji}</span>
-                <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;color:#03def3;letter-spacing:0.05em;display:block;margin-bottom:0.3rem;">{rp.category}</span>
-                <span style="font-size:0.85rem;font-weight:600;color:#162544;line-height:1.4;">{rp.title}</span>
+      <!-- TOC Sidebar -->
+      <aside id="toc-sidebar" style="position:sticky;top:1.5rem;">
+        <div style="background:white;border:1.5px solid #f0f0f0;border-radius:1.25rem;padding:1.25rem;box-shadow:0 1px 6px rgba(0,0,0,0.05);">
+          <p style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#9ca3af;margin:0 0 0.875rem;">Contents</p>
+          <nav id="toc-nav">
+            {post.sections.map((section: any, idx: number) => (
+              <a href={`#section-${idx}`} class="toc-link" data-idx={idx}
+                 style="display:block;font-size:0.78rem;font-weight:500;color:#6b7280;text-decoration:none;padding:0.35rem 0.6rem;border-radius:0.5rem;margin-bottom:0.1rem;border-left:2px solid transparent;transition:all 0.2s;line-height:1.4;">
+                {section.h}
               </a>
             ))}
-          </div>
+          </nav>
         </div>
-      )}
+      </aside>
 
-      <!-- Back to blog -->
-      <div style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #f3f4f6;">
-        <a href="/blog" style="display:inline-flex;align-items:center;gap:0.4rem;color:#9ca3af;font-size:0.8rem;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#162544'" onmouseout="this.style.color='#9ca3af'">
-          ← Back to Blog
-        </a>
-      </div>
+      <!-- Article content -->
+      <article>
+
+        <!-- Lead / desc -->
+        <p style="font-size:1.05rem;color:#374151;line-height:1.85;margin:0 0 2.5rem;font-weight:400;padding-bottom:2rem;border-bottom:2px solid #f3f4f6;">{post.desc}</p>
+
+        <!-- Sections -->
+        {post.sections.map((section: any, idx: number) => (
+          <section id={`section-${idx}`} style="margin-bottom:2.75rem;scroll-margin-top:1.5rem;">
+            <h2 style="font-size:1.3rem;font-weight:800;color:#162544;margin:0 0 1.1rem;letter-spacing:-0.3px;padding-bottom:0.6rem;border-bottom:2px solid #f3f4f6;display:flex;align-items:center;gap:0.5rem;">
+              <span style="display:inline-block;width:4px;height:1.2em;background:linear-gradient(180deg,#03def3,#0bafc0);border-radius:2px;flex-shrink:0;"></span>
+              {section.h}
+            </h2>
+            <div class="prose-body" set:html={(() => {
+              const text: string = section.body;
+              if (!text) return '';
+              const lines = text.split('\n');
+              let html = '';
+              let inUl = false;
+              let inOl = false;
+
+              const formatInline = (t: string) =>
+                t.replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight:700;color:#162544;">$1</strong>');
+
+              const closeLists = () => {
+                if (inUl) { html += '</ul>'; inUl = false; }
+                if (inOl) { html += '</ol>'; inOl = false; }
+              };
+
+              for (const line of lines) {
+                if (line.trim() === '') {
+                  closeLists();
+                  continue;
+                }
+                const numMatch = line.match(/^(\d+)\.\s+(.+)/);
+                if (numMatch) {
+                  if (inUl) { html += '</ul>'; inUl = false; }
+                  if (!inOl) { html += '<ol style="margin:0.75rem 0 1.1rem 1.5rem;display:flex;flex-direction:column;gap:0.4rem;">'; inOl = true; }
+                  html += `<li style="font-size:0.95rem;color:#374151;line-height:1.75;">${formatInline(numMatch[2])}</li>`;
+                  continue;
+                }
+                if (line.match(/^[•*]\s/)) {
+                  if (inOl) { html += '</ol>'; inOl = false; }
+                  if (!inUl) { html += '<ul style="margin:0.75rem 0 1.1rem 1.5rem;display:flex;flex-direction:column;gap:0.4rem;list-style:disc;">'; inUl = true; }
+                  const content = line.replace(/^[•*]\s+/, '');
+                  html += `<li style="font-size:0.95rem;color:#374151;line-height:1.75;">${formatInline(content)}</li>`;
+                  continue;
+                }
+                closeLists();
+                html += `<p style="margin:0 0 1rem;font-size:0.95rem;color:#374151;line-height:1.8;">${formatInline(line)}</p>`;
+              }
+              closeLists();
+              return html;
+            })()} />
+          </section>
+        ))}
+
+        <!-- CTA box -->
+        <div style="background:linear-gradient(135deg,#0f1f3d,#162544);border-radius:1.5rem;padding:2.5rem 2rem;margin:3rem 0;text-align:center;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:rgba(3,222,243,0.07);border-radius:50%;filter:blur(30px);pointer-events:none;"></div>
+          <div style="font-size:2rem;margin-bottom:0.75rem;">📶</div>
+          <h2 style="font-size:1.4rem;font-weight:800;color:white;margin:0 0 0.6rem;">Ready to travel connected?</h2>
+          <p style="color:#9ca3af;font-size:0.875rem;margin:0 0 1.75rem;line-height:1.6;">Get instant eSIM data from $3.50. Instant QR code delivery. No contracts.</p>
+          <a href={post.cta_dest} class="btn-primary" style="font-size:0.9rem;padding:0.85rem 2rem;">{post.cta_text} →</a>
+        </div>
+
+        <!-- Related posts -->
+        {relatedPosts.length > 0 && (
+          <div style="margin-bottom:2rem;">
+            <h3 style="font-size:0.85rem;font-weight:800;color:#162544;margin:0 0 1.25rem;text-transform:uppercase;letter-spacing:0.08em;">Related Articles</h3>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;">
+              {relatedPosts.map((rp: any) => (
+                <a href={`/blog/${post.related[relatedPosts.indexOf(rp)]}`}
+                   style="background:white;border-radius:1.1rem;padding:1.25rem;text-decoration:none;border:1.5px solid #f0f0f0;transition:all 0.2s;display:flex;flex-direction:column;gap:0.4rem;box-shadow:0 1px 4px rgba(0,0,0,0.04);"
+                   onmouseover="this.style.borderColor='#03def3';this.style.background='#f0fdff';this.style.boxShadow='0 6px 20px rgba(3,222,243,0.12)'" onmouseout="this.style.borderColor='#f0f0f0';this.style.background='white';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.04)'">
+                  <span style="font-size:1.75rem;line-height:1;">{rp.emoji}</span>
+                  <span style="font-size:0.65rem;font-weight:700;text-transform:uppercase;color:#03def3;letter-spacing:0.06em;">{rp.category}</span>
+                  <span style="font-size:0.85rem;font-weight:600;color:#162544;line-height:1.4;">{rp.title}</span>
+                  <span style="font-size:0.75rem;color:#9ca3af;margin-top:auto;">{rp.date}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <!-- Back to blog -->
+        <div style="padding-top:1.5rem;border-top:1px solid #f3f4f6;">
+          <a href="/blog" style="display:inline-flex;align-items:center;gap:0.4rem;color:#9ca3af;font-size:0.8rem;font-weight:500;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#162544'" onmouseout="this.style.color='#9ca3af'">
+            ← Back to Blog
+          </a>
+        </div>
+
+      </article>
     </div>
-  </article>
+  </div>
+
 </Base>
+
+<style>
+  /* TOC active highlight */
+  .toc-link.active {
+    color: #162544 !important;
+    font-weight: 700 !important;
+    border-left-color: #03def3 !important;
+    background: #f0fdff;
+  }
+  .toc-link:hover {
+    color: #162544 !important;
+    background: #f9fafb;
+  }
+  /* Mobile: collapse to top box */
+  @media (max-width: 768px) {
+    #blog-layout {
+      grid-template-columns: 1fr !important;
+      gap: 1.5rem !important;
+    }
+    #toc-sidebar {
+      position: static !important;
+    }
+    #toc-sidebar > div {
+      border-radius: 0.875rem !important;
+    }
+    #toc-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+    .toc-link {
+      font-size: 0.72rem !important;
+      padding: 0.3rem 0.6rem !important;
+      background: #f3f4f6;
+      border-radius: 9999px !important;
+      border-left: none !important;
+      white-space: nowrap;
+    }
+    .toc-link.active {
+      background: #03def3 !important;
+      color: #162544 !important;
+    }
+  }
+  @media (max-width: 480px) {
+    #blog-layout { padding: 1.25rem 1rem !important; }
+  }
+</style>
+
+<script>
+  // IntersectionObserver for TOC active highlighting
+  const tocLinks = Array.from(document.querySelectorAll('.toc-link')) as HTMLAnchorElement[];
+  const sections = tocLinks.map(l => document.getElementById(l.dataset.idx !== undefined ? `section-${l.dataset.idx}` : '')).filter(Boolean) as HTMLElement[];
+
+  if (sections.length > 0 && 'IntersectionObserver' in window) {
+    let activeIdx = 0;
+
+    const setActive = (idx: number) => {
+      tocLinks.forEach((l, i) => l.classList.toggle('active', i === idx));
+      activeIdx = idx;
+    };
+
+    setActive(0);
+
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const idx = sections.indexOf(entry.target as HTMLElement);
+          if (idx !== -1) setActive(idx);
+        }
+      }
+    }, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+
+    sections.forEach(s => observer.observe(s));
+  } else {
+    // Fallback: highlight first link
+    if (tocLinks.length > 0) tocLinks[0].classList.add('active');
+  }
+</script>
