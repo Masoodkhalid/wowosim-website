@@ -36,34 +36,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: 'Your cart is empty.' }), { status: 400 });
   }
 
-  // Stripe Checkout Session format — confirmed from Rails console:
-  // [{ price_data: { currency, unit_amount (cents), product_data: { name, metadata: { vendor_plan_id, generate_esim, esim_iccid } } }, quantity }]
-  const payload = {
-    line_items: cartItems.map((item: any) => {
-      const unitAmount = Math.round(parseFloat(String(item.price_usd ?? item.price ?? 0)) * 100);
-      const isTopup    = !!item.is_topup;
-      return {
-        price_data: {
-          currency:    'usd',
-          unit_amount: unitAmount,
-          product_data: {
-            name: item.name ?? 'WoWo SIM eSIM',
-            metadata: {
-              vendor_plan_id: isTopup ? (item.topup_id ?? item.system_id) : (item.system_id ?? item.id),
-              generate_esim:  isTopup ? 0 : 1,
-              esim_iccid:     isTopup ? (item.iccid ?? '') : '',
-            },
-          },
-        },
-        quantity: item.quantity ?? 1,
-      };
-    }),
-  };
+  // Exactly matches the working PHP:
+  // json_encode(["line_items" => json_decode(stripslashes($_COOKIE['wordpress_cart']))])
+  // Portal handles all Stripe formatting internally.
+  const payload = { line_items: cartItems };
 
   const paths = [
-    '/payment-intent',
     '/checkout',
-    '/orders',
+    '/payment-intent',
   ];
 
   const debugLog: Record<string, any> = {};
