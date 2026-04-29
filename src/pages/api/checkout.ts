@@ -36,15 +36,31 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: 'Your cart is empty.' }), { status: 400 });
   }
 
-  // Exactly matches the working PHP:
-  // json_encode(["line_items" => json_decode(stripslashes($_COOKIE['wordpress_cart']))])
-  // Portal handles all Stripe formatting internally.
-  const payload = { line_items: cartItems };
+  // Stripe Checkout Session format — confirmed from Rails console (Morocco $9.00 succeeded):
+  // price_data.unit_amount in cents, metadata under product_data
+  const payload = {
+    line_items: cartItems.map((item: any) => {
+      const unitAmount = Math.round(parseFloat(String(item.price_usd ?? item.price ?? 0)) * 100);
+      const isTopup    = !!item.is_topup;
+      return {
+        price_data: {
+          currency:     'usd',
+          unit_amount:  unitAmount,
+          product_data: {
+            name: item.name ?? 'WoWo SIM eSIM',
+            metadata: {
+              vendor_plan_id: isTopup ? (item.topup_id ?? item.system_id) : (item.system_id ?? item.id),
+              generate_esim:  isTopup ? 0 : 1,
+              esim_iccid:     isTopup ? (item.iccid ?? '') : '',
+            },
+          },
+        },
+        quantity: item.quantity ?? 1,
+      };
+    }),
+  };
 
-  const paths = [
-    '/checkout',
-    '/payment-intent',
-  ];
+  const paths = ['/payment-intent'];
 
   const debugLog: Record<string, any> = {};
 
@@ -85,13 +101,16 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         }), { status: 502, headers: { 'Content-Type': 'application/json' } });
       }
 
-      // Non-200: surface the error body prominently and stop (don't try next path for 422)
+      // 422 — check if it's a Stripe minimum amount error
       if (res.status === 422) {
+        const errMsg: string = data?.error ?? '';
+        const isMinimum = errMsg.includes('minimum charge amount');
         return new Response(JSON.stringify({
-          error: `Portal validation error (422): ${JSON.stringify(data)}`,
-          payload_sent: payload,
+          error: isMinimum
+            ? 'This plan\'s price is below the minimum charge amount. Please choose a plan with a higher price or add more plans to your cart.'
+            : `Payment error: ${errMsg || JSON.stringify(data)}`,
           debug: debugLog,
-        }), { status: 502, headers: { 'Content-Type': 'application/json' } });
+        }), { status: 422, headers: { 'Content-Type': 'application/json' } });
       }
 
       // Other non-200 — log and try next path
