@@ -36,31 +36,29 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: 'Your cart is empty.' }), { status: 400 });
   }
 
-  // Log raw cart items to debug price field
-  console.log('[WoWo] Raw cart items:', JSON.stringify(cartItems));
-
-  // Transform cart items to the exact format the portal passes to Stripe:
-  // { amount (cents), currency, quantity, description, metadata: { vendor_plan_id, generate_esim, esim_iccid } }
+  // Stripe Checkout Session format — confirmed from Rails console:
+  // [{ price_data: { currency, unit_amount (cents), product_data: { name, metadata: { vendor_plan_id, generate_esim, esim_iccid } } }, quantity }]
   const payload = {
     line_items: cartItems.map((item: any) => {
-      const rawPrice    = item.price_usd ?? item.price ?? item.price_regular ?? 0;
-      const amountCents = Math.round(parseFloat(String(rawPrice)) * 100);
-      const isTopup     = !!item.is_topup;
-      console.log(`[WoWo] Item "${item.name}": price_usd=${item.price_usd} price=${item.price} → rawPrice=${rawPrice} → cents=${amountCents}`);
+      const unitAmount = Math.round(parseFloat(String(item.price_usd ?? item.price ?? 0)) * 100);
+      const isTopup    = !!item.is_topup;
       return {
-        amount:      amountCents,
-        currency:    'usd',
-        quantity:    item.quantity ?? 1,
-        description: item.name ?? item.description ?? 'WoWo SIM eSIM',
-        metadata: {
-          vendor_plan_id: isTopup ? (item.topup_id ?? item.system_id) : (item.system_id ?? item.id),
-          generate_esim:  isTopup ? 0 : 1,
-          esim_iccid:     isTopup ? (item.iccid ?? '') : '',
+        price_data: {
+          currency:    'usd',
+          unit_amount: unitAmount,
+          product_data: {
+            name: item.name ?? 'WoWo SIM eSIM',
+            metadata: {
+              vendor_plan_id: isTopup ? (item.topup_id ?? item.system_id) : (item.system_id ?? item.id),
+              generate_esim:  isTopup ? 0 : 1,
+              esim_iccid:     isTopup ? (item.iccid ?? '') : '',
+            },
+          },
         },
+        quantity: item.quantity ?? 1,
       };
     }),
   };
-  console.log('[WoWo] Payload to portal:', JSON.stringify(payload));
 
   const paths = [
     '/payment-intent',
